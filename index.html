@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Dashboard Empresarial</title>
+    
+    <!-- SDK de Telegram (OBLIGATORIO) -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 16px;
+            background: var(--tg-theme-bg-color, #f5f5f5);
+            color: var(--tg-theme-text-color, #000000);
+        }
+        .card {
+            background: var(--tg-theme-secondary-bg-color, #ffffff);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        button {
+            background: var(--tg-theme-button-color, #40a7e3);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        .stat-item {
+            flex: 1;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--tg-theme-accent-text-color, #40a7e3);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>📊 Dashboard Empresarial</h1>
+        <p>Bienvenido, <span id="user-name">Cargando...</span></p>
+    </div>
+    
+    <div class="card stats">
+        <div class="stat-item">
+            <div class="stat-value" id="ventas">0</div>
+            <div>Ventas Hoy</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="meta">0</div>
+            <div>Meta TM</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="cumplimiento">0%</div>
+            <div>Cumplimiento</div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>🏪 Tiendas</h2>
+        <div id="tiendas-list"></div>
+    </div>
+    
+    <button id="btn-actualizar">🔄 Actualizar Datos</button>
+    <button id="btn-enviar">📤 Enviar a Bot</button>
+    
+    <script>
+        // Inicializar la Mini App
+        const WebApp = window.Telegram.WebApp;
+        
+        // 1. Configurar tema y comportamiento
+        WebApp.ready();
+        WebApp.expand(); // Expandir a pantalla completa
+        WebApp.enableClosingConfirmation(); // Preguntar antes de cerrar
+        
+        // 2. Obtener información del usuario
+        const user = WebApp.initDataUnsafe?.user;
+        document.getElementById('user-name').textContent = 
+            user ? `${user.first_name} ${user.last_name || ''}` : 'Usuario';
+        
+        // 3. Datos de ejemplo
+        const datosEmpresa = {
+            ventas_hoy: 125000,
+            meta_tm: 60000,
+            actual_tm: 48500,
+            tiendas: [
+                { nombre: "TM", meta: 60000, actual: 48500 },
+                { nombre: "AB2", meta: 45000, actual: 38200 },
+                { nombre: "MP3", meta: 55000, actual: 31200 },
+                { nombre: "CHI", meta: 40000, actual: 38900 }
+            ]
+        };
+        
+        // 4. Actualizar UI
+        function actualizarDashboard() {
+            document.getElementById('ventas').textContent = 
+                `$${(datosEmpresa.ventas_hoy/1000).toFixed(0)}k`;
+            document.getElementById('meta').textContent = 
+                `$${(datosEmpresa.meta_tm/1000).toFixed(0)}k`;
+            
+            const cumplimiento = (datosEmpresa.actual_tm / datosEmpresa.meta_tm) * 100;
+            document.getElementById('cumplimiento').textContent = 
+                `${cumplimiento.toFixed(1)}%`;
+            
+            const tiendasList = document.getElementById('tiendas-list');
+            tiendasList.innerHTML = '';
+            datosEmpresa.tiendas.forEach(t => {
+                const pct = (t.actual / t.meta) * 100;
+                const barra = '█'.repeat(Math.floor(pct/10)) + '░'.repeat(10 - Math.floor(pct/10));
+                
+                tiendasList.innerHTML += `
+                    <div style="margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <strong>${t.nombre}</strong>
+                            <span>$${(t.actual/1000).toFixed(1)}k / $${(t.meta/1000).toFixed(0)}k</span>
+                        </div>
+                        <div style="background: #e0e0e0; border-radius: 4px; margin-top: 4px;">
+                            <div style="background: ${pct > 75 ? '#4CAF50' : pct > 50 ? '#FFC107' : '#F44336'}; 
+                                      width: ${pct}%; height: 20px; border-radius: 4px;"></div>
+                        </div>
+                        <div style="text-align: right; font-size: 12px; margin-top: 2px;">
+                            ${pct.toFixed(1)}%
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        actualizarDashboard();
+        
+        // 5. Botones de acción
+        document.getElementById('btn-actualizar').onclick = () => {
+            WebApp.HapticFeedback.impactOccurred('medium'); // Vibración en móviles
+            actualizarDashboard();
+        };
+        
+        document.getElementById('btn-enviar').onclick = () => {
+            // Enviar datos al bot
+            const datosParaBot = {
+                action: 'reporte',
+                tiendas: datosEmpresa.tiendas,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Esto envía los datos y CIERRA la Mini App
+            WebApp.sendData(JSON.stringify(datosParaBot));
+        };
+        
+        // 6. Botón principal (opcional)
+        WebApp.MainButton.setText('📊 VER REPORTE COMPLETO');
+        WebApp.MainButton.onClick(() => {
+            WebApp.HapticFeedback.impactOccurred('heavy');
+            WebApp.showAlert('Reporte generado exitosamente');
+        });
+        WebApp.MainButton.show();
+        
+    </script>
+</body>
+</html>
