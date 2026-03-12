@@ -1,173 +1,694 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Dashboard Empresarial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard Empresarial</title>
     
-    <!-- SDK de Telegram (OBLIGATORIO) -->
+    <!-- SDK de Telegram -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 16px;
-            background: var(--tg-theme-bg-color, #f5f5f5);
-            color: var(--tg-theme-text-color, #000000);
+            background: var(--tg-theme-bg-color, #f8f9fa);
+            color: var(--tg-theme-text-color, #2c3e50);
+            padding: 12px;
+            padding-bottom: 80px;
         }
-        .card {
-            background: var(--tg-theme-secondary-bg-color, #ffffff);
-            border-radius: 12px;
-            padding: 16px;
+        
+        /* Tarjetas de resumen */
+        .resumen-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
             margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        button {
-            background: var(--tg-theme-button-color, #40a7e3);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            border: none;
-            border-radius: 8px;
-            padding: 12px 20px;
-            width: 100%;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            cursor: pointer;
+        
+        .card {
+            background: var(--tg-theme-secondary-bg-color, white);
+            border-radius: 16px;
+            padding: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .stats {
+        
+        .card-title {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #6c757d);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        
+        .card-sub {
+            font-size: 11px;
+            color: var(--tg-theme-hint-color, #6c757d);
+        }
+        
+        /* Barras de progreso */
+        .progress-container {
+            margin: 8px 0;
+        }
+        
+        .progress-label {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-bottom: 4px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-fill.green { background: #4CAF50; }
+        .progress-fill.yellow { background: #FFC107; }
+        .progress-fill.orange { background: #FF9800; }
+        .progress-fill.red { background: #F44336; }
+        
+        /* KPIs principales */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .kpi-item {
+            background: var(--tg-theme-secondary-bg-color, white);
+            border-radius: 12px;
+            padding: 10px;
             text-align: center;
         }
-        .stat-item {
-            flex: 1;
+        
+        .kpi-label {
+            font-size: 11px;
+            color: var(--tg-theme-hint-color, #6c757d);
+            margin-bottom: 2px;
         }
+        
+        .kpi-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .kpi-sub {
+            font-size: 10px;
+            color: var(--tg-theme-hint-color, #6c757d);
+        }
+        
+        /* Controles de fecha */
+        .date-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            background: var(--tg-theme-secondary-bg-color, white);
+            border-radius: 12px;
+            padding: 10px;
+        }
+        
+        .date-btn {
+            flex: 1;
+            background: var(--tg-theme-button-color, #40a7e3);
+            color: var(--tg-theme-button-text-color, white);
+            border: none;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .date-input {
+            flex: 1;
+            background: var(--tg-theme-bg-color, #f8f9fa);
+            border: 1px solid var(--tg-theme-hint-color, #dee2e6);
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 12px;
+        }
+        
+        /* Tabla de tiendas */
+        .stores-section {
+            background: var(--tg-theme-secondary-bg-color, white);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        
+        .section-header {
+            padding: 14px;
+            background: var(--tg-theme-bg-color, #f1f3f5);
+            font-weight: 600;
+            font-size: 14px;
+            border-bottom: 1px solid var(--tg-theme-hint-color, #dee2e6);
+        }
+        
+        .store-row {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--tg-theme-hint-color, #e9ecef);
+        }
+        
+        .store-row:last-child {
+            border-bottom: none;
+        }
+        
+        .store-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        
+        .store-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .store-meta {
+            font-size: 11px;
+            color: var(--tg-theme-hint-color, #6c757d);
+        }
+        
+        .store-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: 12px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 10px;
+            color: var(--tg-theme-hint-color, #6c757d);
+        }
+        
         .stat-value {
+            font-weight: 600;
+        }
+        
+        .stat-value.green { color: #4CAF50; }
+        .stat-value.yellow { color: #FFC107; }
+        .stat-value.orange { color: #FF9800; }
+        .stat-value.red { color: #F44336; }
+        
+        /* Totales */
+        .totals {
+            background: var(--tg-theme-secondary-bg-color, white);
+            border-radius: 16px;
+            padding: 14px;
+            margin-top: 12px;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+        
+        .total-row.highlight {
+            font-weight: 700;
+            font-size: 15px;
+            border-top: 1px solid var(--tg-theme-hint-color, #dee2e6);
+            margin-top: 6px;
+            padding-top: 10px;
+        }
+        
+        /* Botón flotante de actualizar */
+        .refresh-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            background: var(--tg-theme-button-color, #40a7e3);
+            color: var(--tg-theme-button-text-color, white);
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             font-size: 24px;
-            font-weight: bold;
-            color: var(--tg-theme-accent-text-color, #40a7e3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .refresh-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .refresh-time {
+            position: fixed;
+            bottom: 85px;
+            right: 20px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            z-index: 100;
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>📊 Dashboard Empresarial</h1>
-        <p>Bienvenido, <span id="user-name">Cargando...</span></p>
+    <div class="resumen-grid">
+        <div class="card">
+            <div class="card-title">AVANCE META DIARIA</div>
+            <div class="card-value" id="meta-diaria">$35,205.09</div>
+            <div class="card-sub">53.0% de meta</div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill green" style="width: 53%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">AVANCE META MENSUAL</div>
+            <div class="card-value" id="meta-mensual">$970,928.00</div>
+            <div class="card-sub">vs $62.8M meta</div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill yellow" style="width: 23.5%"></div>
+                </div>
+            </div>
+        </div>
     </div>
     
-    <div class="card stats">
-        <div class="stat-item">
-            <div class="stat-value" id="ventas">0</div>
-            <div>Ventas Hoy</div>
+    <div class="kpi-grid">
+        <div class="kpi-item">
+            <div class="kpi-label">MARGEN</div>
+            <div class="kpi-value">34.6%</div>
+            <div class="kpi-sub">+2.1% vs ayer</div>
         </div>
-        <div class="stat-item">
-            <div class="stat-value" id="meta">0</div>
-            <div>Meta TM</div>
+        <div class="kpi-item">
+            <div class="kpi-label">ANTICIPO</div>
+            <div class="kpi-value">$0</div>
+            <div class="kpi-sub">Sin anticipos</div>
         </div>
-        <div class="stat-item">
-            <div class="stat-value" id="cumplimiento">0%</div>
-            <div>Cumplimiento</div>
+        <div class="kpi-item">
+            <div class="kpi-label">AÑO PASADO</div>
+            <div class="kpi-value">$68,630</div>
+            <div class="kpi-sub">+12.3% vs 2025</div>
+        </div>
+        <div class="kpi-item">
+            <div class="kpi-label">YTD</div>
+            <div class="kpi-value">$4.89M</div>
+            <div class="kpi-sub">55.9% avance</div>
         </div>
     </div>
     
-    <div class="card">
-        <h2>🏪 Tiendas</h2>
-        <div id="tiendas-list"></div>
+    <div class="date-controls">
+        <button class="date-btn" onclick="actualizarDatos()">🔄 REFRESCAR</button>
+        <input type="text" class="date-input" placeholder="dd/mm/aaaa" value="12/03/2026">
     </div>
     
-    <button id="btn-actualizar">🔄 Actualizar Datos</button>
-    <button id="btn-enviar">📤 Enviar a Bot</button>
+    <div class="stores-section">
+        <div class="section-header">🏪 TIENDAS</div>
+        
+        <div class="store-row" id="store-albrook">
+            <div class="store-header">
+                <span class="store-name">ALBROOK 2</span>
+                <span class="store-meta">LIVE</span>
+            </div>
+            <div class="store-stats">
+                <div class="stat">
+                    <div class="stat-label">VENTA</div>
+                    <div class="stat-value">$4,096</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">META</div>
+                    <div class="stat-value">$10,634</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">%</div>
+                    <div class="stat-value green">38.5%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill green" style="width: 38.5%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="store-row">
+            <div class="store-header">
+                <span class="store-name">CHIRIQUI</span>
+                <span class="store-meta">LIVE</span>
+            </div>
+            <div class="store-stats">
+                <div class="stat">
+                    <div class="stat-label">VENTA</div>
+                    <div class="stat-value">$5,964</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">META</div>
+                    <div class="stat-value">$9,802</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">%</div>
+                    <div class="stat-value green">60.8%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill green" style="width: 60.8%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="store-row">
+            <div class="store-header">
+                <span class="store-name">METROMALL</span>
+                <span class="store-meta">LIVE</span>
+            </div>
+            <div class="store-stats">
+                <div class="stat">
+                    <div class="stat-label">VENTA</div>
+                    <div class="stat-value">$2,211</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">META</div>
+                    <div class="stat-value">$4,068</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">%</div>
+                    <div class="stat-value yellow">54.3%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill yellow" style="width: 54.3%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="store-row">
+            <div class="store-header">
+                <span class="store-name">TUMBA MUERTO</span>
+                <span class="store-meta">LIVE</span>
+            </div>
+            <div class="store-stats">
+                <div class="stat">
+                    <div class="stat-label">VENTA</div>
+                    <div class="stat-value">$8,230</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">META</div>
+                    <div class="stat-value">$10,891</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">%</div>
+                    <div class="stat-value green">74.0%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill green" style="width: 74%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="store-row">
+            <div class="store-header">
+                <span class="store-name">WESTLAND MALL</span>
+                <span class="store-meta">LIVE</span>
+            </div>
+            <div class="store-stats">
+                <div class="stat">
+                    <div class="stat-label">VENTA</div>
+                    <div class="stat-value">$2,782</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">META</div>
+                    <div class="stat-value">$8,520</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">%</div>
+                    <div class="stat-value orange">32.2%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill orange" style="width: 32.2%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="store-row">
+            <div class="store-header">
+                <span class="store-name">COSTA VERDE</span>
+                <span class="store-meta">LIVE</span>
+            </div>
+            <div class="store-stats">
+                <div class="stat">
+                    <div class="stat-label">VENTA</div>
+                    <div class="stat-value">$1,556</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">META</div>
+                    <div class="stat-value">$4,108</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">%</div>
+                    <div class="stat-value orange">36.7%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill orange" style="width: 36.7%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="store-row">
+            <div class="store-header">
+                <span class="store-name">MULTIPLAZA 3</span>
+                <span class="store-meta">LIVE</span>
+            </div>
+            <div class="store-stats">
+                <div class="stat">
+                    <div class="stat-label">VENTA</div>
+                    <div class="stat-value">$9,272</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">META</div>
+                    <div class="stat-value">$13,242</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">%</div>
+                    <div class="stat-value green">68.6%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill green" style="width: 68.6%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="store-row">
+            <div class="store-header">
+                <span class="store-name">FRONTERA</span>
+                <span class="store-meta">LIVE</span>
+            </div>
+            <div class="store-stats">
+                <div class="stat">
+                    <div class="stat-label">VENTA</div>
+                    <div class="stat-value">$476</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">META</div>
+                    <div class="stat-value">$2,623</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">%</div>
+                    <div class="stat-value red">18.1%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill red" style="width: 18.1%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="store-row">
+            <div class="store-header">
+                <span class="store-name">LOS ANDES</span>
+                <span class="store-meta">LIVE</span>
+            </div>
+            <div class="store-stats">
+                <div class="stat">
+                    <div class="stat-label">VENTA</div>
+                    <div class="stat-value">$1,073</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">META</div>
+                    <div class="stat-value">$2,592</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">%</div>
+                    <div class="stat-value orange">41.4%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill orange" style="width: 41.4%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="stores-section">
+        <div class="section-header">🏢 CORPORATIVOS</div>
+        
+        <div class="store-row">
+            <div class="store-header">
+                <span class="store-name">MULTIMAX CORPORATIVO</span>
+                <span class="store-meta">LIVE</span>
+            </div>
+            <div class="store-stats">
+                <div class="stat">
+                    <div class="stat-label">VENTA</div>
+                    <div class="stat-value">$1,533</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">META</div>
+                    <div class="stat-value">$0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">%</div>
+                    <div class="stat-value">-</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill green" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="totals">
+        <div class="total-row">
+            <span>SUBTOTAL TIENDAS</span>
+            <span><strong>$35,659.89</strong></span>
+        </div>
+        <div class="total-row">
+            <span>SUBTOTAL CORPORATIVOS</span>
+            <span><strong>$1,533.00</strong></span>
+        </div>
+        <div class="total-row highlight">
+            <span>TOTAL GENERAL</span>
+            <span><strong>$37,192.89</strong></span>
+        </div>
+    </div>
+    
+    <button class="refresh-btn" onclick="actualizarDatos()">↻</button>
+    <div class="refresh-time" id="refreshTimer">Actualizado hace 2 min</div>
     
     <script>
-        // Inicializar la Mini App
         const WebApp = window.Telegram.WebApp;
         
-        // 1. Configurar tema y comportamiento
+        // Inicializar la Mini App
         WebApp.ready();
-        WebApp.expand(); // Expandir a pantalla completa
-        WebApp.enableClosingConfirmation(); // Preguntar antes de cerrar
+        WebApp.expand();
+        WebApp.enableClosingConfirmation();
         
-        // 2. Obtener información del usuario
-        const user = WebApp.initDataUnsafe?.user;
-        document.getElementById('user-name').textContent = 
-            user ? `${user.first_name} ${user.last_name || ''}` : 'Usuario';
+        // Configurar tema
+        document.body.style.background = WebApp.themeParams.bg_color || '#f8f9fa';
         
-        // 3. Datos de ejemplo
-        const datosEmpresa = {
-            ventas_hoy: 125000,
-            meta_tm: 60000,
-            actual_tm: 48500,
-            tiendas: [
-                { nombre: "TM", meta: 60000, actual: 48500 },
-                { nombre: "AB2", meta: 45000, actual: 38200 },
-                { nombre: "MP3", meta: 55000, actual: 31200 },
-                { nombre: "CHI", meta: 40000, actual: 38900 }
-            ]
-        };
+        // Variables de control
+        let lastUpdate = new Date();
+        let timerInterval;
         
-        // 4. Actualizar UI
-        function actualizarDashboard() {
-            document.getElementById('ventas').textContent = 
-                `$${(datosEmpresa.ventas_hoy/1000).toFixed(0)}k`;
-            document.getElementById('meta').textContent = 
-                `$${(datosEmpresa.meta_tm/1000).toFixed(0)}k`;
+        // Función para actualizar datos
+        function actualizarDatos() {
+            WebApp.HapticFeedback.impactOccurred('light');
             
-            const cumplimiento = (datosEmpresa.actual_tm / datosEmpresa.meta_tm) * 100;
-            document.getElementById('cumplimiento').textContent = 
-                `${cumplimiento.toFixed(1)}%`;
+            // Aquí iría la lógica para obtener datos de tu backend
+            // Por ahora solo actualizamos el timer
+            lastUpdate = new Date();
+            document.getElementById('refreshTimer').innerText = 'Actualizado ahora';
             
-            const tiendasList = document.getElementById('tiendas-list');
-            tiendasList.innerHTML = '';
-            datosEmpresa.tiendas.forEach(t => {
-                const pct = (t.actual / t.meta) * 100;
-                const barra = '█'.repeat(Math.floor(pct/10)) + '░'.repeat(10 - Math.floor(pct/10));
-                
-                tiendasList.innerHTML += `
-                    <div style="margin-bottom: 12px;">
-                        <div style="display: flex; justify-content: space-between;">
-                            <strong>${t.nombre}</strong>
-                            <span>$${(t.actual/1000).toFixed(1)}k / $${(t.meta/1000).toFixed(0)}k</span>
-                        </div>
-                        <div style="background: #e0e0e0; border-radius: 4px; margin-top: 4px;">
-                            <div style="background: ${pct > 75 ? '#4CAF50' : pct > 50 ? '#FFC107' : '#F44336'}; 
-                                      width: ${pct}%; height: 20px; border-radius: 4px;"></div>
-                        </div>
-                        <div style="text-align: right; font-size: 12px; margin-top: 2px;">
-                            ${pct.toFixed(1)}%
-                        </div>
-                    </div>
-                `;
-            });
+            // Reiniciar el contador
+            if (timerInterval) clearInterval(timerInterval);
+            iniciarTimer();
         }
         
-        actualizarDashboard();
+        // Timer de actualización
+        function iniciarTimer() {
+            timerInterval = setInterval(() => {
+                const ahora = new Date();
+                const diffMs = ahora - lastUpdate;
+                const diffMins = Math.floor(diffMs / 60000);
+                
+                if (diffMins < 1) {
+                    document.getElementById('refreshTimer').innerText = 'Actualizado hace <1 min';
+                } else {
+                    document.getElementById('refreshTimer').innerText = `Actualizado hace ${diffMins} min`;
+                }
+            }, 1000);
+        }
         
-        // 5. Botones de acción
-        document.getElementById('btn-actualizar').onclick = () => {
-            WebApp.HapticFeedback.impactOccurred('medium'); // Vibración en móviles
-            actualizarDashboard();
-        };
+        iniciarTimer();
         
-        document.getElementById('btn-enviar').onclick = () => {
-            // Enviar datos al bot
-            const datosParaBot = {
-                action: 'reporte',
-                tiendas: datosEmpresa.tiendas,
-                timestamp: new Date().toISOString()
-            };
-            
-            // Esto envía los datos y CIERRA la Mini App
-            WebApp.sendData(JSON.stringify(datosParaBot));
-        };
-        
-        // 6. Botón principal (opcional)
-        WebApp.MainButton.setText('📊 VER REPORTE COMPLETO');
+        // Botón principal de Telegram (opcional)
+        WebApp.MainButton.setText('📊 COMPARAR CON OTRO DÍA');
         WebApp.MainButton.onClick(() => {
-            WebApp.HapticFeedback.impactOccurred('heavy');
-            WebApp.showAlert('Reporte generado exitosamente');
+            WebApp.HapticFeedback.impactOccurred('medium');
+            WebApp.showPopup({
+                title: 'Comparar fechas',
+                message: 'Selecciona una fecha para comparar',
+                buttons: [
+                    { id: 'ayer', type: 'default', text: 'Ayer' },
+                    { id: 'semana', type: 'default', text: 'Semana pasada' },
+                    { id: 'mes', type: 'default', text: 'Mes pasado' },
+                    { id: 'cancel', type: 'cancel' }
+                ]
+            }, (buttonId) => {
+                if (buttonId && buttonId !== 'cancel') {
+                    WebApp.showAlert(`Comparando con ${buttonId}`);
+                }
+            });
         });
         WebApp.MainButton.show();
+        
+        // Manejar botón de retroceso
+        WebApp.onEvent('backButtonClicked', () => {
+            WebApp.close();
+        });
+        
+        // Mostrar botón de retroceso
+        WebApp.BackButton.show();
         
     </script>
 </body>
