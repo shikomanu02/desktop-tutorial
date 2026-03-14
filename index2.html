@@ -2,662 +2,248 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dash: Aprobaciones Pendientes</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Aprobaciones Pendientes</title>
 <style>
   :root {
-    --bg: #0d1117;
-    --surface: #161b22;
-    --surface2: #1c2128;
-    --border: #30363d;
-    --accent: #f0a500;
-    --accent2: #58a6ff;
-    --danger: #f85149;
-    --success: #3fb950;
-    --muted: #8b949e;
-    --text: #e6edf3;
-    --text2: #c9d1d9;
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'IBM Plex Sans', sans-serif;
+    --bg:      #0f1117;
+    --surface: #1a1f2e;
+    --card:    #1e2435;
+    --border:  #2a3048;
+    --accent:  #f0a500;
+    --blue:    #4a9eff;
+    --red:     #ff5f5f;
+    --green:   #3ecf6a;
+    --muted:   #6b7a99;
+    --text:    #e2e8f8;
+    --text2:   #a0aec8;
+    --mono:    'SF Mono','Fira Code',monospace;
   }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;min-height:100vh;padding-bottom:28px;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* TOPBAR */
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 14px;position:sticky;top:0;z-index:50;}
+  .topbar-title{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px;}
+  .topbar-row{display:flex;gap:8px;align-items:center;}
+  .btn{font-size:12px;font-weight:600;padding:6px 12px;border-radius:6px;border:1px solid var(--border);cursor:pointer;background:var(--card);color:var(--text2);display:inline-flex;align-items:center;gap:5px;white-space:nowrap;transition:background .15s,color .15s,border-color .15s;}
+  .btn-r{color:var(--blue);border-color:var(--blue);}
+  .btn-r:active{background:var(--blue);color:#000;}
+  .btn-a.on{color:var(--green);border-color:var(--green);}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:blink 1.4s infinite;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+  .ts{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:6px;}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-    padding: 0;
-  }
-
-  /* TOP BAR */
-  .topbar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
-  .topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .dash-title {
-    font-family: var(--mono);
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--accent);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .dash-title span {
-    color: var(--muted);
-    font-weight: 400;
-  }
-
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    font-weight: 500;
-    padding: 6px 14px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: all 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .btn-refresh {
-    background: var(--surface2);
-    color: var(--accent2);
-    border-color: var(--accent2);
-  }
-
-  .btn-refresh:hover {
-    background: var(--accent2);
-    color: #000;
-  }
-
-  .btn-auto {
-    background: var(--surface2);
-    color: var(--muted);
-    border-color: var(--border);
-  }
-
-  .btn-auto.active {
-    color: var(--success);
-    border-color: var(--success);
-  }
-
-  .btn-auto:hover { border-color: var(--success); color: var(--success); }
-
-  .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--success); display: inline-block; animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  .last-refresh {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    color: var(--muted);
-    white-space: nowrap;
-  }
+  /* SUMMARY */
+  .summary{display:flex;gap:8px;padding:10px 14px 0;overflow-x:auto;scrollbar-width:none;}
+  .summary::-webkit-scrollbar{display:none;}
+  .pill{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 12px;white-space:nowrap;display:flex;gap:5px;align-items:center;font-size:12px;color:var(--text2);flex-shrink:0;}
+  .pill b{color:var(--accent);font-size:13px;}
 
   /* MAIN */
-  .main {
-    padding: 24px;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
+  .main{padding:12px 14px 0;}
 
   /* SECTION */
-  .section {
-    margin-bottom: 32px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
+  .section{margin-bottom:0;}
+  .section+.section{border-top:1px solid var(--border);padding-top:14px;margin-top:14px;}
+  .sec-hd{display:flex;align-items:center;gap:8px;padding:0 0 10px;cursor:pointer;user-select:none;}
+  .sec-icon{font-size:15px;}
+  .sec-title{font-size:13px;font-weight:700;color:var(--text);flex:1;line-height:1.3;}
+  .badge{background:var(--accent);color:#000;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;min-width:22px;text-align:center;}
+  .chev{color:var(--muted);font-size:12px;transition:transform .2s;line-height:1;}
+  .section.off .chev{transform:rotate(-90deg);}
+  .sec-body{display:flex;flex-direction:column;gap:8px;}
+  .section.off .sec-body{display:none;}
 
-  .section-header {
-    background: var(--surface);
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .section-icon {
-    font-size: 1rem;
-  }
-
-  .section-title {
-    font-family: var(--mono);
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--text2);
-    letter-spacing: 0.03em;
-    flex: 1;
-  }
-
-  .badge {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 2px 9px;
-    border-radius: 12px;
-    background: var(--accent);
-    color: #000;
-    min-width: 24px;
-    text-align: center;
-  }
-
-  /* TABLE WRAPPER */
-  .table-wrap {
-    overflow-x: auto;
-    background: var(--bg);
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.8rem;
-  }
-
-  thead tr {
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-  }
-
-  thead th {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 10px 16px;
-    text-align: left;
-    white-space: nowrap;
-  }
-
-  tbody tr {
-    border-bottom: 1px solid #1e252d;
-    transition: background 0.1s;
-  }
-
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: var(--surface2); }
-
-  td {
-    padding: 10px 16px;
-    vertical-align: middle;
-    white-space: nowrap;
-    color: var(--text2);
-    font-size: 0.8rem;
-  }
-
-  .td-id {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--accent2);
-    font-weight: 500;
-  }
-
-  .td-date {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--muted);
-  }
-
-  .status-pill {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    padding: 2px 8px;
-    border-radius: 3px;
-    white-space: nowrap;
-  }
-
-  .status-abierto {
-    background: rgba(248,81,73,0.12);
-    color: var(--danger);
-    border: 1px solid rgba(248,81,73,0.3);
-  }
-
-  .status-aprobado {
-    background: rgba(63,185,80,0.12);
-    color: var(--success);
-    border: 1px solid rgba(63,185,80,0.3);
-  }
-
-  .td-step {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    color: var(--muted);
-  }
-
-  .td-step .step-num {
-    color: var(--accent);
-    font-weight: 600;
-  }
-
-  .td-btn {
-    padding: 8px 16px;
-  }
-
-  .btn-step {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 4px;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    background: transparent;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .btn-step:hover {
-    background: var(--accent);
-    color: #000;
-  }
-
-  .td-bodega {
-    font-size: 0.75rem;
-    color: var(--text2);
-    max-width: 160px;
-    white-space: normal;
-    line-height: 1.4;
-  }
-
-  /* Alternating row subtle stripe */
-  tbody tr:nth-child(even) {
-    background: rgba(255,255,255,0.012);
-  }
-  tbody tr:nth-child(even):hover {
-    background: var(--surface2);
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .topbar { padding: 10px 16px; }
-    .main { padding: 16px; }
-    .dash-title { font-size: 0.85rem; }
-    td, thead th { padding: 8px 12px; }
-    .section-header { padding: 10px 14px; }
-    .td-bodega { max-width: 110px; }
-  }
-
-  @media (max-width: 480px) {
-    .topbar-right { width: 100%; justify-content: flex-start; }
-    .last-refresh { width: 100%; }
-  }
-
-  /* HEADER PAGE */
-  .page-header {
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .page-title {
-    font-family: var(--mono);
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: 0.02em;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .page-title::before {
-    content: '';
-    display: inline-block;
-    width: 4px;
-    height: 1.1rem;
-    background: var(--accent);
-    border-radius: 2px;
-  }
-
-  .summary-row {
-    display: flex;
-    gap: 16px;
-    margin-top: 14px;
-    flex-wrap: wrap;
-  }
-
-  .summary-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 120px;
-  }
-
-  .summary-card .s-label {
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .summary-card .s-num {
-    font-family: var(--mono);
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: var(--accent);
-    line-height: 1;
-  }
+  /* CARD */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;}
+  .c-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;}
+  .c-row:last-child{margin-bottom:0;}
+  .c-id{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--blue);}
+  .c-date{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap;}
+  .c-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;font-weight:600;}
+  .c-val{font-size:12px;color:var(--text2);line-height:1.4;}
+  .c-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+  .sp{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:4px;}
+  .sp-a{background:rgba(255,95,95,.13);color:var(--red);border:1px solid rgba(255,95,95,.3);}
+  .sp-ok{background:rgba(62,207,106,.13);color:var(--green);border:1px solid rgba(62,207,106,.3);}
+  .step{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;display:flex;gap:6px;align-items:flex-start;margin-bottom:8px;}
+  .sn{background:rgba(240,165,0,.15);color:var(--accent);font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap;margin-top:1px;}
+  .sd{font-size:11px;color:var(--text2);line-height:1.4;flex:1;}
+  .btn-next{width:100%;padding:8px;border-radius:7px;border:1px solid var(--accent);color:var(--accent);background:rgba(240,165,0,.06);font-size:12px;font-weight:700;cursor:pointer;transition:background .15s;letter-spacing:.03em;}
+  .btn-next:active{background:var(--accent);color:#000;}
+  .btn-next:disabled{background:rgba(62,207,106,.12);border-color:var(--green);color:var(--green);cursor:default;}
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
-  <div class="topbar-left">
-    <div class="dash-title">Dash<span>:</span> Aprobaciones</div>
+  <div class="topbar-title">⏳ Aprobaciones Pendientes</div>
+  <div class="topbar-row">
+    <button class="btn btn-r" onclick="doRefresh()">↻ Refresh</button>
+    <button class="btn btn-a" id="btnA" onclick="toggleAuto()">⏱ AutoRefresh (1min)</button>
   </div>
-  <div class="topbar-right">
-    <button class="btn btn-refresh" onclick="doRefresh()">
-      ↻ Refresh
-    </button>
-    <button class="btn btn-auto" id="autoBtn" onclick="toggleAuto()">
-      <span class="pulse" id="pulseEl" style="display:none"></span>
-      Habilitar AutoRefresh (1min)
-    </button>
-    <span class="last-refresh" id="lastRefresh">Last Refresh: 2026-03-14 12:50:10</span>
-  </div>
+  <div class="ts" id="ts">Last Refresh: 2026-03-14 12:50:10</div>
 </div>
 
-<!-- MAIN -->
+<div class="summary">
+  <div class="pill">Subpago <b>21</b></div>
+  <div class="pill">Interna <b>1</b></div>
+  <div class="pill">Trans. Abono <b>9</b></div>
+  <div class="pill">Traspaso <b>3</b></div>
+  <div class="pill" style="color:var(--accent)">Total <b>34</b></div>
+</div>
+
 <div class="main">
 
-  <div class="page-header">
-    <div class="page-title">Aprobaciones Pendientes</div>
-    <div class="summary-row">
-      <div class="summary-card">
-        <span class="s-label">Subpago Proveedor</span>
-        <span class="s-num">21</span>
-      </div>
-      <div class="summary-card">
-        <span class="s-label">Solicitud Interna</span>
-        <span class="s-num">1</span>
-      </div>
-      <div class="summary-card">
-        <span class="s-label">Trans. Abono</span>
-        <span class="s-num">9</span>
-      </div>
-      <div class="summary-card">
-        <span class="s-label">Traspaso Tienda</span>
-        <span class="s-num">3</span>
-      </div>
-      <div class="summary-card">
-        <span class="s-label">Total</span>
-        <span class="s-num">34</span>
+  <div class="section" id="s1">
+    <div class="sec-hd" onclick="tog('s1')">
+      <span class="sec-icon">📄</span>
+      <span class="sec-title">Solicitud de Subpago a Proveedor</span>
+      <span class="badge">21</span><span class="chev">▼</span>
+    </div>
+    <div class="sec-body" id="b1"></div>
+  </div>
+
+  <div class="section" id="s2">
+    <div class="sec-hd" onclick="tog('s2')">
+      <span class="sec-icon">🗂️</span>
+      <span class="sec-title">Solicitud Interna</span>
+      <span class="badge">1</span><span class="chev">▼</span>
+    </div>
+    <div class="sec-body">
+      <div class="card">
+        <div class="c-row"><span class="c-id">SDI-0048926</span><span class="c-date">2025-12-21</span></div>
+        <div class="c-row" style="margin-bottom:10px">
+          <div><div class="c-lbl">Creado por</div><div class="c-val">GONZALEZJA</div></div>
+          <span class="sp sp-ok">ABIERTO:APROBADO</span>
+        </div>
+        <div class="step"><span class="sn">7/13</span><span class="sd">Bodega Sucursal recibe y realiza ajuste</span></div>
       </div>
     </div>
   </div>
 
-  <!-- SECTION 1: Subpago a Proveedor -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-icon">📄</span>
-      <span class="section-title">Solicitud de Subpago a Proveedor</span>
-      <span class="badge">21</span>
+  <div class="section" id="s3">
+    <div class="sec-hd" onclick="tog('s3')">
+      <span class="sec-icon">🔄</span>
+      <span class="sec-title">Transferencias de Abono</span>
+      <span class="badge">9</span><span class="chev">▼</span>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Estado</th>
-            <th>Creado Por</th>
-            <th>Paso Workflow</th>
-            <th>Acción</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-subpago"></tbody>
-      </table>
-    </div>
+    <div class="sec-body" id="b3"></div>
   </div>
 
-  <!-- SECTION 2: Solicitud Interna -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-icon">🗂️</span>
-      <span class="section-title">Solicitud Interna</span>
-      <span class="badge">1</span>
+  <div class="section" id="s4">
+    <div class="sec-hd" onclick="tog('s4')">
+      <span class="sec-icon">🏪</span>
+      <span class="sec-title">Traspaso de Tienda</span>
+      <span class="badge">3</span><span class="chev">▼</span>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Estado</th>
-            <th>Creado Por</th>
-            <th>Paso Workflow</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="td-id">SDI-0048926</td>
-            <td class="td-date">2025-12-21</td>
-            <td><span class="status-pill status-aprobado">ABIERTO:APROBADO</span></td>
-            <td>GONZALEZJA</td>
-            <td class="td-step"><span class="step-num">(7/13)</span> Bodega Sucursal recibe y realiza ajuste</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- SECTION 3: Transferencias de Abono -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-icon">🔄</span>
-      <span class="section-title">Solicitudes de Transferencias de Abono</span>
-      <span class="badge">9</span>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Estado</th>
-            <th>Creado Por</th>
-            <th>Bodega Origen</th>
-            <th>Bodega Destino</th>
-            <th>Paso Workflow</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-abono"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- SECTION 4: Traspaso de Tienda -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-icon">🏪</span>
-      <span class="section-title">Solicitud de Traspaso de Tienda</span>
-      <span class="badge">3</span>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Estado</th>
-            <th>Creado Por</th>
-            <th>Bodega Origen</th>
-            <th>Bodega Destino</th>
-            <th>Paso Workflow</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-traspaso"></tbody>
-      </table>
-    </div>
+    <div class="sec-body" id="b4"></div>
   </div>
 
 </div>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
 <script>
-  // --- DATA ---
-  const subpagoData = [
-    ['SDI-0029030','2017-01-26','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029031','2017-01-26','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029039','2017-01-27','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029040','2017-01-27','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029041','2017-01-27','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029043','2017-01-27','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029045','2017-01-27','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029046','2017-01-27','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029117','2017-02-04','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029118','2017-02-04','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029120','2017-02-04','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029121','2017-02-04','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029191','2017-02-09','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029192','2017-02-09','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029193','2017-02-09','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029564','2017-03-10','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029565','2017-03-10','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029567','2017-03-10','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0029568','2017-03-10','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0041470','2020-09-25','ABIERTO','BARRIAM','(1/3) Creacion'],
-    ['SDI-0042204','2021-06-14','ABIERTO','BARRIAM','(1/3) Creacion'],
-  ];
+const D1=[
+  ['SDI-0029030','2017-01-26','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029031','2017-01-26','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029039','2017-01-27','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029040','2017-01-27','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029041','2017-01-27','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029043','2017-01-27','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029045','2017-01-27','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029046','2017-01-27','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029117','2017-02-04','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029118','2017-02-04','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029120','2017-02-04','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029121','2017-02-04','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029191','2017-02-09','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029192','2017-02-09','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029193','2017-02-09','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029564','2017-03-10','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029565','2017-03-10','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029567','2017-03-10','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0029568','2017-03-10','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0041470','2020-09-25','ABIERTO','BARRIAM','1/3','Creacion'],
+  ['SDI-0042204','2021-06-14','ABIERTO','BARRIAM','1/3','Creacion'],
+];
+const D3=[
+  ['MPSI187597-60','2021-07-04','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','1/4','Manejo de mercancia recibe solicitud'],
+  ['MPSI188295-49','2021-08-14','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','1/4','Manejo de mercancia recibe solicitud'],
+  ['MPSI188363-41','2021-08-17','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','1/4','Manejo de mercancia recibe solicitud'],
+  ['MPSI189923-35','2021-11-13','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','1/4','Manejo de mercancia recibe solicitud'],
+  ['MPSI190815-35','2021-12-19','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','1/4','Manejo de mercancia recibe solicitud'],
+  ['MPSI191543-52','2022-02-02','VIVA ALBROOK','MULTIMAX ABONOS','1/4','Manejo de mercancia recibe solicitud'],
+  ['MPSI191659-23','2022-02-10','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','1/4','Manejo de mercancia recibe solicitud'],
+  ['MPSI191960-90','2022-02-25','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','1/4','Manejo de mercancia recibe solicitud'],
+  ['MPSI193846-20','2022-05-24','MULTIMAX TM','MULTIMAX ABONOS','1/4','Manejo de mercancia recibe solicitud'],
+];
+const D4=[
+  ['MPSIX00209111','2024-07-30','LAVALLEA','MULTIMAX ALBROOK 2','MX CHIRIQUI','5/10','Bodega asigna personal'],
+  ['MPSIX00209112','2024-07-30','LAVALLEA','MULTIMAX ALBROOK 2','MULTIMAX WESTLAND MALL','5/10','Bodega asigna personal'],
+  ['MPSIX00209113','2024-07-30','LAVALLEA','MULTIMAX ALBROOK 2','MULTIMAX LOS ANDES','5/10','Bodega asigna personal'],
+];
 
-  const abonoData = [
-    ['MPSI187597-60','2021-07-04','ABIERTO','—','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','(1/4) Manejo de mercancia recibe solicitud'],
-    ['MPSI188295-49','2021-08-14','ABIERTO','—','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','(1/4) Manejo de mercancia recibe solicitud'],
-    ['MPSI188363-41','2021-08-17','ABIERTO','—','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','(1/4) Manejo de mercancia recibe solicitud'],
-    ['MPSI189923-35','2021-11-13','ABIERTO','—','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','(1/4) Manejo de mercancia recibe solicitud'],
-    ['MPSI190815-35','2021-12-19','ABIERTO','—','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','(1/4) Manejo de mercancia recibe solicitud'],
-    ['MPSI191543-52','2022-02-02','ABIERTO','—','VIVA ALBROOK','MULTIMAX ABONOS','(1/4) Manejo de mercancia recibe solicitud'],
-    ['MPSI191659-23','2022-02-10','ABIERTO','—','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','(1/4) Manejo de mercancia recibe solicitud'],
-    ['MPSI191960-90','2022-02-25','ABIERTO','—','MULTIMAX ALBROOK 2','MULTIMAX ABONOS','(1/4) Manejo de mercancia recibe solicitud'],
-    ['MPSI193846-20','2022-05-24','ABIERTO','—','MULTIMAX TM','MULTIMAX ABONOS','(1/4) Manejo de mercancia recibe solicitud'],
-  ];
+function sp(s){
+  return s.includes('APROBADO')
+    ?`<span class="sp sp-ok">${s}</span>`
+    :`<span class="sp sp-a">${s}</span>`;
+}
 
-  const traspasoData = [
-    ['MPSIX00209111','2024-07-30','ABIERTO','LAVALLEA','MULTIMAX ALBROOK 2','MX CHIRIQUI','(5/10) Bodega asigna personal'],
-    ['MPSIX00209112','2024-07-30','ABIERTO','LAVALLEA','MULTIMAX ALBROOK 2','MULTIMAX WESTLAND MALL','(5/10) Bodega asigna personal'],
-    ['MPSIX00209113','2024-07-30','ABIERTO','LAVALLEA','MULTIMAX ALBROOK 2','MULTIMAX LOS ANDES','(5/10) Bodega asigna personal'],
-  ];
+document.getElementById('b1').innerHTML = D1.map((r,i)=>`
+<div class="card">
+  <div class="c-row"><span class="c-id">${r[0]}</span><span class="c-date">${r[1]}</span></div>
+  <div class="c-row" style="margin-bottom:10px">
+    <div><div class="c-lbl">Creado por</div><div class="c-val">${r[3]}</div></div>
+    ${sp(r[2])}
+  </div>
+  <div class="step"><span class="sn">${r[4]}</span><span class="sd">${r[5]}</span></div>
+  <button class="btn-next" onclick="nx(this)">→ Siguiente Paso</button>
+</div>`).join('');
 
-  function statusPill(s) {
-    const cls = s.includes('APROBADO') ? 'status-aprobado' : 'status-abierto';
-    return `<span class="status-pill ${cls}">${s}</span>`;
-  }
+document.getElementById('b3').innerHTML = D3.map(r=>`
+<div class="card">
+  <div class="c-row"><span class="c-id">${r[0]}</span><span class="c-date">${r[1]}</span></div>
+  <div class="c-row" style="margin-bottom:10px"><div></div>${sp('ABIERTO')}</div>
+  <div class="c-grid">
+    <div><div class="c-lbl">Origen</div><div class="c-val">${r[2]}</div></div>
+    <div><div class="c-lbl">Destino</div><div class="c-val">${r[3]}</div></div>
+  </div>
+  <div class="step"><span class="sn">${r[4]}</span><span class="sd">${r[5]}</span></div>
+</div>`).join('');
 
-  function stepCell(s) {
-    return `<span class="td-step"><span class="step-num">${s.match(/\(\d+\/\d+\)/)?.[0]||''}</span> ${s.replace(/\(\d+\/\d+\)\s*/,'')}</span>`;
-  }
+document.getElementById('b4').innerHTML = D4.map(r=>`
+<div class="card">
+  <div class="c-row"><span class="c-id">${r[0]}</span><span class="c-date">${r[1]}</span></div>
+  <div class="c-row" style="margin-bottom:10px">
+    <div><div class="c-lbl">Creado por</div><div class="c-val">${r[2]}</div></div>
+    ${sp('ABIERTO')}
+  </div>
+  <div class="c-grid">
+    <div><div class="c-lbl">Origen</div><div class="c-val">${r[3]}</div></div>
+    <div><div class="c-lbl">Destino</div><div class="c-val">${r[4]}</div></div>
+  </div>
+  <div class="step"><span class="sn">${r[5]}</span><span class="sd">${r[6]}</span></div>
+</div>`).join('');
 
-  // Render subpago
-  const tbSubpago = document.getElementById('tbody-subpago');
-  subpagoData.forEach(r => {
-    tbSubpago.innerHTML += `<tr>
-      <td class="td-id">${r[0]}</td>
-      <td class="td-date">${r[1]}</td>
-      <td>${statusPill(r[2])}</td>
-      <td>${r[3]}</td>
-      <td>${stepCell(r[4])}</td>
-      <td class="td-btn"><button class="btn-step">Siguiente Paso</button></td>
-    </tr>`;
-  });
+function tog(id){document.getElementById(id).classList.toggle('off');}
 
-  // Render abono
-  const tbAbono = document.getElementById('tbody-abono');
-  abonoData.forEach(r => {
-    tbAbono.innerHTML += `<tr>
-      <td class="td-id">${r[0]}</td>
-      <td class="td-date">${r[1]}</td>
-      <td>${statusPill(r[2])}</td>
-      <td>${r[3]}</td>
-      <td class="td-bodega">${r[4]}</td>
-      <td class="td-bodega">${r[5]}</td>
-      <td>${stepCell(r[6])}</td>
-    </tr>`;
-  });
+function nx(btn){
+  btn.textContent='✓ Procesado';
+  btn.disabled=true;
+}
 
-  // Render traspaso
-  const tbTraspaso = document.getElementById('tbody-traspaso');
-  traspasoData.forEach(r => {
-    tbTraspaso.innerHTML += `<tr>
-      <td class="td-id">${r[0]}</td>
-      <td class="td-date">${r[1]}</td>
-      <td>${statusPill(r[2])}</td>
-      <td>${r[3]}</td>
-      <td class="td-bodega">${r[4]}</td>
-      <td class="td-bodega">${r[5]}</td>
-      <td>${stepCell(r[6])}</td>
-    </tr>`;
-  });
-
-  // --- REFRESH LOGIC ---
-  let autoInterval = null;
-  let autoEnabled = false;
-
-  function pad(n){ return String(n).padStart(2,'0'); }
-
-  function getTimestamp() {
-    const d = new Date();
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-  }
-
-  function doRefresh() {
-    document.getElementById('lastRefresh').textContent = 'Last Refresh: ' + getTimestamp();
-  }
-
-  function toggleAuto() {
-    autoEnabled = !autoEnabled;
-    const btn = document.getElementById('autoBtn');
-    const pulse = document.getElementById('pulseEl');
-    if (autoEnabled) {
-      btn.classList.add('active');
-      btn.innerHTML = '<span class="pulse" id="pulseEl"></span> AutoRefresh ON (1min)';
-      autoInterval = setInterval(doRefresh, 60000);
-    } else {
-      btn.classList.remove('active');
-      btn.innerHTML = 'Habilitar AutoRefresh (1min)';
-      clearInterval(autoInterval);
-    }
-  }
+let autoOn=false,timer=null;
+function pad(n){return String(n).padStart(2,'0');}
+function ts(){const d=new Date();return`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;}
+function doRefresh(){document.getElementById('ts').textContent='Last Refresh: '+ts();}
+function toggleAuto(){
+  autoOn=!autoOn;
+  const b=document.getElementById('btnA');
+  if(autoOn){b.classList.add('on');b.innerHTML='<span class="dot"></span> ON (1min)';timer=setInterval(doRefresh,60000);}
+  else{b.classList.remove('on');b.innerHTML='⏱ AutoRefresh (1min)';clearInterval(timer);}
+}
+if(window.Telegram?.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}
 </script>
-
 </body>
 </html>
