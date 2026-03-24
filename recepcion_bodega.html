@@ -747,16 +747,24 @@ async function processImageFiles(files){
     }));
     contentParts.push({
       type: 'text',
-      text: `Eres un asistente de bodega. Analiza ${files.length > 1 ? 'estas imágenes' : 'esta imagen'} y extrae TODOS los números de serie que veas.
+      text: `Eres un asistente de bodega experto en lectura de etiquetas y documentos.
 
-Contexto: estoy recepcionando el producto "${item.name}" (código ${item.code}). Necesito ${item.qty} series.
+TAREA: Analiza ${files.length > 1 ? 'estas imágenes' : 'esta imagen'} y extrae TODOS los números de serie visibles.
 
-Los números de serie pueden contener: letras, números, guiones (-), guiones bajos (_), barras (/), porcentajes (%) y otros caracteres especiales.
+PRODUCTO: "${item.name}" | CÓDIGO: ${item.code} | SE ESPERAN: ${item.qty} series
 
-Responde ÚNICAMENTE con un JSON válido en este formato exacto, sin texto adicional:
-{"series": ["SERIE1", "SERIE2", "SERIE3"], "nota": "descripción breve de lo que viste en la imagen"}
+FORMATO DE SERIES: alfanumérico, pueden incluir guiones (-), guiones bajos (_), barras (/), porcentajes (%) y otros caracteres especiales. Ejemplo: ABC-abc-1234, SN_001/A, 12345%XYZ
 
-Si no encuentras series, responde: {"series": [], "nota": "No se detectaron números de serie"}`
+INSTRUCCIONES:
+- Lee CADA línea o etiqueta de la imagen con cuidado
+- Extrae TODOS los códigos que parezcan números de serie
+- NO incluyas palabras como "Serie:", "S/N:", "Code:" — solo el valor
+- Si hay una lista, extrae todos los elementos
+
+RESPONDE SOLO con este JSON exacto, sin explicaciones ni texto adicional:
+{"series": ["SERIE1", "SERIE2", "SERIE3"], "nota": "breve descripción"}
+
+IMPORTANTE: Tu respuesta debe empezar con { y terminar con }`
     });
 
     if(!PROXY_URL || PROXY_URL.includes('TU-WORKER')){
@@ -778,11 +786,31 @@ Si no encuentras series, responde: {"series": [], "nota": "No se detectaron núm
 
     let parsed;
     try {
-      const clean = rawText.replace(/```json|```/g,'').trim();
-      parsed = JSON.parse(clean);
+      // Intento 1: buscar bloque JSON dentro del texto (entre { } )
+      const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+      if(jsonMatch){
+        const clean = jsonMatch[0].replace(/```json|```/g,'').trim();
+        parsed = JSON.parse(clean);
+      } else {
+        throw new Error('no json block');
+      }
     } catch(e) {
-      // fallback: try to extract series manually
-      parsed = { series: [], nota: 'No se pudo parsear la respuesta de IA.' };
+      // Intento 2: extraer series línea por línea del texto plano
+      // busca patrones alfanuméricos con - _ / % de al menos 4 chars
+      const lines = rawText.split(/[\n,;]+/);
+      const found = [];
+      lines.forEach(line => {
+        const trimmed = line.trim().replace(/^[-•*·\d]+[.)\s]+/, ''); // quita bullets/numeración
+        // serie válida: al menos 4 chars, alfanumérico con especiales permitidos
+        if(trimmed.length >= 4 && /^[A-Za-z0-9][A-Za-z0-9\-_\/%.]{3,}$/.test(trimmed)){
+          found.push(trimmed);
+        }
+      });
+      if(found.length > 0){
+        parsed = { series: found, nota: 'Extraído de texto plano' };
+      } else {
+        parsed = { series: [], nota: 'No se detectaron series en la imagen. Intenta enfocar mejor el texto.' };
+      }
     }
 
     document.getElementById('cam-analyzing').style.display = 'none';
