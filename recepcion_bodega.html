@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Recepción de Mercancía · Bodega TM</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2333;
+    --border: #2a3045;
+    --accent: #4f8cff;
+    --accent2: #00d4a0;
+    --warn: #ffb340;
+    --danger: #ff5461;
+    --text: #e8eaf0;
+    --text2: #8892aa;
+    --text3: #545f7a;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── LAYOUT ─── */
+  #app { display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ─── HEADER ─── */
+  .header {
+    background: linear-gradient(135deg, #1a2540 0%, #121929 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 18px 14px;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .header-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), #2257cc);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(79,140,255,0.35);
+  }
+  .header-text h1 { font-size: 15px; font-weight: 700; letter-spacing: 0.01em; }
+  .header-text p  { font-size: 12px; color: var(--text2); margin-top: 1px; }
+  .badge-bodega {
+    margin-left: auto; background: rgba(79,140,255,0.15);
+    border: 1px solid rgba(79,140,255,0.4);
+    color: var(--accent); font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ─── CONTENT ─── */
+  .content { flex: 1; padding: 16px 14px 24px; display: flex; flex-direction: column; gap: 14px; }
+
+  /* ─── SECTION LABEL ─── */
+  .section-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--text3);
+    padding: 0 2px;
+  }
+
+  /* ─── ORDER CARD LIST ─── */
+  .orders-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .order-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .order-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--border); border-radius: 3px 0 0 3px;
+    transition: background 0.18s;
+  }
+  .order-card:active { transform: scale(0.985); }
+  .order-card.selected {
+    border-color: rgba(79,140,255,0.5);
+    background: rgba(79,140,255,0.07);
+    box-shadow: 0 0 0 1px rgba(79,140,255,0.2);
+  }
+  .order-card.selected::before { background: var(--accent); }
+  .order-card.received {
+    border-color: rgba(0,212,160,0.3);
+    background: rgba(0,212,160,0.05);
+    opacity: 0.6; cursor: default;
+  }
+  .order-card.received::before { background: var(--accent2); }
+
+  .order-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .order-id {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; color: var(--accent); font-weight: 700;
+    background: rgba(79,140,255,0.1);
+    padding: 3px 8px; border-radius: 5px;
+  }
+  .order-id.received-id { color: var(--accent2); background: rgba(0,212,160,0.1); }
+
+  .order-status {
+    font-size: 11px; font-weight: 600; padding: 3px 9px;
+    border-radius: 20px; display: flex; align-items: center; gap: 4px;
+  }
+  .status-pending { background: rgba(255,179,64,0.12); color: var(--warn); border: 1px solid rgba(255,179,64,0.25); }
+  .status-received { background: rgba(0,212,160,0.12); color: var(--accent2); border: 1px solid rgba(0,212,160,0.25); }
+  .status-selected { background: rgba(79,140,255,0.15); color: var(--accent); border: 1px solid rgba(79,140,255,0.35); }
+
+  .order-provider { font-size: 12px; color: var(--text2); margin-bottom: 3px; }
+  .order-provider span { color: var(--text); font-weight: 500; }
+
+  .order-meta { display: flex; gap: 14px; margin-top: 8px; }
+  .order-meta-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text3); }
+  .order-meta-item strong { color: var(--text2); font-weight: 500; }
+
+  /* ─── SELECTED ORDER DETAIL ─── */
+  .detail-card {
+    background: var(--surface);
+    border: 1px solid rgba(79,140,255,0.3);
+    border-radius: var(--radius);
+    overflow: hidden;
+    animation: slideIn 0.22s ease;
+  }
+  @keyframes slideIn { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+
+  .detail-header {
+    background: linear-gradient(135deg, rgba(79,140,255,0.15), rgba(79,140,255,0.05));
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .detail-title { font-size: 13px; font-weight: 700; color: var(--accent); }
+  .detail-subtitle { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  /* ─── ITEMS TABLE ─── */
+  .items-table { width: 100%; padding: 0 16px 8px; }
+  .item-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .item-row:last-child { border-bottom: none; }
+
+  .item-num {
+    width: 26px; height: 26px; border-radius: 7px;
+    background: rgba(79,140,255,0.12); color: var(--accent);
+    font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .item-info { flex: 1; min-width: 0; }
+  .item-code {
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: var(--warn); font-weight: 700; margin-bottom: 4px;
+    display: inline-block;
+  }
+  .item-name { font-size: 13px; color: var(--text); line-height: 1.45; margin-bottom: 6px; }
+  .item-qty {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(0,212,160,0.1); border: 1px solid rgba(0,212,160,0.2);
+    color: var(--accent2); font-size: 12px; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px;
+  }
+
+  /* ─── ACTION AREA ─── */
+  .action-area { padding: 14px 16px; border-top: 1px solid var(--border); }
+
+  .btn-receive {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, var(--accent) 0%, #2257cc 100%);
+    color: #fff; border: none; border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700;
+    cursor: pointer; letter-spacing: 0.02em;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.18s ease;
+    box-shadow: 0 4px 16px rgba(79,140,255,0.35);
+    position: relative; overflow: hidden;
+  }
+  .btn-receive:active { transform: scale(0.97); box-shadow: 0 2px 8px rgba(79,140,255,0.2); }
+  .btn-receive:disabled {
+    background: var(--surface2); color: var(--text3);
+    box-shadow: none; cursor: not-allowed; transform: none;
+  }
+
+  /* ─── RIPPLE ─── */
+  .ripple {
+    position: absolute; border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transform: scale(0); animation: rippleAnim 0.5s linear;
+    pointer-events: none;
+  }
+  @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+
+  /* ─── CONFIRM MODAL ─── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: flex-end; justify-content: center;
+    z-index: 999; opacity: 0; pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px 20px 0 0;
+    padding: 24px 20px 32px;
+    width: 100%; max-width: 480px;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .modal-overlay.active .modal { transform: translateY(0); }
+
+  .modal-handle {
+    width: 38px; height: 4px; border-radius: 2px;
+    background: var(--border); margin: 0 auto 20px;
+  }
+
+  .modal-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: rgba(0,212,160,0.12);
+    border: 2px solid rgba(0,212,160,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin: 0 auto 16px;
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
+  }
+  @keyframes popIn { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  .modal h2 {
+    text-align: center; font-size: 17px; font-weight: 700;
+    color: var(--accent2); margin-bottom: 16px;
+  }
+
+  .modal-info {
+    background: var(--surface2); border-radius: var(--radius-sm);
+    padding: 14px 16px; margin-bottom: 20px;
+  }
+  .modal-info-row { display: flex; flex-direction: column; gap: 3px; margin-bottom: 10px; }
+  .modal-info-row:last-child { margin-bottom: 0; }
+  .modal-info-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
+  .modal-info-value { font-size: 13px; color: var(--text); font-weight: 500; }
+  .modal-info-value.mono { font-family: 'Space Mono', monospace; color: var(--accent); }
+  .modal-info-value.green { color: var(--accent2); font-weight: 600; }
+
+  .modal-msg {
+    background: rgba(0,212,160,0.08);
+    border: 1px solid rgba(0,212,160,0.2);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 13px; color: var(--text2); line-height: 1.55;
+    margin-bottom: 22px;
+  }
+  .modal-msg strong { color: var(--accent2); }
+
+  .btn-close {
+    width: 100%; padding: 13px;
+    background: rgba(0,212,160,0.15);
+    border: 1.5px solid rgba(0,212,160,0.4);
+    color: var(--accent2); border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-close:active { background: rgba(0,212,160,0.25); }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 10px; padding: 40px 20px; color: var(--text3);
+    text-align: center;
+  }
+  .empty-state span { font-size: 36px; }
+  .empty-state p { font-size: 13px; line-height: 1.5; }
+
+  /* ─── LOADING SPINNER ─── */
+  .spinner {
+    width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff; border-radius: 50%;
+    animation: spin 0.7s linear infinite; flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); font-size: 13px; padding: 10px 18px;
+    border-radius: 30px; z-index: 1000;
+    opacity: 0; transition: all 0.25s; white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-icon">📦</div>
+    <div class="header-text">
+      <h1>Recepción de Mercancía</h1>
+      <p>Confirmar entrega del proveedor</p>
+    </div>
+    <div class="badge-bodega">Bodega TM</div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="content" id="main-content">
+
+    <!-- ORDERS LIST -->
+    <div class="section-label">Órdenes de Compra Pendientes</div>
+    <div class="orders-list" id="orders-list"></div>
+
+    <!-- DETAIL PANEL -->
+    <div id="detail-panel" style="display:none;">
+      <div class="section-label">Detalle de la Orden</div>
+      <div class="detail-card" id="detail-card"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- CONFIRMATION MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-icon">✅</div>
+    <h2>¡Recepción Confirmada!</h2>
+    <div class="modal-info" id="modal-info"></div>
+    <div class="modal-msg" id="modal-msg"></div>
+    <button class="btn-close" onclick="closeModal()">Entendido</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ─── TELEGRAM WEB APP INIT ───
+  const tg = window.Telegram?.WebApp;
+  if (tg) {
+    tg.ready();
+    tg.expand();
+    tg.setHeaderColor('#0f1117');
+    tg.setBackgroundColor('#0f1117');
+  }
+
+  // ─── DATA ───
+  const ORDERS = [
+    {
+      id: 'MKPN0046767',
+      provider_code: 'P00002461',
+      provider_name: 'DISTRIBUIDORA GLOWLEY S.A.',
+      date: '2025-03-22',
+      items: [
+        {
+          code: 'PSN0113426',
+          name: 'TCL 75V6C TV 75" UHD 4K 3840x2160 GOOGLE TV WIFI 5 BT 5.2 USB HDMI 60Hz ISDB-T',
+          qty: 10
+        },
+        {
+          code: 'PSN0113424',
+          name: 'TCL 32S5K TV 32" FHD QLED GOOGLE TV WIFI 4 BT 5.0 USB HDMI 60Hz DVB-T2',
+          qty: 50
+        }
+      ],
+      received: false
+    },
+    {
+      id: 'MKPN0046750',
+      provider_code: 'P00001830',
+      provider_name: 'SAMSUNG PANAMA S.A.',
+      date: '2025-03-21',
+      items: [
+        {
+          code: 'SAM0055901',
+          name: 'SAMSUNG QN85Q70C TV 85" QLED 4K SMART TV WIFI BLUETOOTH 60Hz TIZEN',
+          qty: 6
+        }
+      ],
+      received: false
+    },
+    {
+      id: 'MKPN0046735',
+      provider_code: 'P00003115',
+      provider_name: 'LG ELECTRONICS PANAMA S.A.',
+      date: '2025-03-20',
+      items: [
+        {
+          code: 'LGE0091200',
+          name: 'LG OLED65C3 TV 65" OLED EVO 4K SMART TV WEBOS WIFI BLUETOOTH 120Hz',
+          qty: 8
+        },
+        {
+          code: 'LGE0091185',
+          name: 'LG 50UP7750 TV 50" LED UHD 4K SMART TV WIFI THINQ AI 60Hz',
+          qty: 24
+        }
+      ],
+      received: false
+    }
+  ];
+
+  let selectedOrderId = null;
+  let loading = false;
+
+  // ─── RENDER ORDERS LIST ───
+  function renderOrders() {
+    const container = document.getElementById('orders-list');
+    container.innerHTML = '';
+
+    ORDERS.forEach(order => {
+      const totalItems = order.items.reduce((s, i) => s + i.qty, 0);
+      const isSelected = order.id === selectedOrderId;
+
+      let statusHtml = '';
+      if (order.received) {
+        statusHtml = `<div class="order-status status-received">✓ Recibido</div>`;
+      } else if (isSelected) {
+        statusHtml = `<div class="order-status status-selected">● Seleccionado</div>`;
+      } else {
+        statusHtml = `<div class="order-status status-pending">⏳ Pendiente</div>`;
+      }
+
+      const card = document.createElement('div');
+      card.className = `order-card${isSelected ? ' selected' : ''}${order.received ? ' received' : ''}`;
+      card.dataset.id = order.id;
+      card.innerHTML = `
+        <div class="order-header">
+          <div class="order-id ${order.received ? 'received-id' : ''}">${order.id}</div>
+          ${statusHtml}
+        </div>
+        <div class="order-provider">Proveedor: <span>[${order.provider_code}] ${order.provider_name}</span></div>
+        <div class="order-meta">
+          <div class="order-meta-item">📅 <strong>${order.date}</strong></div>
+          <div class="order-meta-item">📦 <strong>${order.items.length} SKU${order.items.length > 1 ? 's' : ''}</strong></div>
+          <div class="order-meta-item">🔢 <strong>${totalItems} uds.</strong></div>
+        </div>
+      `;
+      if (!order.received) {
+        card.addEventListener('click', () => selectOrder(order.id));
+      }
+      container.appendChild(card);
+    });
+  }
+
+  // ─── SELECT ORDER ───
+  function selectOrder(orderId) {
+    if (selectedOrderId === orderId) {
+      selectedOrderId = null;
+      document.getElementById('detail-panel').style.display = 'none';
+    } else {
+      selectedOrderId = orderId;
+      renderDetailPanel(orderId);
+      document.getElementById('detail-panel').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('detail-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 80);
+    }
+    renderOrders();
+  }
+
+  // ─── RENDER DETAIL PANEL ───
+  function renderDetailPanel(orderId) {
+    const order = ORDERS.find(o => o.id === orderId);
+    if (!order) return;
+
+    const itemsHtml = order.items.map((item, i) => `
+      <div class="item-row">
+        <div class="item-num">${String(i + 1).padStart(2, '0')}</div>
+        <div class="item-info">
+          <div class="item-code">${item.code}</div>
+          <div class="item-name">${item.name}</div>
+          <div class="item-qty">📦 ${item.qty} unidades</div>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('detail-card').innerHTML = `
+      <div class="detail-header">
+        <div>
+          <div class="detail-title">Orden ${order.id}</div>
+          <div class="detail-subtitle">[${order.provider_code}] ${order.provider_name}</div>
+        </div>
+      </div>
+      <div class="items-table">${itemsHtml}</div>
+      <div class="action-area">
+        <button class="btn-receive" id="btn-receive" onclick="receiveOrder('${order.id}')">
+          <span>📥</span> Recepcionar Todo
+        </button>
+      </div>
+    `;
+  }
+
+  // ─── RECEIVE ORDER ───
+  function receiveOrder(orderId) {
+    if (loading) return;
+    loading = true;
+
+    const btn = document.getElementById('btn-receive');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Procesando...';
+
+    // Simulate API call
+    setTimeout(() => {
+      const order = ORDERS.find(o => o.id === orderId);
+      order.received = true;
+      loading = false;
+
+      // Update data
+      renderOrders();
+      document.getElementById('detail-panel').style.display = 'none';
+      selectedOrderId = null;
+
+      // Show modal
+      showConfirmModal(order);
+
+      // Telegram haptic feedback
+      if (tg?.HapticFeedback) {
+        tg.HapticFeedback.notificationOccurred('success');
+      }
+    }, 1800);
+  }
+
+  // ─── SHOW CONFIRM MODAL ───
+  function showConfirmModal(order) {
+    const totalItems = order.items.reduce((s, i) => s + i.qty, 0);
+    const totalSkus = order.items.length;
+
+    document.getElementById('modal-info').innerHTML = `
+      <div class="modal-info-row">
+        <div class="modal-info-label">Orden de Compra</div>
+        <div class="modal-info-value mono">${order.id}</div>
+      </div>
+      <div class="modal-info-row">
+        <div class="modal-info-label">Proveedor</div>
+        <div class="modal-info-value">[${order.provider_code}] ${order.provider_name}</div>
+      </div>
+      <div class="modal-info-row">
+        <div class="modal-info-label">Mercancía recibida</div>
+        <div class="modal-info-value green">${totalSkus} SKU · ${totalItems} unidades totales</div>
+      </div>
+    `;
+
+    document.getElementById('modal-msg').innerHTML =
+      `Orden de compra Id: <strong>${order.id}</strong>, Proveedor: <strong>[${order.provider_code}] ${order.provider_name}</strong>, ha sido recepcionado, <strong>mercancía disponible para la venta.</strong>`;
+
+    document.getElementById('modal-overlay').classList.add('active');
+  }
+
+  // ─── CLOSE MODAL ───
+  function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('active');
+  }
+
+  // Close modal on backdrop click
+  document.getElementById('modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // ─── RIPPLE EFFECT ───
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btn-receive, .btn-close');
+    if (!btn) return;
+    const r = document.createElement('span');
+    r.className = 'ripple';
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
+    btn.appendChild(r);
+    setTimeout(() => r.remove(), 600);
+  });
+
+  // ─── TOAST ───
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // ─── INIT ───
+  renderOrders();
+</script>
+</body>
+</html>
