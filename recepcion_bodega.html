@@ -27,10 +27,12 @@
 }
 
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;font-size:15px;min-height:100vh;overflow-x:hidden}
+html{background:#080a10}
+body{background:#080a10;color:var(--text);font-family:'Syne',sans-serif;font-size:15px;min-height:100vh;overflow-x:hidden;display:flex;justify-content:center;align-items:flex-start}
+#app{width:100%;max-width:430px;min-height:100vh;background:var(--bg);display:flex;flex-direction:column}
 
 /* ── STEP INDICATOR ── */
-.step-bar{background:var(--s1);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:50}
+.step-bar{background:var(--s1);border-bottom:1px solid var(--border);padding:10px 12px;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:50;width:100%}
 .step-dot{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;position:relative}
 .step-dot::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:2px;background:var(--border);z-index:0}
 .step-dot:last-child::after{display:none}
@@ -174,7 +176,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;f
 /* ── SUCCESS MODAL ── */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-bg.open{opacity:1;pointer-events:all}
-.modal{background:var(--s1);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:24px 20px 36px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.modal{background:var(--s1);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:24px 20px 36px;width:100%;max-width:430px;transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
 .modal-bg.open .modal{transform:translateY(0)}
 .mhandle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 20px}
 .micon{width:68px;height:68px;border-radius:50%;background:rgba(0,229,176,0.1);border:2px solid rgba(0,229,176,0.4);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 14px;animation:popIn .4s cubic-bezier(.34,1.56,.64,1) .1s both}
@@ -200,6 +202,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;f
 </style>
 </head>
 <body>
+<div id="app">
 
 <!-- STEP BAR -->
 <div class="step-bar" id="step-bar">
@@ -497,7 +500,52 @@ let diffType  = 'none';
 let rackVal   = '01.0101';
 
 // ─── STEP NAVIGATION ───
+// ─── VALIDATION ───
+function serialsDone(){
+  if(!curOrder) return true;
+  return curOrder.items.every(i => !i.serialized || i.serials.length >= i.qty);
+}
+function serialsStatus(){
+  if(!curOrder) return {ok:0,total:0,pending:[]};
+  const pending = curOrder.items.filter(i=>i.serialized && i.serials.length < i.qty);
+  const ok = curOrder.items.filter(i=>!i.serialized || i.serials.length >= i.qty).length;
+  return {ok, total:curOrder.items.length, pending};
+}
+function showValidationAlert(msg){
+  const existing = document.getElementById('val-alert');
+  if(existing) existing.remove();
+  const el = document.createElement('div');
+  el.id = 'val-alert';
+  el.style.cssText = 'position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#1a1e2a;border:1.5px solid rgba(255,77,109,0.5);color:#ff4d6d;font-size:13px;font-weight:600;padding:11px 18px;border-radius:10px;z-index:300;text-align:center;max-width:340px;width:90%;box-shadow:0 4px 20px rgba(0,0,0,0.5);line-height:1.4';
+  el.innerHTML = msg;
+  document.body.appendChild(el);
+  if(window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+  setTimeout(()=>el.remove(), 3500);
+}
+
 function goStep(n){
+  // Block going forward past step 2 without completing series
+  if(n > 2 && n !== 3 && curOrder){
+    const st = serialsStatus();
+    if(!serialsDone()){
+      const names = st.pending.map(i=>'<br>· '+i.code+' ('+i.serials.length+'/'+i.qty+')').join('');
+      showValidationAlert('⚠️ Faltan series por registrar:'+names);
+      // highlight pending items
+      st.pending.forEach(item=>{
+        const idx = curOrder.items.indexOf(item);
+        const badge = document.getElementById('serbadge-'+idx);
+        if(badge){ badge.style.borderColor='var(--danger)'; badge.style.color='var(--danger)'; badge.style.background='rgba(255,77,109,0.12)';
+          setTimeout(()=>{ badge.style.borderColor=''; badge.style.color=''; badge.style.background=''; },3000);
+        }
+      });
+      return;
+    }
+  }
+  // Block closing OC without series
+  if(n === 6 && curOrder && !serialsDone()){
+    showValidationAlert('⚠️ No puedes cerrar la orden sin registrar todas las series.');
+    return;
+  }
   curStep = n;
   [1,2,3,4,5,6].forEach(i=>{
     document.getElementById('s'+i).classList.toggle('active',i===n);
@@ -509,8 +557,28 @@ function goStep(n){
   window.scrollTo({top:0,behavior:'smooth'});
   if(n===4) buildDiffSummary();
   if(n===6) buildSummary();
+  if(n===2) updateContinueBtn();
 }
 function goBack(n){goStep(n)}
+
+function updateContinueBtn(){
+  const btn = document.getElementById('btn-to-diff');
+  if(!btn || !curOrder) return;
+  const done = serialsDone();
+  const st = serialsStatus();
+  if(done){
+    btn.disabled = false;
+    btn.innerHTML = 'Continuar →';
+    btn.className = btn.className.replace('btn-ghost','') + ' btn-primary';
+  } else {
+    btn.disabled = false; // allow click so validation message shows
+    btn.innerHTML = '⚠️ Faltan series en ' + st.pending.length + ' ítem(s) — continuar igual';
+    btn.style.background = 'rgba(245,166,35,0.12)';
+    btn.style.border = '1.5px solid rgba(245,166,35,0.4)';
+    btn.style.color = 'var(--warn)';
+    btn.style.boxShadow = 'none';
+  }
+}
 
 // ─── SCREEN 1: ORDER LIST ───
 function renderOrders(){
@@ -578,6 +646,7 @@ function renderItems(){
     card.appendChild(row);
   });
   c.appendChild(card);
+  updateContinueBtn();
 }
 
 // ─── SCREEN 3: SERIALS ───
@@ -900,7 +969,7 @@ function clearSerials(){
 
 function confirmSerials(){
   curOrder.items[curItemIdx].serials = [...activeSerials];
-  renderItems();
+  renderItems(); // also calls updateContinueBtn
   goStep(2);
   if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 }
@@ -976,6 +1045,12 @@ function buildSummary(){
 
 // ─── CLOSE OC ───
 function closeOC(){
+  if(!serialsDone()){
+    const st = serialsStatus();
+    const names = st.pending.map(i=>'\n· '+i.code+' ('+i.serials.length+'/'+i.qty+')').join('');
+    showValidationAlert('🔒 No se puede cerrar.<br>Faltan series por registrar.');
+    return;
+  }
   const btn=document.getElementById('btn-close-oc');
   btn.disabled=true;
   btn.innerHTML='<div class="spin"></div> Procesando...';
@@ -1013,5 +1088,6 @@ document.getElementById('modal').addEventListener('click',function(e){if(e.targe
 // ─── INIT ───
 renderOrders();
 </script>
+</div>
 </body>
 </html>
