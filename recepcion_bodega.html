@@ -781,36 +781,54 @@ IMPORTANTE: Tu respuesta debe empezar con { y terminar con }`
       })
     });
 
-    const data = await response.json();
-    const rawText = data.content?.map(c=>c.text||'').join('').trim();
+    let data, rawText;
+    try {
+      data = await response.json();
+    } catch(e) {
+      throw new Error('El Worker no devolvió JSON válido. Status: ' + response.status);
+    }
+
+    // Si el Worker devolvió un error propio
+    if(data.error){
+      throw new Error('Worker error: ' + data.error);
+    }
+
+    // Extraer texto de la respuesta de Claude
+    if(data.content && Array.isArray(data.content)){
+      rawText = data.content.map(c => c.text || '').join('').trim();
+    } else if(data.type === 'error'){
+      throw new Error('API error: ' + (data.error?.message || JSON.stringify(data)));
+    } else {
+      throw new Error('Respuesta inesperada del API: ' + JSON.stringify(data).slice(0,120));
+    }
+
+    if(!rawText){
+      throw new Error('La IA no devolvió texto. Intenta de nuevo.');
+    }
 
     let parsed;
+    // Intento 1: buscar bloque JSON { } en el texto
     try {
-      // Intento 1: buscar bloque JSON dentro del texto (entre { } )
       const jsonMatch = rawText.match(/\{[\s\S]*\}/);
       if(jsonMatch){
-        const clean = jsonMatch[0].replace(/```json|```/g,'').trim();
-        parsed = JSON.parse(clean);
+        parsed = JSON.parse(jsonMatch[0].replace(/```json|```/g,'').trim());
       } else {
-        throw new Error('no json block');
+        throw new Error('no json');
       }
     } catch(e) {
-      // Intento 2: extraer series línea por línea del texto plano
-      // busca patrones alfanuméricos con - _ / % de al menos 4 chars
-      const lines = rawText.split(/[\n,;]+/);
+      // Intento 2: extraer series línea por línea
+      const lines = rawText.split(/[
+,;]+/);
       const found = [];
       lines.forEach(line => {
-        const trimmed = line.trim().replace(/^[-•*·\d]+[.)\s]+/, ''); // quita bullets/numeración
-        // serie válida: al menos 4 chars, alfanumérico con especiales permitidos
+        const trimmed = line.trim().replace(/^[-•*·\d]+[.)\s]+/, '');
         if(trimmed.length >= 4 && /^[A-Za-z0-9][A-Za-z0-9\-_\/%.]{3,}$/.test(trimmed)){
           found.push(trimmed);
         }
       });
-      if(found.length > 0){
-        parsed = { series: found, nota: 'Extraído de texto plano' };
-      } else {
-        parsed = { series: [], nota: 'No se detectaron series en la imagen. Intenta enfocar mejor el texto.' };
-      }
+      parsed = found.length > 0
+        ? { series: found, nota: 'Extraído de texto plano' }
+        : { series: [], nota: 'No se detectaron series. Intenta con otra foto más nítida.' };
     }
 
     document.getElementById('cam-analyzing').style.display = 'none';
