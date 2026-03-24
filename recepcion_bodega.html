@@ -281,26 +281,69 @@ html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;f
 
     <!-- TABS -->
     <div class="import-tabs">
-      <button class="itab active" id="tab-paste" onclick="setTab('paste')">📋 Pegar texto</button>
-      <button class="itab" id="tab-scan"  onclick="setTab('scan')">📷 Escanear</button>
+      <button class="itab active" id="tab-paste" onclick="setTab('paste')">📋 Pegar</button>
+      <button class="itab" id="tab-cam"   onclick="setTab('cam')">📷 IA Foto</button>
+      <button class="itab" id="tab-scan"  onclick="setTab('scan')">⌨️ Manual</button>
       <button class="itab" id="tab-file"  onclick="setTab('file')">📄 Archivo</button>
     </div>
 
     <!-- TAB: PEGAR -->
     <div class="import-body" id="body-paste">
-      <div class="hint">Pega las series desde <strong>WhatsApp, Excel, chat o email</strong>. Una por línea, coma, punto y coma o espacio. Acepta guiones, barras, porcentajes y caracteres especiales.</div>
+      <div class="hint">Pega las series desde <strong>WhatsApp, Excel, chat o email</strong>. Una por línea, coma, punto y coma o espacio. Acepta - _ / % y caracteres especiales.</div>
       <textarea class="stextarea" id="ta-paste" rows="4" placeholder="SN-ABC123&#10;SN_DEF456/01&#10;SN%789-XYZ&#10;..."></textarea>
       <button class="btn btn-primary btn-sm" onclick="importFromPaste()">Importar series</button>
     </div>
 
-    <!-- TAB: ESCANEAR -->
+    <!-- TAB: CÁMARA IA -->
+    <div class="import-body" id="body-cam" style="display:none">
+      <div class="hint">Toma <strong>una o varias fotos</strong> de etiquetas, cajas o documentos. La IA extrae todas las series automáticamente y las acumula.</div>
+
+      <!-- preview de fotos tomadas -->
+      <div id="cam-photos-wrap" style="display:none;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span class="lbl">Fotos cargadas</span>
+          <button class="btn btn-ghost btn-sm" style="width:auto;padding:5px 10px;font-size:11px" onclick="clearPhotos()">Limpiar fotos</button>
+        </div>
+        <div id="cam-thumbs" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+      </div>
+
+      <!-- estado de análisis -->
+      <div id="cam-analyzing" style="display:none;flex-direction:column;align-items:center;gap:10px;padding:18px 0">
+        <div class="spin" style="border-top-color:var(--acc);border-color:rgba(77,124,254,0.25);width:28px;height:28px;border-width:3px"></div>
+        <div style="font-size:13px;color:var(--text2)" id="cam-status">Analizando imagen con IA...</div>
+        <div style="font-size:11px;color:var(--text3)" id="cam-substatus">Detectando números de serie</div>
+      </div>
+
+      <!-- resultado de última foto -->
+      <div id="cam-result" style="display:none;flex-direction:column;gap:8px">
+        <div class="info-box" id="cam-result-msg"></div>
+        <div id="cam-detected-list" style="display:flex;flex-direction:column;gap:4px"></div>
+        <button class="btn btn-primary btn-sm" id="btn-add-detected" onclick="addDetectedSerials()">✓ Agregar estas series</button>
+      </div>
+
+      <!-- botones de acción -->
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-primary" style="flex:1" onclick="document.getElementById('cam-input').click()">
+          📷 Tomar / Subir foto
+        </button>
+        <button class="btn btn-ghost btn-sm" style="width:auto;padding:9px 14px" onclick="document.getElementById('cam-input-gallery').click()">
+          🖼️ Galería
+        </button>
+      </div>
+      <input type="file" id="cam-input" accept="image/*" capture="environment" onchange="analyzePhoto(this)" style="display:none">
+      <input type="file" id="cam-input-gallery" accept="image/*" multiple onchange="analyzePhotos(this)" style="display:none">
+
+      <div class="hint" style="margin-top:4px">Funciona con etiquetas, cajas, listas impresas, pantallas. Puedes tomar <strong>múltiples fotos</strong> — las series se acumulan.</div>
+    </div>
+
+    <!-- TAB: MANUAL/SCANNER -->
     <div class="import-body" id="body-scan" style="display:none">
-      <div class="hint">Escanea o escribe una serie y presiona <strong>Agregar</strong>. El campo se limpia solo para el siguiente.</div>
+      <div class="hint">Escanea con lector de código de barras o escribe manualmente. Presiona <strong>Enter</strong> o el botón + para agregar.</div>
       <div style="display:flex;gap:8px">
         <input class="finput" id="scan-input" type="text" placeholder="Ej: SN-ABC123/01" autocomplete="off" autocorrect="off" spellcheck="false" style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:13px">
         <button class="btn btn-primary btn-sm" style="width:auto;padding:9px 16px" onclick="addFromScan()">+</button>
       </div>
-      <div class="hint">El campo acepta cualquier carácter: <strong>- _ / % letras y números</strong></div>
+      <div class="hint">Acepta cualquier carácter: <strong>- _ / % letras y números</strong></div>
     </div>
 
     <!-- TAB: ARCHIVO -->
@@ -311,7 +354,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;f
         <small>Excel (.xlsx, .xls), CSV o TXT · una serie por fila</small>
       </div>
       <input type="file" id="file-input" accept=".xlsx,.xls,.csv,.txt" onchange="handleFile(this)">
-      <div class="hint">Si el archivo tiene varias columnas, la app detecta automáticamente la columna con las series.</div>
+      <div class="hint">Si el archivo tiene varias columnas, la app detecta la columna de series automáticamente.</div>
     </div>
 
     <!-- LISTA DE SERIES -->
@@ -555,14 +598,180 @@ function openSerials(idx){
 }
 
 function setTab(t){
-  ['paste','scan','file'].forEach(x=>{
-    document.getElementById('tab-'+x).classList.toggle('active',x===t);
-    document.getElementById('body-'+x).style.display = x===t?'flex':'none';
-    if(document.getElementById('body-'+x).style.display==='flex'){
-      document.getElementById('body-'+x).style.flexDirection='column';
+  ['paste','cam','scan','file'].forEach(x=>{
+    const tab = document.getElementById('tab-'+x);
+    if(tab) tab.classList.toggle('active',x===t);
+    const body = document.getElementById('body-'+x);
+    if(body){
+      body.style.display = x===t?'flex':'none';
+      if(x===t) body.style.flexDirection='column';
     }
   });
   if(t==='scan') setTimeout(()=>document.getElementById('scan-input').focus(),100);
+}
+
+// ── AI VISION CAMERA ──
+let pendingDetected = [];
+let photoCount = 0;
+
+function clearPhotos(){
+  photoCount = 0;
+  pendingDetected = [];
+  document.getElementById('cam-thumbs').innerHTML = '';
+  document.getElementById('cam-photos-wrap').style.display = 'none';
+  document.getElementById('cam-result').style.display = 'none';
+  document.getElementById('cam-analyzing').style.display = 'none';
+}
+
+function analyzePhoto(input){
+  if(!input.files[0]) return;
+  processImageFiles([input.files[0]]);
+  input.value = '';
+}
+
+function analyzePhotos(input){
+  if(!input.files.length) return;
+  processImageFiles(Array.from(input.files));
+  input.value = '';
+}
+
+async function processImageFiles(files){
+  // Show analyzing state
+  document.getElementById('cam-result').style.display = 'none';
+  document.getElementById('cam-analyzing').style.display = 'flex';
+  document.getElementById('cam-analyzing').style.flexDirection = 'column';
+
+  // Add thumbnails
+  const thumbsWrap = document.getElementById('cam-photos-wrap');
+  const thumbs = document.getElementById('cam-thumbs');
+  thumbsWrap.style.display = 'flex';
+  thumbsWrap.style.flexDirection = 'column';
+
+  const base64Images = [];
+  for(const file of files){
+    photoCount++;
+    // thumbnail
+    const reader = new FileReader();
+    const b64 = await new Promise(res=>{ reader.onload=e=>res(e.target.result); reader.readAsDataURL(file); });
+    const img = document.createElement('img');
+    img.src = b64;
+    img.style.cssText = 'width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--border)';
+    thumbs.appendChild(img);
+    // extract base64 data only
+    base64Images.push({ data: b64.split(',')[1], media_type: file.type || 'image/jpeg' });
+  }
+
+  document.getElementById('cam-status').textContent = files.length > 1
+    ? `Analizando ${files.length} imágenes con IA...`
+    : 'Analizando imagen con IA...';
+  document.getElementById('cam-substatus').textContent = 'Buscando números de serie y códigos...';
+
+  try {
+    const item = curOrder.items[curItemIdx];
+    const contentParts = base64Images.map(img=>({
+      type: 'image',
+      source: { type: 'base64', media_type: img.media_type, data: img.data }
+    }));
+    contentParts.push({
+      type: 'text',
+      text: `Eres un asistente de bodega. Analiza ${files.length > 1 ? 'estas imágenes' : 'esta imagen'} y extrae TODOS los números de serie que veas.
+
+Contexto: estoy recepcionando el producto "${item.name}" (código ${item.code}). Necesito ${item.qty} series.
+
+Los números de serie pueden contener: letras, números, guiones (-), guiones bajos (_), barras (/), porcentajes (%) y otros caracteres especiales.
+
+Responde ÚNICAMENTE con un JSON válido en este formato exacto, sin texto adicional:
+{"series": ["SERIE1", "SERIE2", "SERIE3"], "nota": "descripción breve de lo que viste en la imagen"}
+
+Si no encuentras series, responde: {"series": [], "nota": "No se detectaron números de serie"}`
+    });
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: contentParts }]
+      })
+    });
+
+    const data = await response.json();
+    const rawText = data.content?.map(c=>c.text||'').join('').trim();
+
+    let parsed;
+    try {
+      const clean = rawText.replace(/```json|```/g,'').trim();
+      parsed = JSON.parse(clean);
+    } catch(e) {
+      // fallback: try to extract series manually
+      parsed = { series: [], nota: 'No se pudo parsear la respuesta de IA.' };
+    }
+
+    document.getElementById('cam-analyzing').style.display = 'none';
+
+    pendingDetected = parsed.series || [];
+    const nota = parsed.nota || '';
+
+    const resultEl = document.getElementById('cam-result');
+    resultEl.style.display = 'flex';
+    resultEl.style.flexDirection = 'column';
+
+    const msgEl = document.getElementById('cam-result-msg');
+    if(pendingDetected.length > 0){
+      msgEl.innerHTML = `🤖 IA detectó <strong>${pendingDetected.length} serie${pendingDetected.length>1?'s':''}</strong>${nota?' · '+nota:''}`;
+      msgEl.style.borderColor = 'rgba(0,229,176,0.3)';
+      msgEl.style.background = 'rgba(0,229,176,0.07)';
+    } else {
+      msgEl.innerHTML = `⚠️ No se detectaron series. ${nota} Intenta con otra foto más nítida.`;
+      msgEl.style.borderColor = 'rgba(245,166,35,0.3)';
+      msgEl.style.background = 'rgba(245,166,35,0.07)';
+    }
+
+    const detList = document.getElementById('cam-detected-list');
+    detList.innerHTML = '';
+    pendingDetected.forEach(s=>{
+      const already = activeSerials.includes(s);
+      const div = document.createElement('div');
+      div.className = 'sitem' + (already?' invalid':' valid');
+      div.innerHTML = `<div class="sitem-code">${s}</div>${already?'<div style="font-size:10px;color:var(--warn);flex-shrink:0">ya existe</div>':''}`;
+      detList.appendChild(div);
+    });
+
+    const btnAdd = document.getElementById('btn-add-detected');
+    const newOnes = pendingDetected.filter(s=>!activeSerials.includes(s));
+    if(newOnes.length > 0){
+      btnAdd.style.display = 'flex';
+      btnAdd.textContent = `✓ Agregar ${newOnes.length} serie${newOnes.length>1?'s':''} nuevas`;
+    } else if(pendingDetected.length > 0){
+      btnAdd.style.display = 'flex';
+      btnAdd.textContent = 'Todas ya están registradas';
+      btnAdd.disabled = true;
+    } else {
+      btnAdd.style.display = 'none';
+    }
+
+    if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred(pendingDetected.length>0?'success':'warning');
+
+  } catch(err) {
+    document.getElementById('cam-analyzing').style.display = 'none';
+    const resultEl = document.getElementById('cam-result');
+    resultEl.style.display = 'flex';
+    resultEl.style.flexDirection = 'column';
+    document.getElementById('cam-result-msg').innerHTML = `❌ Error al conectar con la IA: ${err.message}. Verifica tu conexión.`;
+    document.getElementById('cam-detected-list').innerHTML = '';
+    document.getElementById('btn-add-detected').style.display = 'none';
+  }
+}
+
+function addDetectedSerials(){
+  const newOnes = pendingDetected.filter(s=>!activeSerials.includes(s));
+  newOnes.forEach(s=>activeSerials.push(s));
+  pendingDetected = [];
+  document.getElementById('cam-result').style.display = 'none';
+  document.getElementById('btn-add-detected').disabled = false;
+  renderSerialList();
+  if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 }
 
 // Parse serials from any raw text: split by newline, comma, semicolon, tab or multiple spaces
