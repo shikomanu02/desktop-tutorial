@@ -262,7 +262,7 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
     <div class="lbl">Motivo del servicio <span style="color:var(--danger)">*</span></div>
     <div class="motivos-grid" id="motivos-grid"></div>
     
-    <!-- Sección de Equipo (se muestra solo si se selecciona Soporte o Reemplazo) -->
+    <!-- Sección de Equipo (se muestra solo si se selecciona Soporte/Reemplazo) -->
     <div id="equipment-section" style="display:none">
       <div class="lbl">Equipo a evaluar</div>
       <div class="equipment-card">
@@ -394,7 +394,7 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
   </div>
 </div>
 
-<!-- CONTENIDO TAREAS -->
+<!-- CONTENIDO TAREAS - AHORA CON VISUALIZACIÓN CLARA -->
 <div id="tab-tareas" class="tab-content">
   <div class="header">
     <div>
@@ -403,9 +403,7 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
     </div>
     <div class="header-badge">En progreso</div>
   </div>
-  <div style="padding:14px">
-    <div id="tasks-list"></div>
-  </div>
+  <div style="padding:14px" id="tasks-container"></div>
 </div>
 
 <!-- MODAL CLIENTE -->
@@ -447,7 +445,52 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
 const tg = window.Telegram?.WebApp;
 if(tg){ tg.ready(); tg.expand(); tg.setHeaderColor('#45c3f4'); tg.setBackgroundColor('#f4fcff'); }
 
-// ── DATA ──
+// ── TAREAS DE PROYECTOS (DATOS DE EJEMPLO) ──
+const TAREAS = [
+  {
+    id:'TASK-001',
+    titulo:'Instalación Central Telefónica',
+    descripcion:'Instalación y configuración de central telefónica IP para 50 extensiones. Incluye cableado estructurado, configuración de troncales SIP y pruebas de funcionamiento.',
+    prioridad:'high',
+    progreso:65,
+    proyecto:'PRY-2024-0102',
+    responsable:'Carlos Mendoza',
+    fechaLimite:'2025-04-10',
+    subtareas:['Instalar rack y equipamiento', 'Cableado de 50 puntos', 'Configurar central telefónica', 'Pruebas de llamadas']
+  },
+  {
+    id:'TASK-002',
+    titulo:'Migración Servidores Core',
+    descripcion:'Migración de servidores virtuales a nueva infraestructura. Involucra 8 servidores físicos, migración de VMs y validación de servicios críticos.',
+    prioridad:'medium',
+    progreso:30,
+    proyecto:'PRY-2024-0042',
+    responsable:'Ana Rodríguez',
+    fechaLimite:'2025-04-25',
+    subtareas:['Backup de servidores existentes', 'Configurar nuevo cluster', 'Migrar VMs por fase', 'Validar servicios post-migración']
+  },
+  {
+    id:'TASK-003',
+    titulo:'Cableado Estructurado - Sede Central',
+    descripcion:'Instalación de cableado categoría 6A para 120 puntos de red. Incluye canaletas, patch panels y certificación de cableado.',
+    prioridad:'medium',
+    progreso:45,
+    proyecto:'PRY-2024-0098',
+    responsable:'Ricardo Pérez',
+    fechaLimite:'2025-04-18',
+    subtareas:['Levantamiento de planos', 'Instalación de canaletas', 'Tendido de cableado', 'Certificación de puntos']
+  }
+];
+
+// ── STOCK DISPONIBLE PARA REEMPLAZO ──
+const STOCK_EQUIPOS = [
+  { id:'STK-001', nombre:'Servidor Dell PowerEdge T160', serie:'SN-DELL-001', estado:'Disponible', ubicacion:'Bodega Principal' },
+  { id:'STK-002', nombre:'Switch Cisco Catalyst 2960', serie:'SN-CISCO-002', estado:'Disponible', ubicacion:'Bodega Principal' },
+  { id:'STK-003', nombre:'Router MikroTik RB4011', serie:'SN-MIK-003', estado:'En préstamo', ubicacion:'Cliente ABC' },
+  { id:'STK-004', nombre:'Firewall Fortinet 60F', serie:'SN-FORT-004', estado:'Disponible', ubicacion:'Bodega Secundaria' }
+];
+
+// ── DATOS CLIENTES Y CASOS ──
 const CLIENTES = {
   'MC0035': { id:'MC0035', nombre:'TELECOMUNICACIONES DIGITALES', email:'atencion.proveedor.pa@tigo.com.pa', tel:'390-7600', contacto:'MELISSA ARAUZ', direccion:'AVENIDA 12 DE OCTUBRE', ciudad:'Panamá' },
   'MC0041': { id:'MC0041', nombre:'BANCO GENERAL S.A.', email:'soporte.ti@bancogeneral.com', tel:'303-0303', contacto:'CARLOS MIRANDA', direccion:'VÍA ESPAÑA, EDIFICIO BANCO GENERAL', ciudad:'Panamá' },
@@ -472,66 +515,6 @@ const CASOS = [
   }
 ];
 
-// TAREAS DE PROYECTOS
-const TAREAS = [
-  {
-    id:'TASK-001',
-    titulo:'Instalación Central Telefónica',
-    descripcion:'Instalación y configuración de central telefónica IP para 50 extensiones. Incluye cableado estructurado, configuración de troncales SIP y pruebas de funcionamiento.',
-    prioridad:'high',
-    progreso:65,
-    proyecto:'PRY-2024-0102',
-    responsable:'Carlos Mendoza',
-    fechaLimite:'2025-04-10',
-    subtareas:[
-      'Instalar rack y equipamiento',
-      'Cableado de 50 puntos',
-      'Configurar central telefónica',
-      'Pruebas de llamadas'
-    ]
-  },
-  {
-    id:'TASK-002',
-    titulo:'Migración Servidores Core',
-    descripcion:'Migración de servidores virtuales a nueva infraestructura. Involucra 8 servidores físicos, migración de VMs y validación de servicios críticos.',
-    prioridad:'medium',
-    progreso:30,
-    proyecto:'PRY-2024-0042',
-    responsable:'Ana Rodríguez',
-    fechaLimite:'2025-04-25',
-    subtareas:[
-      'Backup de servidores existentes',
-      'Configurar nuevo cluster',
-      'Migrar VMs por fase',
-      'Validar servicios post-migración'
-    ]
-  },
-  {
-    id:'TASK-003',
-    titulo:'Cableado Estructurado - Sede Central',
-    descripcion:'Instalación de cableado categoría 6A para 120 puntos de red. Incluye canaletas, patch panels y certificación de cableado.',
-    prioridad:'medium',
-    progreso:45,
-    proyecto:'PRY-2024-0098',
-    responsable:'Ricardo Pérez',
-    fechaLimite:'2025-04-18',
-    subtareas:[
-      'Levantamiento de planos',
-      'Instalación de canaletas',
-      'Tendido de cableado',
-      'Certificación de puntos'
-    ]
-  }
-];
-
-// STOCK DISPONIBLE PARA REEMPLAZO
-const STOCK_EQUIPOS = [
-  { id:'STK-001', nombre:'Servidor Dell PowerEdge T160', serie:'SN-DELL-001', estado:'Disponible', ubicacion:'Bodega Principal' },
-  { id:'STK-002', nombre:'Switch Cisco Catalyst 2960', serie:'SN-CISCO-002', estado:'Disponible', ubicacion:'Bodega Principal' },
-  { id:'STK-003', nombre:'Router MikroTik RB4011', serie:'SN-MIK-003', estado:'En préstamo', ubicacion:'Cliente ABC' },
-  { id:'STK-004', nombre:'Firewall Fortinet 60F', serie:'SN-FORT-004', estado:'Disponible', ubicacion:'Bodega Secundaria' }
-];
-
 const MOTIVOS = [
   'Levantamiento de Información (Survey)',
   'Instalación (Software)',
@@ -549,23 +532,29 @@ let motivosSeleccionados = new Set();
 let diagnosticoSeleccionado = null;
 let stockSeleccionado = null;
 
-// ── TABS ──
+// ── FUNCIÓN PARA CAMBIAR ENTRE PESTAÑAS ──
 function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+  const tabCasos = document.getElementById('tab-casos');
+  const tabTareas = document.getElementById('tab-tareas');
+  const btns = document.querySelectorAll('.tab-btn');
   
   if(tab === 'casos') {
-    document.querySelector('.tab-btn:first-child').classList.add('active');
-    document.getElementById('tab-casos').classList.add('active');
+    btns[0].classList.add('active');
+    btns[1].classList.remove('active');
+    tabCasos.classList.add('active');
+    tabTareas.classList.remove('active');
   } else {
-    document.querySelector('.tab-btn:last-child').classList.add('active');
-    document.getElementById('tab-tareas').classList.add('active');
-    renderTasks();
+    btns[0].classList.remove('active');
+    btns[1].classList.add('active');
+    tabCasos.classList.remove('active');
+    tabTareas.classList.add('active');
+    renderTasks(); // Renderizar tareas al cambiar a la pestaña
   }
 }
 
+// ── RENDERIZAR TAREAS ──
 function renderTasks() {
-  const container = document.getElementById('tasks-list');
+  const container = document.getElementById('tasks-container');
   if(!container) return;
   container.innerHTML = '';
   
@@ -597,7 +586,7 @@ function renderTasks() {
 }
 
 function showTaskDetail(task) {
-  const subtasksHtml = task.subtareas.map(st => `✓ ${st}`).join('<br>');
+  const subtasksHtml = task.subtareas.map(st => `✓ ${st}`).join('\n');
   alert(`📋 ${task.titulo}\n\n${task.descripcion}\n\nProyecto: ${task.proyecto}\nResponsable: ${task.responsable}\nFecha límite: ${task.fechaLimite}\nProgreso: ${task.progreso}%\n\nSubtareas:\n${subtasksHtml}`);
 }
 
@@ -665,7 +654,6 @@ function openCase(id){
   if(tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 }
 
-// ── S2: CLIENT CARD ──
 function renderClientCard(){
   const cl = CLIENTES[curCase.clienteId];
   document.getElementById('client-card').innerHTML = `
@@ -696,7 +684,6 @@ function renderOriginCard(){
     </div>`;
 }
 
-// ── S3: MOTIVOS ──
 function renderMotivos(){
   const grid = document.getElementById('motivos-grid');
   if(!grid) return;
@@ -715,7 +702,6 @@ function toggleMotivo(m){
   else motivosSeleccionados.add(m);
   renderMotivos();
   
-  // Mostrar sección de equipo si se selecciona Soporte/Reemplazo
   const showEquipment = motivosSeleccionados.has('Soporte / Reemplazo');
   const equipmentSection = document.getElementById('equipment-section');
   if(equipmentSection) equipmentSection.style.display = showEquipment ? 'block' : 'none';
@@ -770,7 +756,6 @@ function validateS3(){
     return;
   }
   
-  // Validar datos de equipo si se seleccionó Soporte/Reemplazo
   if(motivosSeleccionados.has('Soporte / Reemplazo')) {
     if(!document.getElementById('equipo-modelo').value.trim()){
       alert('Por favor ingresa el modelo del equipo a evaluar.');
@@ -789,7 +774,6 @@ function validateS3(){
   goStep(4);
 }
 
-// ── S5: QR ──
 function generateQR(){
   goStep(5);
   const cl = CLIENTES[curCase.clienteId];
@@ -820,7 +804,6 @@ function generateQR(){
   });
 }
 
-// ── CLIENT MODAL ──
 function simulateClientSign(){
   resultadoCliente = null;
   document.getElementById('client-nombre').value = '';
@@ -858,7 +841,6 @@ function confirmClientSign(){
   document.getElementById('client-modal').classList.remove('open');
   
   const requiereReemplazo = diagnosticoSeleccionado === 'replace';
-  const isCompleto = resultadoCliente === 'completo' && !requiereReemplazo;
   
   curCase.atendido = true;
   curCase.resultado = resultadoCliente;
@@ -878,12 +860,12 @@ function confirmClientSign(){
       <div class="info-row"><div class="info-key">Fecha/Hora</div><div class="info-val">${new Date().toLocaleString('es-PA')}</div></div>
     </div>`;
   
-  document.getElementById('resultado-card').className = 'resultado-card ' + (requiereReemplazo ? 'parcial' : (isCompleto?'completo':'parcial'));
-  document.getElementById('resultado-icon').textContent = requiereReemplazo ? '🔄' : (isCompleto ? '✅' : '⚠️');
-  document.getElementById('resultado-title').textContent = requiereReemplazo ? 'Reemplazo Pendiente' : (isCompleto ? 'Caso Atendido Completo' : 'Caso Atendido Parcial');
+  document.getElementById('resultado-card').className = 'resultado-card ' + (requiereReemplazo ? 'parcial' : (resultadoCliente==='completo'?'completo':'parcial'));
+  document.getElementById('resultado-icon').textContent = requiereReemplazo ? '🔄' : (resultadoCliente==='completo' ? '✅' : '⚠️');
+  document.getElementById('resultado-title').textContent = requiereReemplazo ? 'Reemplazo Pendiente' : (resultadoCliente==='completo' ? 'Caso Atendido Completo' : 'Caso Atendido Parcial');
   document.getElementById('resultado-sub').textContent = requiereReemplazo
     ? 'Se requiere coordinar una segunda visita para el reemplazo del equipo.'
-    : (isCompleto
+    : (resultadoCliente==='completo'
       ? 'El cliente confirmó que el servicio fue completado satisfactoriamente.'
       : 'El servicio fue atendido de forma parcial. Se requiere seguimiento.');
   
@@ -892,10 +874,9 @@ function confirmClientSign(){
   
   renderCases();
   goStep(6);
-  if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred(requiereReemplazo ? 'warning' : (isCompleto?'success':'warning'));
+  if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred(requiereReemplazo ? 'warning' : (resultadoCliente==='completo'?'success':'warning'));
 }
 
-// ── FOTO ADJUNTA ──
 let fotoAdjunta = null;
 let fotoS3 = null;
 
@@ -968,6 +949,7 @@ function showToast(msg, tipo){
 
 document.getElementById('client-modal')?.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
 
+// ── INICIALIZAR ──
 renderCases();
 renderTasks();
 
