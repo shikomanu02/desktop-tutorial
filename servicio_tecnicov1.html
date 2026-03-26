@@ -7,219 +7,570 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
-:root{
-  --bg:#f4fcff;--s1:#ffffff;--s2:#edf9fe;--s3:#d8f2fc;
-  --border:#b8e6f8;--border2:#8dd6f2;
-  --acc:#45c3f4;--acc2:#1cae48;--acc3:#1cae48;
-  --warn:#d4820a;--danger:#e03030;
-  --text:#0a1a1f;--text2:#3a6070;--text3:#7aaabb;
-  --r:12px;--r-sm:8px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{background:#cceeff}
-body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;min-height:100vh;overflow-x:hidden;display:flex;justify-content:center;align-items:flex-start}
-#app{width:100%;max-width:430px;min-height:100vh;background:var(--bg);display:flex;flex-direction:column}
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: #cceeff;
+  color: #0a1a1f;
+}
+
+#app {
+  max-width: 430px;
+  margin: 0 auto;
+  background: #f4fcff;
+  min-height: 100vh;
+}
 
 /* TABS */
-.tabs-container{background:var(--s1);border-bottom:2px solid var(--border);padding:0 12px;display:flex;gap:4px;position:sticky;top:0;z-index:45}
-.tab-btn{flex:1;padding:12px 8px;background:none;border:none;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;color:var(--text3);cursor:pointer;transition:all .2s;border-bottom:3px solid transparent}
-.tab-btn.active{color:var(--acc);border-bottom-color:var(--acc)}
-.tab-content{display:none}
-.tab-content.active{display:block}
-
-/* STEP BAR */
-.step-bar{background:var(--s1);border-bottom:2px solid var(--border);padding:10px 12px;display:flex;align-items:center;position:sticky;top:0;z-index:50;width:100%}
-.step-dot{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;position:relative}
-.step-dot::after{content:'';position:absolute;top:12px;left:50%;width:100%;height:2px;background:var(--border);z-index:0}
-.step-dot:last-child::after{display:none}
-.step-circle{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text3);position:relative;z-index:1}
-.step-dot.active .step-circle{border-color:var(--acc);background:rgba(69,195,244,.15);color:#0a8ab8}
-.step-dot.done .step-circle{border-color:var(--acc2);background:rgba(28,174,72,.12);color:#158a38}
-.step-label{font-size:8px;color:var(--text3);font-weight:600;text-transform:uppercase}
+.tabs {
+  display: flex;
+  background: white;
+  border-bottom: 2px solid #b8e6f8;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.tab {
+  flex: 1;
+  padding: 14px;
+  text-align: center;
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 15px;
+  color: #7aaabb;
+  border-bottom: 3px solid transparent;
+}
+.tab.active {
+  color: #45c3f4;
+  border-bottom-color: #45c3f4;
+}
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
 
 /* HEADER */
-.header{background:#ffffff;border-bottom:3px solid var(--acc);padding:16px;display:flex;align-items:center;gap:12px}
-.header-logo{font-size:20px;font-weight:800;color:#0a1a1f}
-.header-logo span{color:var(--acc)}
-.header-sub{font-size:11px;color:var(--text2)}
-.header-badge{margin-left:auto;background:rgba(69,195,244,.12);border:1px solid rgba(69,195,244,.4);color:var(--acc);font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px}
+.header {
+  background: white;
+  padding: 16px;
+  border-bottom: 3px solid #45c3f4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header h1 {
+  font-size: 20px;
+}
+.header h1 span {
+  color: #45c3f4;
+}
+.header-badge {
+  background: rgba(69,195,244,.12);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #45c3f4;
+}
 
 /* TASK CARDS */
-.task-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px;cursor:pointer;transition:all .2s}
-.task-card:active{transform:scale(.985)}
-.task-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.task-title{font-size:15px;font-weight:700;color:var(--text)}
-.task-status{font-size:10px;padding:4px 10px;border-radius:20px;font-weight:600}
-.status-pending{background:rgba(212,130,10,.1);color:var(--warn)}
-.status-progress{background:rgba(69,195,244,.1);color:#0a8ab8}
-.status-done{background:rgba(28,174,72,.1);color:var(--acc3)}
-.task-desc{font-size:12px;color:var(--text2);margin-bottom:8px}
-.task-meta{display:flex;gap:12px;font-size:10px;color:var(--text3);margin-top:8px;flex-wrap:wrap}
-.task-progress{height:4px;background:var(--border);border-radius:2px;margin-top:10px;overflow:hidden}
-.task-progress-bar{height:100%;background:var(--acc);transition:width .3s}
+.task-card {
+  background: white;
+  border: 1px solid #b8e6f8;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.task-card:active {
+  transform: scale(0.98);
+}
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.task-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+.task-status {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+.status-pending {
+  background: rgba(212,130,10,.1);
+  color: #d4820a;
+}
+.status-progress {
+  background: rgba(69,195,244,.1);
+  color: #0a8ab8;
+}
+.status-done {
+  background: rgba(28,174,72,.1);
+  color: #1cae48;
+}
+.task-desc {
+  font-size: 13px;
+  color: #3a6070;
+  margin-bottom: 10px;
+}
+.task-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: #7aaabb;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.task-progress {
+  height: 4px;
+  background: #b8e6f8;
+  border-radius: 2px;
+  margin-top: 12px;
+}
+.task-progress-bar {
+  height: 100%;
+  background: #45c3f4;
+  border-radius: 2px;
+  width: 0%;
+}
+.expense-badge {
+  background: rgba(212,130,10,.1);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #d4820a;
+}
 
-/* TASK DETAIL MODAL */
-.task-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
-.task-modal.open{opacity:1;pointer-events:all}
-.task-modal-content{background:var(--s1);border-radius:24px 24px 0 0;width:100%;max-width:430px;max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
-.task-modal.open .task-modal-content{transform:translateY(0)}
-.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto}
-.modal-header{padding:8px 20px 0;display:flex;justify-content:space-between;align-items:center}
-.modal-header h3{font-size:18px;font-weight:700}
-.modal-close{font-size:24px;cursor:pointer;color:var(--text3)}
-.modal-body{padding:16px 20px 24px}
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.modal-content {
+  background: white;
+  width: 100%;
+  max-width: 430px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: 24px 24px 0 0;
+  transform: translateY(100%);
+  transition: transform 0.3s;
+}
+.modal.open .modal-content {
+  transform: translateY(0);
+}
+.modal-handle {
+  width: 40px;
+  height: 4px;
+  background: #b8e6f8;
+  border-radius: 2px;
+  margin: 12px auto;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px 8px;
+}
+.modal-header h3 {
+  font-size: 18px;
+}
+.modal-close {
+  font-size: 28px;
+  cursor: pointer;
+  color: #7aaabb;
+}
+.modal-body {
+  padding: 8px 20px 24px;
+}
 
 /* STATUS BUTTONS */
-.status-buttons{display:flex;gap:8px;margin:16px 0}
-.status-btn{flex:1;padding:10px;border-radius:var(--r-sm);border:none;font-weight:600;font-size:13px;cursor:pointer;transition:all .2s}
-.status-btn.pending{background:rgba(212,130,10,.1);color:var(--warn);border:1px solid rgba(212,130,10,.3)}
-.status-btn.progress{background:rgba(69,195,244,.1);color:#0a8ab8;border:1px solid rgba(69,195,244,.3)}
-.status-btn.done{background:rgba(28,174,72,.1);color:var(--acc3);border:1px solid rgba(28,174,72,.3)}
-.status-btn.active{background:var(--acc);color:white;border:none}
+.status-buttons {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+.status-btn {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #b8e6f8;
+  border-radius: 10px;
+  background: white;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+.status-btn.active {
+  background: #45c3f4;
+  color: white;
+  border: none;
+}
 
 /* EXPENSE SECTION */
-.expense-section{background:var(--s2);border-radius:var(--r);padding:16px;margin:16px 0}
-.expense-title{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.expense-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.expense-input{flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:13px}
-.expense-type{flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);background:white}
-.expense-list{margin-top:12px}
-.expense-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
-.expense-item-info{flex:1}
-.expense-item-type{font-size:11px;color:var(--text3)}
-.expense-item-amount{font-weight:700;color:var(--text)}
-.expense-delete{color:var(--danger);cursor:pointer;padding:4px 8px}
+.expense-section {
+  background: #edf9fe;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+}
+.section-title {
+  font-weight: 700;
+  margin-bottom: 12px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.expense-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.expense-select {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #b8e6f8;
+  border-radius: 10px;
+  background: white;
+}
+.expense-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #b8e6f8;
+  border-radius: 10px;
+}
+.expense-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #b8e6f8;
+}
+.expense-total {
+  font-weight: 700;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #b8e6f8;
+}
+.delete-btn {
+  color: #e03030;
+  cursor: pointer;
+  padding: 4px 8px;
+}
 
 /* COMMENT SECTION */
-.comment-input{display:flex;gap:8px;margin:12px 0}
-.comment-input textarea{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:13px;resize:none;font-family:inherit}
-.comment-list{margin-top:16px;max-height:300px;overflow-y:auto}
-.comment-item{background:var(--s2);border-radius:var(--r-sm);padding:10px;margin-bottom:8px}
-.comment-header{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:4px}
-.comment-text{font-size:12px;color:var(--text);line-height:1.4}
+.comment-input {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+.comment-input textarea {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #b8e6f8;
+  border-radius: 10px;
+  font-family: inherit;
+  resize: none;
+}
+.comment-item {
+  background: #edf9fe;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #7aaabb;
+  margin-bottom: 4px;
+}
+.comment-text {
+  font-size: 13px;
+}
 
 /* TIMER SECTION */
-.timer-section{background:linear-gradient(135deg, var(--acc) 0%, #2a9bcb 100%);border-radius:var(--r);padding:16px;margin:16px 0;color:white}
-.timer-display{font-size:32px;font-weight:800;font-family:'JetBrains Mono',monospace;text-align:center}
-.timer-buttons{display:flex;gap:8px;margin-top:12px}
-.timer-btn{flex:1;padding:8px;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer}
-.timer-start{background:#fff;color:var(--acc)}
-.timer-stop{background:rgba(255,255,255,.2);color:white}
-.log-time-btn{background:var(--acc2);color:white;margin-top:8px;padding:8px;border:none;border-radius:var(--r-sm);font-weight:600}
+.timer-section {
+  background: linear-gradient(135deg, #45c3f4, #2a9bcb);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+  color: white;
+}
+.timer-display {
+  font-size: 36px;
+  font-weight: 800;
+  font-family: monospace;
+  text-align: center;
+}
+.timer-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.timer-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.timer-start {
+  background: white;
+  color: #45c3f4;
+}
+.timer-stop {
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+.log-time-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  background: #1cae48;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.time-recorded {
+  font-size: 11px;
+  text-align: center;
+  margin-top: 8px;
+  opacity: 0.8;
+}
 
 /* EVIDENCE SECTION */
-.evidence-section{margin:16px 0}
-.evidence-btn{width:100%;padding:12px;background:var(--s2);border:1.5px dashed var(--border);border-radius:var(--r-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-.evidence-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.evidence-item{position:relative;width:70px;height:70px;border-radius:8px;overflow:hidden}
-.evidence-item img{width:100%;height:100%;object-fit:cover}
-.evidence-delete{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.5);color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer}
+.evidence-btn {
+  width: 100%;
+  padding: 12px;
+  background: #edf9fe;
+  border: 1.5px dashed #b8e6f8;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.evidence-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.evidence-img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #b8e6f8;
+  position: relative;
+}
+.evidence-delete {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.evidence-wrapper {
+  position: relative;
+  display: inline-block;
+}
 
 /* ACTIVITY LOG */
-.activity-log{background:var(--s2);border-radius:var(--r);padding:12px;margin-top:16px}
-.activity-item{font-size:11px;color:var(--text2);padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:8px}
-.activity-time{font-family:'JetBrains Mono',monospace;color:var(--text3);min-width:60px}
+.activity-log {
+  background: #edf9fe;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 16px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.activity-item {
+  font-size: 11px;
+  padding: 6px 0;
+  border-bottom: 1px solid #b8e6f8;
+  display: flex;
+  gap: 8px;
+}
+.activity-time {
+  color: #7aaabb;
+  min-width: 65px;
+  font-family: monospace;
+}
 
-/* BADGES */
-.badge{display:inline-block;padding:2px 6px;border-radius:12px;font-size:9px;font-weight:600}
-.badge-expense{background:rgba(212,130,10,.1);color:var(--warn)}
+/* CASE CARDS */
+.case-card {
+  background: white;
+  border: 1px solid #b8e6f8;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.case-card.done {
+  opacity: 0.6;
+}
+.case-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.case-id {
+  font-family: monospace;
+  font-weight: 600;
+  color: #0a8ab8;
+}
+.pill {
+  font-size: 10px;
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+.pill-open {
+  background: rgba(69,195,244,.12);
+  color: #0a8ab8;
+}
+.pill-done {
+  background: rgba(28,174,72,.1);
+  color: #1cae48;
+}
 
 /* BUTTONS */
-.btn{width:100%;padding:12px;border:none;border-radius:var(--r-sm);font-weight:700;cursor:pointer;transition:all .2s}
-.btn-primary{background:var(--acc);color:#fff}
-.btn-success{background:var(--acc2);color:#fff}
-.btn-ghost{background:var(--s2);border:1px solid var(--border);color:var(--text2)}
-.btn-sm{padding:8px 12px;font-size:12px}
+.btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-primary {
+  background: #45c3f4;
+  color: white;
+}
+.btn-sm {
+  padding: 8px 12px;
+  font-size: 12px;
+}
+.btn-success {
+  background: #1cae48;
+  color: white;
+}
+.lbl {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #7aaabb;
+  margin-bottom: 8px;
+}
 </style>
 </head>
 <body>
 <div id="app">
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('casos')">📋 Casos</button>
+    <button class="tab" onclick="switchTab('tareas')">✅ Tareas</button>
+  </div>
 
-<!-- TABS -->
-<div class="tabs-container">
-  <button class="tab-btn active" onclick="switchTab('casos')">📋 Casos</button>
-  <button class="tab-btn" onclick="switchTab('tareas')">✅ Tareas</button>
+  <!-- CASOS -->
+  <div id="tab-casos" class="tab-content active">
+    <div class="header">
+      <div><h1>MULTI<span>TEK</span></h1><div style="font-size:11px;color:#3a6070">Órdenes de Servicio</div></div>
+      <div class="header-badge">Ing. Técnico</div>
+    </div>
+    <div style="padding:14px">
+      <div class="lbl">Casos asignados</div>
+      <div id="cases-list"></div>
+    </div>
+  </div>
+
+  <!-- TAREAS -->
+  <div id="tab-tareas" class="tab-content">
+    <div class="header">
+      <div><h1>MULTI<span>TEK</span></h1><div style="font-size:11px;color:#3a6070">Gestión de Tareas</div></div>
+      <div class="header-badge">Seguimiento</div>
+    </div>
+    <div style="padding:14px" id="tasks-list"></div>
+  </div>
 </div>
 
-<!-- CONTENIDO CASOS (resumido para enfoque en tareas) -->
-<div id="tab-casos" class="tab-content active">
-  <div class="step-bar">
-    <div class="step-dot active"><div class="step-circle">1</div><div class="step-label">Caso</div></div>
-    <div class="step-dot"><div class="step-circle">2</div><div class="step-label">Cliente</div></div>
-    <div class="step-dot"><div class="step-circle">3</div><div class="step-label">Servicio</div></div>
-    <div class="step-dot"><div class="step-circle">4</div><div class="step-label">Notas</div></div>
-    <div class="step-dot"><div class="step-circle">5</div><div class="step-label">QR</div></div>
-    <div class="step-dot"><div class="step-circle">6</div><div class="step-label">Cierre</div></div>
-  </div>
-  <div class="header">
-    <div><div class="header-logo">MULTI<span>TEK</span></div><div class="header-sub">Órdenes de Servicio</div></div>
-    <div class="header-badge">Ing. Técnico</div>
-  </div>
-  <div style="padding:14px">
-    <div class="lbl">Casos asignados</div>
-    <div id="cases-list"></div>
-  </div>
-</div>
-
-<!-- CONTENIDO TAREAS - VERSIÓN COMPLETA -->
-<div id="tab-tareas" class="tab-content">
-  <div class="header">
-    <div><div class="header-logo">MULTI<span>TEK</span></div><div class="header-sub">Gestión de Tareas de Proyectos</div></div>
-    <div class="header-badge">Seguimiento</div>
-  </div>
-  <div style="padding:14px" id="tasks-container"></div>
-</div>
-
-<!-- MODAL PARA DETALLE DE TAREA -->
-<div id="task-modal" class="task-modal">
-  <div class="task-modal-content">
+<!-- MODAL DETALLE TAREA -->
+<div id="task-modal" class="modal">
+  <div class="modal-content">
     <div class="modal-handle"></div>
     <div class="modal-header">
-      <h3 id="modal-task-title">Tarea</h3>
-      <span class="modal-close" onclick="closeTaskModal()">×</span>
+      <h3 id="modal-title">Tarea</h3>
+      <span class="modal-close" onclick="closeModal()">×</span>
     </div>
-    <div class="modal-body" id="modal-task-body"></div>
+    <div class="modal-body" id="modal-body"></div>
   </div>
 </div>
 
 <script>
-// ── TELEGRAM ──
-const tg = window.Telegram?.WebApp;
-if(tg){ tg.ready(); tg.expand(); tg.setHeaderColor('#45c3f4'); tg.setBackgroundColor('#f4fcff'); }
-
-// ── TAREAS COMPLETAS CON SEGUIMIENTO ──
+// ==================== DATOS ====================
 let TAREAS = [
   {
-    id: 'TASK-001',
+    id: 'T001',
     titulo: 'Instalación Central Telefónica',
-    descripcion: 'Instalación y configuración de central telefónica IP para 50 extensiones. Incluye cableado estructurado, configuración de troncales SIP y pruebas de funcionamiento.',
-    prioridad: 'high',
+    descripcion: 'Instalación y configuración de central telefónica IP para 50 extensiones. Incluye cableado estructurado, configuración de troncales SIP.',
+    prioridad: 'alta',
     status: 'progress',
     progreso: 65,
     proyecto: 'PRY-2024-0102',
     responsable: 'Carlos Mendoza',
     fechaLimite: '2025-04-10',
-    comentarios: [
-      { usuario: 'Carlos M.', texto: 'Iniciada instalación del rack', fecha: '2025-03-25 09:30', tipo: 'comment' },
-      { usuario: 'Carlos M.', texto: 'Cableado de 20 puntos completado', fecha: '2025-03-25 14:15', tipo: 'comment' }
-    ],
-    gastos: [
-      { tipo: 'Combustible', monto: 15.00, fecha: '2025-03-25' },
-      { tipo: 'Viáticos', monto: 25.00, fecha: '2025-03-25' }
-    ],
+    comentarios: [],
+    gastos: [],
     evidencias: [],
-    tiempoRegistrado: 4.5,
-    actividades: [
-      { accion: 'Tarea iniciada', fecha: '2025-03-25 08:00' },
-      { accion: 'Gasto registrado: Combustible $15.00', fecha: '2025-03-25 12:30' }
-    ]
+    tiempoRegistrado: 0,
+    actividades: []
   },
   {
-    id: 'TASK-002',
+    id: 'T002',
     titulo: 'Migración Servidores Core',
-    descripcion: 'Migración de servidores virtuales a nueva infraestructura. Involucra 8 servidores físicos, migración de VMs y validación de servicios críticos.',
-    prioridad: 'medium',
+    descripcion: 'Migración de servidores virtuales a nueva infraestructura. 8 servidores físicos, migración de VMs y validación de servicios.',
+    prioridad: 'media',
     status: 'pending',
     progreso: 30,
     proyecto: 'PRY-2024-0042',
@@ -232,10 +583,10 @@ let TAREAS = [
     actividades: []
   },
   {
-    id: 'TASK-003',
+    id: 'T003',
     titulo: 'Cableado Estructurado - Sede Central',
-    descripcion: 'Instalación de cableado categoría 6A para 120 puntos de red. Incluye canaletas, patch panels y certificación de cableado.',
-    prioridad: 'medium',
+    descripcion: 'Instalación de cableado categoría 6A para 120 puntos de red. Canaletas, patch panels y certificación.',
+    prioridad: 'media',
     status: 'pending',
     progreso: 45,
     proyecto: 'PRY-2024-0098',
@@ -249,167 +600,162 @@ let TAREAS = [
   }
 ];
 
-let currentTask = null;
-let timerInterval = null;
-let timerSeconds = 0;
-let timerRunning = false;
+// Agregar actividad inicial a cada tarea
+TAREAS.forEach(t => {
+  if(t.actividades.length === 0) {
+    t.actividades.push({ accion: 'Tarea creada', fecha: new Date().toLocaleString() });
+  }
+});
 
-// ── DATOS PARA CASOS ──
-const CLIENTES = {
-  'MC0035': { nombre: 'TELECOMUNICACIONES DIGITALES', id: 'MC0035' },
-  'MC0041': { nombre: 'BANCO GENERAL S.A.', id: 'MC0041' },
-  'MC0058': { nombre: 'COPA AIRLINES', id: 'MC0058' }
-};
-
+// DATOS PARA CASOS
 const CASOS = [
-  { id:'OS-2024-0318', clienteId:'MC0035', fecha:'2025-03-25', atendido:false },
-  { id:'OS-2024-0315', clienteId:'MC0041', fecha:'2025-03-24', atendido:false },
-  { id:'OS-2024-0309', clienteId:'MC0058', fecha:'2025-03-22', atendido:true, resultado:'completo' }
+  { id: 'OS-2024-0318', cliente: 'TELECOMUNICACIONES DIGITALES', fecha: '2025-03-25', atendido: false },
+  { id: 'OS-2024-0315', cliente: 'BANCO GENERAL S.A.', fecha: '2025-03-24', atendido: false },
+  { id: 'OS-2024-0309', cliente: 'COPA AIRLINES', fecha: '2025-03-22', atendido: true }
 ];
 
-// ── FUNCIONES PRINCIPALES ──
+// Variables globales
+let currentTask = null;
+let timerSeconds = 0;
+let timerInterval = null;
+let timerRunning = false;
+
+// ==================== FUNCIONES ====================
 function switchTab(tab) {
-  const tabCasos = document.getElementById('tab-casos');
-  const tabTareas = document.getElementById('tab-tareas');
-  const btns = document.querySelectorAll('.tab-btn');
+  const tabs = document.querySelectorAll('.tab');
+  const contents = document.querySelectorAll('.tab-content');
+  
+  tabs.forEach(t => t.classList.remove('active'));
+  contents.forEach(c => c.classList.remove('active'));
   
   if(tab === 'casos') {
-    btns[0].classList.add('active');
-    btns[1].classList.remove('active');
-    tabCasos.classList.add('active');
-    tabTareas.classList.remove('active');
+    tabs[0].classList.add('active');
+    document.getElementById('tab-casos').classList.add('active');
     renderCases();
   } else {
-    btns[0].classList.remove('active');
-    btns[1].classList.add('active');
-    tabCasos.classList.remove('active');
-    tabTareas.classList.add('active');
-    renderTasksList();
+    tabs[1].classList.add('active');
+    document.getElementById('tab-tareas').classList.add('active');
+    renderTasks();
   }
 }
 
-function renderTasksList() {
-  const container = document.getElementById('tasks-container');
+function renderTasks() {
+  const container = document.getElementById('tasks-list');
   if(!container) return;
   container.innerHTML = '';
   
   TAREAS.forEach(task => {
     const statusText = task.status === 'pending' ? 'Pendiente' : (task.status === 'progress' ? 'En Progreso' : 'Completada');
     const statusClass = task.status === 'pending' ? 'status-pending' : (task.status === 'progress' ? 'status-progress' : 'status-done');
+    const totalGastos = task.gastos.reduce((sum, g) => sum + g.monto, 0);
     
     const div = document.createElement('div');
     div.className = 'task-card';
-    div.onclick = () => openTaskDetail(task);
+    div.onclick = () => openTask(task);
     div.innerHTML = `
       <div class="task-header">
         <div class="task-title">${task.titulo}</div>
         <div class="task-status ${statusClass}">${statusText}</div>
       </div>
-      <div class="task-desc">${task.descripcion.substring(0, 80)}${task.descripcion.length > 80 ? '...' : ''}</div>
+      <div class="task-desc">${task.descripcion.substring(0, 70)}${task.descripcion.length > 70 ? '...' : ''}</div>
       <div class="task-meta">
         <span>📋 ${task.proyecto}</span>
         <span>👤 ${task.responsable}</span>
         <span>📅 ${task.fechaLimite}</span>
-        ${task.gastos.length > 0 ? `<span class="badge badge-expense">💰 $${task.gastos.reduce((sum, g) => sum + g.monto, 0)}</span>` : ''}
+        ${totalGastos > 0 ? `<span class="expense-badge">💰 B/.${totalGastos}</span>` : ''}
       </div>
       <div class="task-progress">
         <div class="task-progress-bar" style="width: ${task.progreso}%"></div>
       </div>
-      <div style="font-size:10px;color:var(--text3);margin-top:6px">Progreso: ${task.progreso}%</div>
+      <div style="font-size:10px;color:#7aaabb;margin-top:6px">Progreso: ${task.progreso}%</div>
     `;
     container.appendChild(div);
   });
 }
 
-function openTaskDetail(task) {
+function openTask(task) {
   currentTask = task;
-  document.getElementById('modal-task-title').textContent = task.titulo;
-  renderTaskModal();
+  document.getElementById('modal-title').textContent = task.titulo;
+  renderModal();
   document.getElementById('task-modal').classList.add('open');
 }
 
-function renderTaskModal() {
-  if(!currentTask) return;
-  
-  const modalBody = document.getElementById('modal-task-body');
+function renderModal() {
+  const modalBody = document.getElementById('modal-body');
+  const totalGastos = currentTask.gastos.reduce((sum, g) => sum + g.monto, 0);
   const statusText = currentTask.status === 'pending' ? 'Pendiente' : (currentTask.status === 'progress' ? 'En Progreso' : 'Completada');
-  const progresoWidth = currentTask.progreso;
   
   modalBody.innerHTML = `
     <div style="margin-bottom:16px">
-      <div class="task-desc" style="font-size:14px">${currentTask.descripcion}</div>
-      <div class="task-meta" style="margin-top:8px">
+      <div style="font-size:14px;color:#3a6070;margin-bottom:8px">${currentTask.descripcion}</div>
+      <div class="task-meta" style="margin-bottom:8px">
         <span>📋 ${currentTask.proyecto}</span>
         <span>👤 ${currentTask.responsable}</span>
         <span>📅 ${currentTask.fechaLimite}</span>
       </div>
-      <div style="margin-top:8px">
-        <div style="font-size:12px;font-weight:600">Progreso: ${progresoWidth}%</div>
-        <div class="task-progress"><div class="task-progress-bar" style="width: ${progresoWidth}%"></div></div>
-      </div>
+      <div>Estado: <strong>${statusText}</strong> | Progreso: ${currentTask.progreso}%</div>
+      <div class="task-progress" style="margin-top:8px"><div class="task-progress-bar" style="width: ${currentTask.progreso}%"></div></div>
     </div>
     
-    <!-- BOTONES DE CAMBIO DE ESTADO -->
+    <!-- Botones de estado -->
     <div class="status-buttons">
-      <button class="status-btn pending ${currentTask.status === 'pending' ? 'active' : ''}" onclick="updateTaskStatus('pending')">⏳ Pendiente</button>
-      <button class="status-btn progress ${currentTask.status === 'progress' ? 'active' : ''}" onclick="updateTaskStatus('progress')">🔄 En Progreso</button>
-      <button class="status-btn done ${currentTask.status === 'done' ? 'active' : ''}" onclick="updateTaskStatus('done')">✅ Completada</button>
+      <button class="status-btn ${currentTask.status === 'pending' ? 'active' : ''}" onclick="updateStatus('pending')">⏳ Pendiente</button>
+      <button class="status-btn ${currentTask.status === 'progress' ? 'active' : ''}" onclick="updateStatus('progress')">🔄 En Progreso</button>
+      <button class="status-btn ${currentTask.status === 'done' ? 'active' : ''}" onclick="updateStatus('done')">✅ Completada</button>
     </div>
     
-    <!-- REGISTRO DE TIEMPO -->
+    <!-- Timer -->
     <div class="timer-section">
-      <div style="font-size:12px;margin-bottom:8px">⏱️ Registro de Tiempo</div>
+      <div class="section-title">⏱️ Registro de Tiempo</div>
       <div class="timer-display" id="timer-display">00:00:00</div>
       <div class="timer-buttons">
         <button class="timer-btn timer-start" onclick="startTimer()">▶ Iniciar</button>
         <button class="timer-btn timer-stop" onclick="stopTimer()">⏸ Pausar</button>
       </div>
       <button class="log-time-btn" onclick="logTime()">📝 Registrar tiempo trabajado</button>
-      <div style="font-size:11px;margin-top:8px;text-align:center">Tiempo registrado: ${formatTime(currentTask.tiempoRegistrado * 3600)}</div>
+      <div class="time-recorded">Tiempo registrado: ${formatTime(currentTask.tiempoRegistrado * 3600)}</div>
     </div>
     
-    <!-- SOLICITUD DE GASTOS -->
+    <!-- Gastos -->
     <div class="expense-section">
-      <div class="expense-title">💰 Gastos y Viáticos</div>
+      <div class="section-title">💰 Gastos y Viáticos</div>
       <div class="expense-row">
-        <select id="expense-type" class="expense-type">
+        <select id="expense-type" class="expense-select">
           <option value="Combustible">⛽ Combustible</option>
           <option value="Viáticos">🍽️ Viáticos</option>
           <option value="Peajes">🛣️ Peajes</option>
           <option value="Estacionamiento">🅿️ Estacionamiento</option>
           <option value="Materiales">🔧 Materiales</option>
-          <option value="Otros">📦 Otros</option>
         </select>
-        <input type="number" id="expense-amount" class="expense-input" placeholder="Monto B/." step="0.01">
-        <button class="btn btn-primary btn-sm" style="width:auto;padding:8px 16px" onclick="addExpense()">+</button>
+        <input type="number" id="expense-amount" class="expense-input" placeholder="B/." step="0.01">
+        <button class="btn btn-primary btn-sm" style="padding:10px 16px" onclick="addExpense()">+</button>
       </div>
-      <div id="expense-list" class="expense-list"></div>
+      <div id="expense-list"></div>
+      <div class="expense-total">Total: B/.${totalGastos.toFixed(2)}</div>
     </div>
     
-    <!-- COMENTARIOS Y SEGUIMIENTO -->
+    <!-- Comentarios -->
     <div>
-      <div class="expense-title">💬 Comentarios y Eventos</div>
+      <div class="section-title">💬 Comentarios</div>
       <div class="comment-input">
-        <textarea id="new-comment" rows="2" placeholder="Agregar comentario o evento..."></textarea>
-        <button class="btn btn-primary btn-sm" style="width:auto;padding:8px 16px" onclick="addComment()">Enviar</button>
+        <textarea id="new-comment" rows="2" placeholder="Agregar comentario..."></textarea>
+        <button class="btn btn-primary btn-sm" style="padding:10px 16px" onclick="addComment()">Enviar</button>
       </div>
-      <div id="comment-list" class="comment-list"></div>
+      <div id="comments-list"></div>
     </div>
     
-    <!-- EVIDENCIAS -->
-    <div class="evidence-section">
-      <div class="expense-title">📸 Evidencias</div>
-      <button class="evidence-btn" onclick="document.getElementById('evidence-input').click()">
-        📷 Adjuntar foto o documento
-      </button>
+    <!-- Evidencias -->
+    <div style="margin-top:16px">
+      <div class="section-title">📸 Evidencias</div>
+      <button class="evidence-btn" onclick="document.getElementById('evidence-input').click()">📷 Adjuntar foto</button>
       <input type="file" id="evidence-input" accept="image/*" style="display:none" onchange="addEvidence(this)">
       <div id="evidence-list" class="evidence-list"></div>
     </div>
     
-    <!-- HISTORIAL DE ACTIVIDADES -->
+    <!-- Actividades -->
     <div class="activity-log">
-      <div class="expense-title">📋 Historial de Actividades</div>
-      <div id="activity-list"></div>
+      <div class="section-title">📋 Historial</div>
+      <div id="activities-list"></div>
     </div>
   `;
   
@@ -417,24 +763,21 @@ function renderTaskModal() {
   renderComments();
   renderEvidences();
   renderActivities();
+  updateTimerDisplay();
 }
 
-function updateTaskStatus(newStatus) {
+function updateStatus(newStatus) {
   currentTask.status = newStatus;
-  
-  let progresoUpdate = currentTask.progreso;
-  if(newStatus === 'progress' && currentTask.progreso < 30) progresoUpdate = 30;
-  if(newStatus === 'done') progresoUpdate = 100;
-  currentTask.progreso = progresoUpdate;
+  if(newStatus === 'progress' && currentTask.progreso < 30) currentTask.progreso = 30;
+  if(newStatus === 'done') currentTask.progreso = 100;
   
   currentTask.actividades.unshift({
     accion: `Estado cambiado a ${newStatus === 'pending' ? 'Pendiente' : (newStatus === 'progress' ? 'En Progreso' : 'Completada')}`,
     fecha: new Date().toLocaleString()
   });
   
-  renderTaskModal();
-  renderTasksList();
-  if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+  renderModal();
+  renderTasks();
 }
 
 function startTimer() {
@@ -475,9 +818,8 @@ function logTime() {
   timerRunning = false;
   clearInterval(timerInterval);
   updateTimerDisplay();
-  renderTaskModal();
-  renderTasksList();
-  if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  renderModal();
+  renderTasks();
 }
 
 function addExpense() {
@@ -503,8 +845,7 @@ function addExpense() {
   document.getElementById('expense-amount').value = '';
   renderExpenses();
   renderActivities();
-  renderTasksList();
-  if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  renderTasks();
 }
 
 function renderExpenses() {
@@ -512,24 +853,17 @@ function renderExpenses() {
   if(!container) return;
   
   if(currentTask.gastos.length === 0) {
-    container.innerHTML = '<div style="font-size:11px;color:var(--text3);text-align:center">No hay gastos registrados</div>';
+    container.innerHTML = '<div style="font-size:12px;color:#7aaabb;text-align:center">No hay gastos registrados</div>';
     return;
   }
   
-  const total = currentTask.gastos.reduce((sum, g) => sum + g.monto, 0);
-  container.innerHTML = `
-    <div style="font-weight:600;margin-bottom:8px">Total: B/.${total.toFixed(2)}</div>
-    ${currentTask.gastos.map((g, idx) => `
-      <div class="expense-item">
-        <div class="expense-item-info">
-          <strong>${g.tipo}</strong>
-          <div class="expense-item-type">${g.fecha}</div>
-        </div>
-        <div class="expense-item-amount">B/.${g.monto.toFixed(2)}</div>
-        <div class="expense-delete" onclick="deleteExpense(${idx})">🗑️</div>
-      </div>
-    `).join('')}
-  `;
+  container.innerHTML = currentTask.gastos.map((g, idx) => `
+    <div class="expense-item">
+      <div><strong>${g.tipo}</strong><br><span style="font-size:10px;color:#7aaabb">${g.fecha}</span></div>
+      <div><strong>B/.${g.monto.toFixed(2)}</strong></div>
+      <div class="delete-btn" onclick="deleteExpense(${idx})">🗑️</div>
+    </div>
+  `).join('');
 }
 
 function deleteExpense(idx) {
@@ -540,7 +874,7 @@ function deleteExpense(idx) {
   });
   renderExpenses();
   renderActivities();
-  renderTasksList();
+  renderTasks();
 }
 
 function addComment() {
@@ -555,27 +889,25 @@ function addComment() {
   currentTask.comentarios.push({
     usuario: currentTask.responsable,
     texto: texto,
-    fecha: new Date().toLocaleString(),
-    tipo: 'comment'
+    fecha: new Date().toLocaleString()
   });
   
   currentTask.actividades.unshift({
-    accion: `Comentario agregado: "${texto.substring(0, 50)}${texto.length > 50 ? '...' : ''}"`,
+    accion: `Comentario: "${texto.substring(0, 50)}${texto.length > 50 ? '...' : ''}"`,
     fecha: new Date().toLocaleString()
   });
   
   textarea.value = '';
   renderComments();
   renderActivities();
-  if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
 
 function renderComments() {
-  const container = document.getElementById('comment-list');
+  const container = document.getElementById('comments-list');
   if(!container) return;
   
   if(currentTask.comentarios.length === 0) {
-    container.innerHTML = '<div style="font-size:11px;color:var(--text3);text-align:center">No hay comentarios</div>';
+    container.innerHTML = '<div style="font-size:12px;color:#7aaabb;text-align:center">No hay comentarios</div>';
     return;
   }
   
@@ -607,7 +939,6 @@ function addEvidence(input) {
     });
     renderEvidences();
     renderActivities();
-    if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
   };
   reader.readAsDataURL(file);
   input.value = '';
@@ -623,8 +954,8 @@ function renderEvidences() {
   }
   
   container.innerHTML = currentTask.evidencias.map((e, idx) => `
-    <div class="evidence-item">
-      <img src="${e.url}" alt="evidencia">
+    <div class="evidence-wrapper">
+      <img src="${e.url}" class="evidence-img">
       <div class="evidence-delete" onclick="deleteEvidence(${idx})">×</div>
     </div>
   `).join('');
@@ -641,15 +972,15 @@ function deleteEvidence(idx) {
 }
 
 function renderActivities() {
-  const container = document.getElementById('activity-list');
+  const container = document.getElementById('activities-list');
   if(!container) return;
   
   if(currentTask.actividades.length === 0) {
-    container.innerHTML = '<div style="font-size:11px;color:var(--text3);text-align:center">No hay actividades registradas</div>';
+    container.innerHTML = '<div style="font-size:12px;color:#7aaabb;text-align:center">No hay actividades</div>';
     return;
   }
   
-  container.innerHTML = currentTask.actividades.slice(0, 20).map(a => `
+  container.innerHTML = currentTask.actividades.slice(0, 15).map(a => `
     <div class="activity-item">
       <div class="activity-time">${a.fecha.substring(5,16)}</div>
       <div>${a.accion}</div>
@@ -657,35 +988,33 @@ function renderActivities() {
   `).join('');
 }
 
-function closeTaskModal() {
-  document.getElementById('task-modal').classList.remove('open');
+function closeModal() {
   if(timerRunning) {
     stopTimer();
     timerSeconds = 0;
-    updateTimerDisplay();
   }
+  document.getElementById('task-modal').classList.remove('open');
   currentTask = null;
 }
 
 function renderCases() {
-  const c = document.getElementById('cases-list');
-  if(!c) return;
-  c.innerHTML = CASOS.map(caso => `
+  const container = document.getElementById('cases-list');
+  if(!container) return;
+  container.innerHTML = CASOS.map(caso => `
     <div class="case-card ${caso.atendido ? 'done' : ''}">
       <div class="case-header">
         <div class="case-id">${caso.id}</div>
         <div class="pill ${caso.atendido ? 'pill-done' : 'pill-open'}">${caso.atendido ? '✓ Atendido' : '● Abierto'}</div>
       </div>
-      <div class="case-client">${CLIENTES[caso.clienteId]?.nombre || 'Cliente'}</div>
-      <div class="case-meta"><div class="case-meta-i">📅 ${caso.fecha}</div></div>
+      <div class="case-client" style="font-weight:600">${caso.cliente}</div>
+      <div class="case-meta" style="font-size:11px;color:#7aaabb;margin-top:4px">📅 ${caso.fecha}</div>
     </div>
   `).join('');
 }
 
 // Inicializar
 renderCases();
-renderTasksList();
+renderTasks();
 </script>
-</div>
 </body>
 </html>
