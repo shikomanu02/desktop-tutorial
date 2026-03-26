@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Servicio Técnico · Multitek</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Multitek · Servicio Técnico</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -11,48 +11,53 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  background: #cceeff;
-  color: #0a1a1f;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background: #EFF3F6;
+  color: #1A2C3A;
 }
 
-#app {
-  max-width: 430px;
+.app {
+  max-width: 450px;
   margin: 0 auto;
-  background: #f4fcff;
+  background: #FFFFFF;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
 }
 
 /* TABS */
 .tabs {
   display: flex;
   background: white;
-  border-bottom: 2px solid #b8e6f8;
+  border-bottom: 1px solid #E2E8F0;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 50;
 }
-.tab {
+.tab-btn {
   flex: 1;
-  padding: 14px;
-  text-align: center;
+  padding: 14px 12px;
+  font-size: 15px;
   font-weight: 600;
-  cursor: pointer;
   background: none;
   border: none;
-  font-size: 15px;
-  color: #7aaabb;
-  border-bottom: 3px solid transparent;
+  color: #7F8C8D;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 2px solid transparent;
 }
-.tab.active {
-  color: #45c3f4;
-  border-bottom-color: #45c3f4;
+.tab-btn.active {
+  color: #2C7DA0;
+  border-bottom-color: #2C7DA0;
 }
 .tab-content {
   display: none;
+  flex: 1;
 }
 .tab-content.active {
   display: block;
@@ -60,101 +65,96 @@ body {
 
 /* HEADER */
 .header {
-  background: white;
-  padding: 16px;
-  border-bottom: 3px solid #45c3f4;
+  background: #FFFFFF;
+  padding: 16px 20px;
+  border-bottom: 1px solid #E2E8F0;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .header h1 {
-  font-size: 20px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1E2F3A;
 }
 .header h1 span {
-  color: #45c3f4;
+  color: #2C7DA0;
 }
 .header-badge {
-  background: rgba(69,195,244,.12);
-  padding: 4px 12px;
+  background: #EFF6FF;
+  padding: 6px 12px;
   border-radius: 20px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  color: #45c3f4;
+  color: #2C7DA0;
 }
 
-/* TASK CARDS */
-.task-card {
+/* CARDS GENERALES */
+.card {
   background: white;
-  border: 1px solid #b8e6f8;
-  border-radius: 12px;
+  border-radius: 16px;
+  border: 1px solid #E2E8F0;
   padding: 16px;
   margin-bottom: 12px;
-  cursor: pointer;
   transition: all 0.2s;
+  cursor: pointer;
 }
-.task-card:active {
+.card:active {
   transform: scale(0.98);
 }
-.task-header {
+.card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
-.task-title {
+.card-title {
   font-weight: 700;
   font-size: 16px;
 }
-.task-status {
+.card-badge {
   font-size: 11px;
   padding: 4px 10px;
   border-radius: 20px;
   font-weight: 600;
 }
-.status-pending {
-  background: rgba(212,130,10,.1);
-  color: #d4820a;
-}
-.status-progress {
-  background: rgba(69,195,244,.1);
-  color: #0a8ab8;
-}
-.status-done {
-  background: rgba(28,174,72,.1);
-  color: #1cae48;
-}
-.task-desc {
+.badge-pending { background: #FEF3C7; color: #D97706; }
+.badge-progress { background: #E0F2FE; color: #0284C7; }
+.badge-done { background: #D1FAE5; color: #059669; }
+.badge-open { background: #E0F2FE; color: #0284C7; }
+.card-desc {
   font-size: 13px;
-  color: #3a6070;
+  color: #5A6E7A;
   margin-bottom: 10px;
+  line-height: 1.4;
 }
-.task-meta {
+.card-meta {
   display: flex;
   gap: 12px;
   font-size: 11px;
-  color: #7aaabb;
+  color: #8A9AA8;
   flex-wrap: wrap;
-  margin-top: 8px;
 }
-.task-progress {
+.progress-bar {
   height: 4px;
-  background: #b8e6f8;
-  border-radius: 2px;
+  background: #E2E8F0;
+  border-radius: 4px;
   margin-top: 12px;
+  overflow: hidden;
 }
-.task-progress-bar {
+.progress-fill {
   height: 100%;
-  background: #45c3f4;
-  border-radius: 2px;
+  background: #2C7DA0;
+  border-radius: 4px;
   width: 0%;
 }
-.expense-badge {
-  background: rgba(212,130,10,.1);
+.expense-chip {
+  background: #FEF3C7;
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 10px;
   font-weight: 600;
-  color: #d4820a;
+  color: #D97706;
 }
 
 /* MODAL */
@@ -168,22 +168,22 @@ body {
   align-items: flex-end;
   justify-content: center;
   opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s;
+  visibility: hidden;
+  transition: all 0.25s;
 }
 .modal.open {
   opacity: 1;
-  pointer-events: all;
+  visibility: visible;
 }
 .modal-content {
   background: white;
   width: 100%;
-  max-width: 430px;
+  max-width: 450px;
   max-height: 85vh;
-  overflow-y: auto;
   border-radius: 24px 24px 0 0;
+  overflow-y: auto;
   transform: translateY(100%);
-  transition: transform 0.3s;
+  transition: transform 0.3s ease-out;
 }
 .modal.open .modal-content {
   transform: translateY(0);
@@ -191,8 +191,8 @@ body {
 .modal-handle {
   width: 40px;
   height: 4px;
-  background: #b8e6f8;
-  border-radius: 2px;
+  background: #CBD5E1;
+  border-radius: 4px;
   margin: 12px auto;
 }
 .modal-header {
@@ -203,18 +203,20 @@ body {
 }
 .modal-header h3 {
   font-size: 18px;
+  font-weight: 700;
 }
 .modal-close {
   font-size: 28px;
   cursor: pointer;
-  color: #7aaabb;
+  color: #8A9AA8;
+  line-height: 1;
 }
 .modal-body {
   padding: 8px 20px 24px;
 }
 
-/* STATUS BUTTONS */
-.status-buttons {
+/* BOTONES DE ESTADO */
+.status-row {
   display: flex;
   gap: 8px;
   margin: 16px 0;
@@ -222,23 +224,24 @@ body {
 .status-btn {
   flex: 1;
   padding: 10px;
-  border: 1px solid #b8e6f8;
-  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
   background: white;
   font-weight: 600;
   font-size: 13px;
   cursor: pointer;
+  transition: all 0.2s;
 }
 .status-btn.active {
-  background: #45c3f4;
+  background: #2C7DA0;
   color: white;
   border: none;
 }
 
-/* EXPENSE SECTION */
-.expense-section {
-  background: #edf9fe;
-  border-radius: 12px;
+/* SECCIÓN DE GASTOS */
+.expense-box {
+  background: #F8FAFC;
+  border-radius: 16px;
   padding: 16px;
   margin: 16px 0;
 }
@@ -255,73 +258,38 @@ body {
   gap: 8px;
   margin-bottom: 12px;
 }
-.expense-select {
+.expense-select, .expense-input {
   flex: 1;
   padding: 10px;
-  border: 1px solid #b8e6f8;
-  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
   background: white;
-}
-.expense-input {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #b8e6f8;
-  border-radius: 10px;
+  font-size: 13px;
 }
 .expense-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid #b8e6f8;
+  border-bottom: 1px solid #E2E8F0;
 }
 .expense-total {
   font-weight: 700;
   margin-top: 8px;
   padding-top: 8px;
-  border-top: 1px solid #b8e6f8;
+  border-top: 1px solid #E2E8F0;
 }
-.delete-btn {
-  color: #e03030;
+.delete-icon {
+  color: #EF4444;
   cursor: pointer;
   padding: 4px 8px;
+  font-size: 14px;
 }
 
-/* COMMENT SECTION */
-.comment-input {
-  display: flex;
-  gap: 8px;
-  margin: 12px 0;
-}
-.comment-input textarea {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #b8e6f8;
-  border-radius: 10px;
-  font-family: inherit;
-  resize: none;
-}
-.comment-item {
-  background: #edf9fe;
-  border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 8px;
-}
-.comment-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 10px;
-  color: #7aaabb;
-  margin-bottom: 4px;
-}
-.comment-text {
-  font-size: 13px;
-}
-
-/* TIMER SECTION */
-.timer-section {
-  background: linear-gradient(135deg, #45c3f4, #2a9bcb);
-  border-radius: 12px;
+/* CRONÓMETRO */
+.timer-box {
+  background: linear-gradient(135deg, #2C7DA0, #1F5E7A);
+  border-radius: 16px;
   padding: 16px;
   margin: 16px 0;
   color: white;
@@ -331,6 +299,7 @@ body {
   font-weight: 800;
   font-family: monospace;
   text-align: center;
+  letter-spacing: 2px;
 }
 .timer-buttons {
   display: flex;
@@ -341,13 +310,13 @@ body {
   flex: 1;
   padding: 10px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
 }
 .timer-start {
   background: white;
-  color: #45c3f4;
+  color: #2C7DA0;
 }
 .timer-stop {
   background: rgba(255,255,255,0.2);
@@ -357,10 +326,10 @@ body {
   width: 100%;
   margin-top: 12px;
   padding: 10px;
-  background: #1cae48;
+  background: #10B981;
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -371,18 +340,52 @@ body {
   opacity: 0.8;
 }
 
-/* EVIDENCE SECTION */
+/* COMENTARIOS */
+.comment-input {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+.comment-input textarea {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  font-family: inherit;
+  resize: none;
+  font-size: 13px;
+}
+.comment-item {
+  background: #F8FAFC;
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #8A9AA8;
+  margin-bottom: 4px;
+}
+.comment-text {
+  font-size: 13px;
+}
+
+/* EVIDENCIAS */
 .evidence-btn {
   width: 100%;
   padding: 12px;
-  background: #edf9fe;
-  border: 1.5px dashed #b8e6f8;
-  border-radius: 10px;
+  background: #F8FAFC;
+  border: 1.5px dashed #CBD5E1;
+  border-radius: 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
 }
 .evidence-list {
   display: flex;
@@ -394,34 +397,34 @@ body {
   width: 70px;
   height: 70px;
   object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #b8e6f8;
-  position: relative;
-}
-.evidence-delete {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  background: rgba(0,0,0,0.5);
-  color: white;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
 }
 .evidence-wrapper {
   position: relative;
   display: inline-block;
 }
+.evidence-delete {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #EF4444;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid white;
+}
 
-/* ACTIVITY LOG */
+/* HISTORIAL */
 .activity-log {
-  background: #edf9fe;
-  border-radius: 12px;
+  background: #F8FAFC;
+  border-radius: 16px;
   padding: 12px;
   margin-top: 16px;
   max-height: 200px;
@@ -430,113 +433,167 @@ body {
 .activity-item {
   font-size: 11px;
   padding: 6px 0;
-  border-bottom: 1px solid #b8e6f8;
+  border-bottom: 1px solid #E2E8F0;
   display: flex;
   gap: 8px;
 }
 .activity-time {
-  color: #7aaabb;
+  color: #8A9AA8;
   min-width: 65px;
   font-family: monospace;
 }
 
-/* CASE CARDS */
-.case-card {
-  background: white;
-  border: 1px solid #b8e6f8;
+/* EQUIPOS */
+.equipment-card {
+  background: #F8FAFC;
   border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 10px;
-  cursor: pointer;
+  padding: 12px;
+  margin: 12px 0;
 }
-.case-card.done {
-  opacity: 0.6;
+.equipment-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
 }
-.case-header {
+.diagnosis-option {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
   margin-bottom: 6px;
+  border: 1px solid #E2E8F0;
 }
-.case-id {
-  font-family: monospace;
-  font-weight: 600;
-  color: #0a8ab8;
+.diagnosis-option.selected {
+  background: #E0F2FE;
+  border-color: #2C7DA0;
 }
-.pill {
-  font-size: 10px;
-  padding: 2px 10px;
-  border-radius: 20px;
+.diagnosis-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #CBD5E1;
 }
-.pill-open {
-  background: rgba(69,195,244,.12);
-  color: #0a8ab8;
+.diagnosis-option.selected .diagnosis-radio {
+  border-color: #2C7DA0;
+  background: #2C7DA0;
+  box-shadow: inset 0 0 0 3px white;
 }
-.pill-done {
-  background: rgba(28,174,72,.1);
-  color: #1cae48;
+.stock-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 6px;
+  border: 1px solid #E2E8F0;
+}
+.stock-item.selected {
+  background: #D1FAE5;
+  border-color: #10B981;
+}
+.stock-radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #CBD5E1;
+}
+.stock-item.selected .stock-radio {
+  border-color: #10B981;
+  background: #10B981;
+  box-shadow: inset 0 0 0 3px white;
 }
 
-/* BUTTONS */
+/* QR */
+.qr-container {
+  text-align: center;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  margin: 16px 0;
+}
+
+/* BOTONES GENERALES */
 .btn {
-  padding: 10px 16px;
+  padding: 12px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
+  width: 100%;
+  font-size: 15px;
 }
 .btn-primary {
-  background: #45c3f4;
+  background: #2C7DA0;
   color: white;
+}
+.btn-success {
+  background: #10B981;
+  color: white;
+}
+.btn-ghost {
+  background: #F1F5F9;
+  color: #1E2F3A;
+  border: 1px solid #E2E8F0;
 }
 .btn-sm {
   padding: 8px 12px;
-  font-size: 12px;
+  font-size: 13px;
+  width: auto;
 }
-.btn-success {
-  background: #1cae48;
-  color: white;
-}
+
+/* UTILS */
 .lbl {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  color: #7aaabb;
+  color: #8A9AA8;
   margin-bottom: 8px;
+  letter-spacing: 0.5px;
 }
+.mb-2 { margin-bottom: 8px; }
+.mt-2 { margin-top: 8px; }
+.gap-2 { gap: 8px; }
+.flex { display: flex; }
 </style>
 </head>
 <body>
-<div id="app">
+<div class="app">
   <!-- TABS -->
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('casos')">📋 Casos</button>
-    <button class="tab" onclick="switchTab('tareas')">✅ Tareas</button>
+    <button class="tab-btn active" onclick="switchTab('casos')">📋 Casos</button>
+    <button class="tab-btn" onclick="switchTab('tareas')">✅ Tareas</button>
   </div>
 
-  <!-- CASOS -->
+  <!-- CONTENIDO CASOS -->
   <div id="tab-casos" class="tab-content active">
     <div class="header">
-      <div><h1>MULTI<span>TEK</span></h1><div style="font-size:11px;color:#3a6070">Órdenes de Servicio</div></div>
-      <div class="header-badge">Ing. Técnico</div>
+      <div><h1>MULTI<span>TEK</span></h1><div style="font-size: 12px; color: #5A6E7A;">Órdenes de Servicio</div></div>
+      <div class="header-badge">Técnico</div>
     </div>
-    <div style="padding:14px">
+    <div style="padding: 16px;">
       <div class="lbl">Casos asignados</div>
-      <div id="cases-list"></div>
+      <div id="casos-list"></div>
     </div>
   </div>
 
-  <!-- TAREAS -->
+  <!-- CONTENIDO TAREAS -->
   <div id="tab-tareas" class="tab-content">
     <div class="header">
-      <div><h1>MULTI<span>TEK</span></h1><div style="font-size:11px;color:#3a6070">Gestión de Tareas</div></div>
+      <div><h1>MULTI<span>TEK</span></h1><div style="font-size: 12px; color: #5A6E7A;">Gestión de Tareas</div></div>
       <div class="header-badge">Seguimiento</div>
     </div>
-    <div style="padding:14px" id="tasks-list"></div>
+    <div style="padding: 16px;" id="tareas-list"></div>
   </div>
 </div>
 
-<!-- MODAL DETALLE TAREA -->
-<div id="task-modal" class="modal">
+<!-- MODAL TAREA -->
+<div id="modal-tarea" class="modal">
   <div class="modal-content">
     <div class="modal-handle"></div>
     <div class="modal-header">
@@ -547,177 +604,186 @@ body {
   </div>
 </div>
 
+<!-- MODAL CASO (para gestión de equipos y QR) -->
+<div id="modal-caso" class="modal">
+  <div class="modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3 id="modal-caso-title">Caso</h3>
+      <span class="modal-close" onclick="closeCasoModal()">×</span>
+    </div>
+    <div class="modal-body" id="modal-caso-body"></div>
+  </div>
+</div>
+
 <script>
+// ==================== TELEGRAM ====================
+const tg = window.Telegram?.WebApp;
+if(tg) { tg.ready(); tg.expand(); }
+
 // ==================== DATOS ====================
-let TAREAS = [
+// TAREAS
+let tareas = [
   {
     id: 'T001',
     titulo: 'Instalación Central Telefónica',
-    descripcion: 'Instalación y configuración de central telefónica IP para 50 extensiones. Incluye cableado estructurado, configuración de troncales SIP.',
-    prioridad: 'alta',
-    status: 'progress',
-    progreso: 65,
+    descripcion: 'Instalación y configuración de central telefónica IP para 50 extensiones. Incluye cableado estructurado, configuración de troncales SIP y pruebas de funcionamiento.',
     proyecto: 'PRY-2024-0102',
     responsable: 'Carlos Mendoza',
     fechaLimite: '2025-04-10',
+    status: 'progress',
+    progreso: 65,
     comentarios: [],
     gastos: [],
     evidencias: [],
     tiempoRegistrado: 0,
-    actividades: []
+    actividades: [{ accion: 'Tarea creada', fecha: new Date().toLocaleString() }]
   },
   {
     id: 'T002',
     titulo: 'Migración Servidores Core',
-    descripcion: 'Migración de servidores virtuales a nueva infraestructura. 8 servidores físicos, migración de VMs y validación de servicios.',
-    prioridad: 'media',
-    status: 'pending',
-    progreso: 30,
+    descripcion: 'Migración de servidores virtuales a nueva infraestructura. Involucra 8 servidores físicos, migración de VMs y validación de servicios críticos.',
     proyecto: 'PRY-2024-0042',
     responsable: 'Ana Rodríguez',
     fechaLimite: '2025-04-25',
+    status: 'pending',
+    progreso: 30,
     comentarios: [],
     gastos: [],
     evidencias: [],
     tiempoRegistrado: 0,
-    actividades: []
+    actividades: [{ accion: 'Tarea creada', fecha: new Date().toLocaleString() }]
   },
   {
     id: 'T003',
     titulo: 'Cableado Estructurado - Sede Central',
-    descripcion: 'Instalación de cableado categoría 6A para 120 puntos de red. Canaletas, patch panels y certificación.',
-    prioridad: 'media',
-    status: 'pending',
-    progreso: 45,
+    descripcion: 'Instalación de cableado categoría 6A para 120 puntos de red. Incluye canaletas, patch panels y certificación de cableado.',
     proyecto: 'PRY-2024-0098',
     responsable: 'Ricardo Pérez',
     fechaLimite: '2025-04-18',
+    status: 'pending',
+    progreso: 45,
     comentarios: [],
     gastos: [],
     evidencias: [],
     tiempoRegistrado: 0,
-    actividades: []
+    actividades: [{ accion: 'Tarea creada', fecha: new Date().toLocaleString() }]
   }
 ];
 
-// Agregar actividad inicial a cada tarea
-TAREAS.forEach(t => {
-  if(t.actividades.length === 0) {
-    t.actividades.push({ accion: 'Tarea creada', fecha: new Date().toLocaleString() });
-  }
-});
-
-// DATOS PARA CASOS
-const CASOS = [
-  { id: 'OS-2024-0318', cliente: 'TELECOMUNICACIONES DIGITALES', fecha: '2025-03-25', atendido: false },
-  { id: 'OS-2024-0315', cliente: 'BANCO GENERAL S.A.', fecha: '2025-03-24', atendido: false },
-  { id: 'OS-2024-0309', cliente: 'COPA AIRLINES', fecha: '2025-03-22', atendido: true }
+// CASOS
+let casos = [
+  { id: 'OS-2024-0318', cliente: 'TELECOMUNICACIONES DIGITALES', fecha: '2025-03-25', atendido: false, equipo: null, diagnostico: null, stockSeleccionado: null },
+  { id: 'OS-2024-0315', cliente: 'BANCO GENERAL S.A.', fecha: '2025-03-24', atendido: false, equipo: null, diagnostico: null, stockSeleccionado: null },
+  { id: 'OS-2024-0309', cliente: 'COPA AIRLINES', fecha: '2025-03-22', atendido: true, equipo: null, diagnostico: null, stockSeleccionado: null }
 ];
 
-// Variables globales
+// STOCK
+const stockEquipos = [
+  { id: 'STK-001', nombre: 'Servidor Dell PowerEdge T160', serie: 'SN-DELL-001', ubicacion: 'Bodega Principal', disponible: true },
+  { id: 'STK-002', nombre: 'Switch Cisco Catalyst 2960', serie: 'SN-CISCO-002', ubicacion: 'Bodega Principal', disponible: true },
+  { id: 'STK-003', nombre: 'Router MikroTik RB4011', serie: 'SN-MIK-003', ubicacion: 'Cliente ABC', disponible: false },
+  { id: 'STK-004', nombre: 'Firewall Fortinet 60F', serie: 'SN-FORT-004', ubicacion: 'Bodega Secundaria', disponible: true }
+];
+
+// Variables temporales para modales
 let currentTask = null;
+let currentCaso = null;
 let timerSeconds = 0;
 let timerInterval = null;
 let timerRunning = false;
+let casoDiagnostico = null;
+let casoStockSeleccionado = null;
 
-// ==================== FUNCIONES ====================
+// ==================== FUNCIONES GENERALES ====================
 function switchTab(tab) {
-  const tabs = document.querySelectorAll('.tab');
-  const contents = document.querySelectorAll('.tab-content');
-  
-  tabs.forEach(t => t.classList.remove('active'));
-  contents.forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
   
   if(tab === 'casos') {
-    tabs[0].classList.add('active');
+    document.querySelector('.tab-btn:first-child').classList.add('active');
     document.getElementById('tab-casos').classList.add('active');
-    renderCases();
+    renderCasos();
   } else {
-    tabs[1].classList.add('active');
+    document.querySelector('.tab-btn:last-child').classList.add('active');
     document.getElementById('tab-tareas').classList.add('active');
-    renderTasks();
+    renderTareas();
   }
 }
 
-function renderTasks() {
-  const container = document.getElementById('tasks-list');
+// ==================== TAREAS ====================
+function renderTareas() {
+  const container = document.getElementById('tareas-list');
   if(!container) return;
   container.innerHTML = '';
   
-  TAREAS.forEach(task => {
-    const statusText = task.status === 'pending' ? 'Pendiente' : (task.status === 'progress' ? 'En Progreso' : 'Completada');
-    const statusClass = task.status === 'pending' ? 'status-pending' : (task.status === 'progress' ? 'status-progress' : 'status-done');
-    const totalGastos = task.gastos.reduce((sum, g) => sum + g.monto, 0);
+  tareas.forEach(t => {
+    const statusMap = { pending: 'Pendiente', progress: 'En Progreso', done: 'Completada' };
+    const statusClass = { pending: 'badge-pending', progress: 'badge-progress', done: 'badge-done' };
+    const totalGastos = t.gastos.reduce((s, g) => s + g.monto, 0);
     
     const div = document.createElement('div');
-    div.className = 'task-card';
-    div.onclick = () => openTask(task);
+    div.className = 'card';
+    div.onclick = () => openTareaModal(t);
     div.innerHTML = `
-      <div class="task-header">
-        <div class="task-title">${task.titulo}</div>
-        <div class="task-status ${statusClass}">${statusText}</div>
+      <div class="card-header">
+        <div class="card-title">${t.titulo}</div>
+        <div class="card-badge ${statusClass[t.status]}">${statusMap[t.status]}</div>
       </div>
-      <div class="task-desc">${task.descripcion.substring(0, 70)}${task.descripcion.length > 70 ? '...' : ''}</div>
-      <div class="task-meta">
-        <span>📋 ${task.proyecto}</span>
-        <span>👤 ${task.responsable}</span>
-        <span>📅 ${task.fechaLimite}</span>
-        ${totalGastos > 0 ? `<span class="expense-badge">💰 B/.${totalGastos}</span>` : ''}
+      <div class="card-desc">${t.descripcion.substring(0, 70)}${t.descripcion.length > 70 ? '...' : ''}</div>
+      <div class="card-meta">
+        <span>📋 ${t.proyecto}</span>
+        <span>👤 ${t.responsable}</span>
+        <span>📅 ${t.fechaLimite}</span>
+        ${totalGastos > 0 ? `<span class="expense-chip">💰 B/.${totalGastos}</span>` : ''}
       </div>
-      <div class="task-progress">
-        <div class="task-progress-bar" style="width: ${task.progreso}%"></div>
-      </div>
-      <div style="font-size:10px;color:#7aaabb;margin-top:6px">Progreso: ${task.progreso}%</div>
+      <div class="progress-bar"><div class="progress-fill" style="width: ${t.progreso}%"></div></div>
+      <div style="font-size: 10px; color: #8A9AA8; margin-top: 6px;">Progreso: ${t.progreso}%</div>
     `;
     container.appendChild(div);
   });
 }
 
-function openTask(task) {
-  currentTask = task;
-  document.getElementById('modal-title').textContent = task.titulo;
-  renderModal();
-  document.getElementById('task-modal').classList.add('open');
+function openTareaModal(tarea) {
+  currentTask = tarea;
+  document.getElementById('modal-title').textContent = tarea.titulo;
+  renderTareaModal();
+  document.getElementById('modal-tarea').classList.add('open');
 }
 
-function renderModal() {
-  const modalBody = document.getElementById('modal-body');
-  const totalGastos = currentTask.gastos.reduce((sum, g) => sum + g.monto, 0);
-  const statusText = currentTask.status === 'pending' ? 'Pendiente' : (currentTask.status === 'progress' ? 'En Progreso' : 'Completada');
+function renderTareaModal() {
+  const body = document.getElementById('modal-body');
+  const statusMap = { pending: 'Pendiente', progress: 'En Progreso', done: 'Completada' };
+  const totalGastos = currentTask.gastos.reduce((s, g) => s + g.monto, 0);
   
-  modalBody.innerHTML = `
-    <div style="margin-bottom:16px">
-      <div style="font-size:14px;color:#3a6070;margin-bottom:8px">${currentTask.descripcion}</div>
-      <div class="task-meta" style="margin-bottom:8px">
-        <span>📋 ${currentTask.proyecto}</span>
-        <span>👤 ${currentTask.responsable}</span>
-        <span>📅 ${currentTask.fechaLimite}</span>
-      </div>
-      <div>Estado: <strong>${statusText}</strong> | Progreso: ${currentTask.progreso}%</div>
-      <div class="task-progress" style="margin-top:8px"><div class="task-progress-bar" style="width: ${currentTask.progreso}%"></div></div>
+  body.innerHTML = `
+    <div class="card-desc" style="margin-bottom: 12px;">${currentTask.descripcion}</div>
+    <div class="card-meta" style="margin-bottom: 12px;">
+      <span>📋 ${currentTask.proyecto}</span>
+      <span>👤 ${currentTask.responsable}</span>
+      <span>📅 ${currentTask.fechaLimite}</span>
+    </div>
+    <div>Estado: <strong>${statusMap[currentTask.status]}</strong> | Progreso: ${currentTask.progreso}%</div>
+    <div class="progress-bar" style="margin-top: 8px;"><div class="progress-fill" style="width: ${currentTask.progreso}%"></div></div>
+    
+    <div class="status-row">
+      <button class="status-btn ${currentTask.status === 'pending' ? 'active' : ''}" onclick="cambiarEstadoTarea('pending')">⏳ Pendiente</button>
+      <button class="status-btn ${currentTask.status === 'progress' ? 'active' : ''}" onclick="cambiarEstadoTarea('progress')">🔄 En Progreso</button>
+      <button class="status-btn ${currentTask.status === 'done' ? 'active' : ''}" onclick="cambiarEstadoTarea('done')">✅ Completada</button>
     </div>
     
-    <!-- Botones de estado -->
-    <div class="status-buttons">
-      <button class="status-btn ${currentTask.status === 'pending' ? 'active' : ''}" onclick="updateStatus('pending')">⏳ Pendiente</button>
-      <button class="status-btn ${currentTask.status === 'progress' ? 'active' : ''}" onclick="updateStatus('progress')">🔄 En Progreso</button>
-      <button class="status-btn ${currentTask.status === 'done' ? 'active' : ''}" onclick="updateStatus('done')">✅ Completada</button>
-    </div>
-    
-    <!-- Timer -->
-    <div class="timer-section">
+    <div class="timer-box">
       <div class="section-title">⏱️ Registro de Tiempo</div>
       <div class="timer-display" id="timer-display">00:00:00</div>
       <div class="timer-buttons">
-        <button class="timer-btn timer-start" onclick="startTimer()">▶ Iniciar</button>
-        <button class="timer-btn timer-stop" onclick="stopTimer()">⏸ Pausar</button>
+        <button class="timer-btn timer-start" onclick="iniciarTimer()">▶ Iniciar</button>
+        <button class="timer-btn timer-stop" onclick="detenerTimer()">⏸ Pausar</button>
       </div>
-      <button class="log-time-btn" onclick="logTime()">📝 Registrar tiempo trabajado</button>
+      <button class="log-time-btn" onclick="registrarTiempo()">📝 Registrar tiempo trabajado</button>
       <div class="time-recorded">Tiempo registrado: ${formatTime(currentTask.tiempoRegistrado * 3600)}</div>
     </div>
     
-    <!-- Gastos -->
-    <div class="expense-section">
+    <div class="expense-box">
       <div class="section-title">💰 Gastos y Viáticos</div>
       <div class="expense-row">
         <select id="expense-type" class="expense-select">
@@ -728,68 +794,62 @@ function renderModal() {
           <option value="Materiales">🔧 Materiales</option>
         </select>
         <input type="number" id="expense-amount" class="expense-input" placeholder="B/." step="0.01">
-        <button class="btn btn-primary btn-sm" style="padding:10px 16px" onclick="addExpense()">+</button>
+        <button class="btn btn-primary btn-sm" style="width: auto; padding: 10px 16px;" onclick="agregarGasto()">+</button>
       </div>
       <div id="expense-list"></div>
       <div class="expense-total">Total: B/.${totalGastos.toFixed(2)}</div>
     </div>
     
-    <!-- Comentarios -->
     <div>
       <div class="section-title">💬 Comentarios</div>
       <div class="comment-input">
         <textarea id="new-comment" rows="2" placeholder="Agregar comentario..."></textarea>
-        <button class="btn btn-primary btn-sm" style="padding:10px 16px" onclick="addComment()">Enviar</button>
+        <button class="btn btn-primary btn-sm" style="width: auto; padding: 10px 16px;" onclick="agregarComentario()">Enviar</button>
       </div>
       <div id="comments-list"></div>
     </div>
     
-    <!-- Evidencias -->
-    <div style="margin-top:16px">
+    <div style="margin-top: 16px;">
       <div class="section-title">📸 Evidencias</div>
       <button class="evidence-btn" onclick="document.getElementById('evidence-input').click()">📷 Adjuntar foto</button>
-      <input type="file" id="evidence-input" accept="image/*" style="display:none" onchange="addEvidence(this)">
+      <input type="file" id="evidence-input" accept="image/*" style="display:none" onchange="agregarEvidencia(this)">
       <div id="evidence-list" class="evidence-list"></div>
     </div>
     
-    <!-- Actividades -->
     <div class="activity-log">
       <div class="section-title">📋 Historial</div>
       <div id="activities-list"></div>
     </div>
   `;
   
-  renderExpenses();
-  renderComments();
-  renderEvidences();
-  renderActivities();
+  renderGastos();
+  renderComentarios();
+  renderEvidencias();
+  renderActividades();
   updateTimerDisplay();
 }
 
-function updateStatus(newStatus) {
-  currentTask.status = newStatus;
-  if(newStatus === 'progress' && currentTask.progreso < 30) currentTask.progreso = 30;
-  if(newStatus === 'done') currentTask.progreso = 100;
+function cambiarEstadoTarea(nuevoEstado) {
+  currentTask.status = nuevoEstado;
+  if(nuevoEstado === 'progress' && currentTask.progreso < 30) currentTask.progreso = 30;
+  if(nuevoEstado === 'done') currentTask.progreso = 100;
   
   currentTask.actividades.unshift({
-    accion: `Estado cambiado a ${newStatus === 'pending' ? 'Pendiente' : (newStatus === 'progress' ? 'En Progreso' : 'Completada')}`,
+    accion: `Estado cambiado a ${nuevoEstado === 'pending' ? 'Pendiente' : (nuevoEstado === 'progress' ? 'En Progreso' : 'Completada')}`,
     fecha: new Date().toLocaleString()
   });
   
-  renderModal();
-  renderTasks();
+  renderTareaModal();
+  renderTareas();
 }
 
-function startTimer() {
+function iniciarTimer() {
   if(timerRunning) return;
   timerRunning = true;
-  timerInterval = setInterval(() => {
-    timerSeconds++;
-    updateTimerDisplay();
-  }, 1000);
+  timerInterval = setInterval(() => { timerSeconds++; updateTimerDisplay(); }, 1000);
 }
 
-function stopTimer() {
+function detenerTimer() {
   if(!timerRunning) return;
   timerRunning = false;
   clearInterval(timerInterval);
@@ -800,14 +860,14 @@ function updateTimerDisplay() {
   if(display) display.textContent = formatTime(timerSeconds);
 }
 
-function formatTime(seconds) {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-  return `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+function formatTime(segundos) {
+  const h = Math.floor(segundos / 3600);
+  const m = Math.floor((segundos % 3600) / 60);
+  const s = segundos % 60;
+  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 }
 
-function logTime() {
+function registrarTiempo() {
   const horas = timerSeconds / 3600;
   currentTask.tiempoRegistrado += horas;
   currentTask.actividades.unshift({
@@ -818,11 +878,11 @@ function logTime() {
   timerRunning = false;
   clearInterval(timerInterval);
   updateTimerDisplay();
-  renderModal();
-  renderTasks();
+  renderTareaModal();
+  renderTareas();
 }
 
-function addExpense() {
+function agregarGasto() {
   const tipo = document.getElementById('expense-type').value;
   const monto = parseFloat(document.getElementById('expense-amount').value);
   
@@ -831,155 +891,103 @@ function addExpense() {
     return;
   }
   
-  currentTask.gastos.push({
-    tipo: tipo,
-    monto: monto,
-    fecha: new Date().toLocaleDateString()
-  });
-  
-  currentTask.actividades.unshift({
-    accion: `Gasto registrado: ${tipo} - B/.${monto.toFixed(2)}`,
-    fecha: new Date().toLocaleString()
-  });
-  
+  currentTask.gastos.push({ tipo, monto, fecha: new Date().toLocaleDateString() });
+  currentTask.actividades.unshift({ accion: `Gasto: ${tipo} - B/.${monto.toFixed(2)}`, fecha: new Date().toLocaleString() });
   document.getElementById('expense-amount').value = '';
-  renderExpenses();
-  renderActivities();
-  renderTasks();
+  renderGastos();
+  renderActividades();
+  renderTareas();
 }
 
-function renderExpenses() {
+function renderGastos() {
   const container = document.getElementById('expense-list');
   if(!container) return;
-  
   if(currentTask.gastos.length === 0) {
-    container.innerHTML = '<div style="font-size:12px;color:#7aaabb;text-align:center">No hay gastos registrados</div>';
+    container.innerHTML = '<div style="font-size: 12px; color: #8A9AA8; text-align: center;">No hay gastos</div>';
     return;
   }
-  
-  container.innerHTML = currentTask.gastos.map((g, idx) => `
+  container.innerHTML = currentTask.gastos.map((g, i) => `
     <div class="expense-item">
-      <div><strong>${g.tipo}</strong><br><span style="font-size:10px;color:#7aaabb">${g.fecha}</span></div>
+      <div><strong>${g.tipo}</strong><br><span style="font-size: 10px;">${g.fecha}</span></div>
       <div><strong>B/.${g.monto.toFixed(2)}</strong></div>
-      <div class="delete-btn" onclick="deleteExpense(${idx})">🗑️</div>
+      <div class="delete-icon" onclick="eliminarGasto(${i})">🗑️</div>
     </div>
   `).join('');
 }
 
-function deleteExpense(idx) {
+function eliminarGasto(idx) {
   currentTask.gastos.splice(idx, 1);
-  currentTask.actividades.unshift({
-    accion: `Gasto eliminado`,
-    fecha: new Date().toLocaleString()
-  });
-  renderExpenses();
-  renderActivities();
-  renderTasks();
+  currentTask.actividades.unshift({ accion: `Gasto eliminado`, fecha: new Date().toLocaleString() });
+  renderGastos();
+  renderActividades();
+  renderTareas();
 }
 
-function addComment() {
-  const textarea = document.getElementById('new-comment');
-  const texto = textarea.value.trim();
-  
-  if(!texto) {
-    alert('Escribe un comentario');
-    return;
-  }
-  
-  currentTask.comentarios.push({
-    usuario: currentTask.responsable,
-    texto: texto,
-    fecha: new Date().toLocaleString()
-  });
-  
-  currentTask.actividades.unshift({
-    accion: `Comentario: "${texto.substring(0, 50)}${texto.length > 50 ? '...' : ''}"`,
-    fecha: new Date().toLocaleString()
-  });
-  
-  textarea.value = '';
-  renderComments();
-  renderActivities();
+function agregarComentario() {
+  const texto = document.getElementById('new-comment').value.trim();
+  if(!texto) { alert('Escribe un comentario'); return; }
+  currentTask.comentarios.push({ usuario: currentTask.responsable, texto, fecha: new Date().toLocaleString() });
+  currentTask.actividades.unshift({ accion: `Comentario: "${texto.substring(0, 50)}${texto.length > 50 ? '...' : ''}"`, fecha: new Date().toLocaleString() });
+  document.getElementById('new-comment').value = '';
+  renderComentarios();
+  renderActividades();
 }
 
-function renderComments() {
+function renderComentarios() {
   const container = document.getElementById('comments-list');
   if(!container) return;
-  
   if(currentTask.comentarios.length === 0) {
-    container.innerHTML = '<div style="font-size:12px;color:#7aaabb;text-align:center">No hay comentarios</div>';
+    container.innerHTML = '<div style="font-size: 12px; color: #8A9AA8; text-align: center;">No hay comentarios</div>';
     return;
   }
-  
   container.innerHTML = currentTask.comentarios.map(c => `
     <div class="comment-item">
-      <div class="comment-header">
-        <strong>${c.usuario}</strong>
-        <span>${c.fecha}</span>
-      </div>
+      <div class="comment-header"><strong>${c.usuario}</strong><span>${c.fecha}</span></div>
       <div class="comment-text">${c.texto}</div>
     </div>
   `).join('');
 }
 
-function addEvidence(input) {
+function agregarEvidencia(input) {
   if(!input.files[0]) return;
   const file = input.files[0];
   const reader = new FileReader();
-  
   reader.onload = e => {
-    currentTask.evidencias.push({
-      url: e.target.result,
-      nombre: file.name,
-      fecha: new Date().toLocaleString()
-    });
-    currentTask.actividades.unshift({
-      accion: `Evidencia adjuntada: ${file.name}`,
-      fecha: new Date().toLocaleString()
-    });
-    renderEvidences();
-    renderActivities();
+    currentTask.evidencias.push({ url: e.target.result, nombre: file.name, fecha: new Date().toLocaleString() });
+    currentTask.actividades.unshift({ accion: `Evidencia: ${file.name}`, fecha: new Date().toLocaleString() });
+    renderEvidencias();
+    renderActividades();
   };
   reader.readAsDataURL(file);
   input.value = '';
 }
 
-function renderEvidences() {
+function renderEvidencias() {
   const container = document.getElementById('evidence-list');
   if(!container) return;
-  
-  if(currentTask.evidencias.length === 0) {
-    container.innerHTML = '';
-    return;
-  }
-  
-  container.innerHTML = currentTask.evidencias.map((e, idx) => `
+  if(currentTask.evidencias.length === 0) { container.innerHTML = ''; return; }
+  container.innerHTML = currentTask.evidencias.map((e, i) => `
     <div class="evidence-wrapper">
       <img src="${e.url}" class="evidence-img">
-      <div class="evidence-delete" onclick="deleteEvidence(${idx})">×</div>
+      <div class="evidence-delete" onclick="eliminarEvidencia(${i})">×</div>
     </div>
   `).join('');
 }
 
-function deleteEvidence(idx) {
+function eliminarEvidencia(idx) {
   currentTask.evidencias.splice(idx, 1);
-  currentTask.actividades.unshift({
-    accion: `Evidencia eliminada`,
-    fecha: new Date().toLocaleString()
-  });
-  renderEvidences();
-  renderActivities();
+  currentTask.actividades.unshift({ accion: `Evidencia eliminada`, fecha: new Date().toLocaleString() });
+  renderEvidencias();
+  renderActividades();
 }
 
-function renderActivities() {
+function renderActividades() {
   const container = document.getElementById('activities-list');
   if(!container) return;
-  
   if(currentTask.actividades.length === 0) {
-    container.innerHTML = '<div style="font-size:12px;color:#7aaabb;text-align:center">No hay actividades</div>';
+    container.innerHTML = '<div style="font-size: 12px; color: #8A9AA8; text-align: center;">No hay actividades</div>';
     return;
   }
-  
   container.innerHTML = currentTask.actividades.slice(0, 15).map(a => `
     <div class="activity-item">
       <div class="activity-time">${a.fecha.substring(5,16)}</div>
@@ -989,32 +997,128 @@ function renderActivities() {
 }
 
 function closeModal() {
-  if(timerRunning) {
-    stopTimer();
-    timerSeconds = 0;
-  }
-  document.getElementById('task-modal').classList.remove('open');
+  if(timerRunning) { detenerTimer(); timerSeconds = 0; }
+  document.getElementById('modal-tarea').classList.remove('open');
   currentTask = null;
 }
 
-function renderCases() {
-  const container = document.getElementById('cases-list');
+// ==================== CASOS ====================
+function renderCasos() {
+  const container = document.getElementById('casos-list');
   if(!container) return;
-  container.innerHTML = CASOS.map(caso => `
-    <div class="case-card ${caso.atendido ? 'done' : ''}">
-      <div class="case-header">
-        <div class="case-id">${caso.id}</div>
-        <div class="pill ${caso.atendido ? 'pill-done' : 'pill-open'}">${caso.atendido ? '✓ Atendido' : '● Abierto'}</div>
+  container.innerHTML = '';
+  
+  casos.forEach(c => {
+    const div = document.createElement('div');
+    div.className = `card ${c.atendido ? 'done' : ''}`;
+    div.onclick = () => !c.atendido && abrirCasoModal(c);
+    div.innerHTML = `
+      <div class="card-header">
+        <div class="card-title">${c.id}</div>
+        <div class="card-badge ${c.atendido ? 'badge-done' : 'badge-open'}">${c.atendido ? '✓ Atendido' : '● Abierto'}</div>
       </div>
-      <div class="case-client" style="font-weight:600">${caso.cliente}</div>
-      <div class="case-meta" style="font-size:11px;color:#7aaabb;margin-top:4px">📅 ${caso.fecha}</div>
-    </div>
-  `).join('');
+      <div class="card-desc" style="font-weight: 600;">${c.cliente}</div>
+      <div class="card-meta">📅 ${c.fecha}</div>
+    `;
+    container.appendChild(div);
+  });
 }
 
-// Inicializar
-renderCases();
-renderTasks();
+function abrirCasoModal(caso) {
+  currentCaso = caso;
+  casoDiagnostico = caso.diagnostico || null;
+  casoStockSeleccionado = caso.stockSeleccionado || null;
+  document.getElementById('modal-caso-title').textContent = caso.id;
+  renderCasoModal();
+  document.getElementById('modal-caso').classList.add('open');
+}
+
+function renderCasoModal() {
+  const body = document.getElementById('modal-caso-body');
+  body.innerHTML = `
+    <div style="margin-bottom: 16px;">
+      <div class="lbl">Cliente</div>
+      <div class="card-desc" style="font-weight: 600;">${currentCaso.cliente}</div>
+      <div class="card-meta">📅 ${currentCaso.fecha}</div>
+    </div>
+    
+    <div class="lbl">Equipo a evaluar</div>
+    <div class="equipment-card">
+      <input type="text" id="equipo-modelo" class="equipment-input" placeholder="Modelo / Descripción" value="${currentCaso.equipo?.modelo || ''}">
+      <input type="text" id="equipo-serie" class="equipment-input" placeholder="Número de Serie" value="${currentCaso.equipo?.serie || ''}">
+      <input type="text" id="equipo-garantia" class="equipment-input" placeholder="Vigencia de Garantía" value="${currentCaso.equipo?.garantia || ''}">
+    </div>
+    
+    <div class="lbl">Diagnóstico</div>
+    <div class="diagnosis-option ${casoDiagnostico === 'reparacion' ? 'selected' : ''}" onclick="setDiagnostico('reparacion')">
+      <div class="diagnosis-radio"></div>
+      <div><strong>🔧 Reparación</strong><br><small>El equipo puede ser reparado</small></div>
+    </div>
+    <div class="diagnosis-option ${casoDiagnostico === 'reemplazo' ? 'selected' : ''}" onclick="setDiagnostico('reemplazo')">
+      <div class="diagnosis-radio"></div>
+      <div><strong>🔄 Reemplazo</strong><br><small>Requiere reemplazo del equipo</small></div>
+    </div>
+    
+    <div id="stock-section" style="display: ${casoDiagnostico === 'reemplazo' ? 'block' : 'none'}; margin-top: 12px;">
+      <div class="lbl">Stock / Spare disponible</div>
+      ${stockEquipos.filter(s => s.disponible).map(s => `
+        <div class="stock-item ${casoStockSeleccionado === s.id ? 'selected' : ''}" onclick="seleccionarStock('${s.id}')">
+          <div class="stock-radio"></div>
+          <div>
+            <strong>${s.nombre}</strong><br>
+            <small>Serie: ${s.serie} | 📍 ${s.ubicacion}</small>
+          </div>
+        </div>
+      `).join('')}
+      ${stockEquipos.filter(s => s.disponible).length === 0 ? '<div style="font-size: 12px; color: #EF4444;">No hay stock disponible</div>' : ''}
+    </div>
+    
+    <button class="btn btn-primary" style="margin-top: 16px;" onclick="guardarCaso()">Guardar y continuar →</button>
+  `;
+}
+
+function setDiagnostico(tipo) {
+  casoDiagnostico = tipo;
+  renderCasoModal();
+}
+
+function seleccionarStock(id) {
+  casoStockSeleccionado = id;
+  renderCasoModal();
+}
+
+function guardarCaso() {
+  const modelo = document.getElementById('equipo-modelo').value.trim();
+  const serie = document.getElementById('equipo-serie').value.trim();
+  const garantia = document.getElementById('equipo-garantia').value.trim();
+  
+  if(!modelo || !serie) {
+    alert('Por favor ingresa modelo y serie del equipo');
+    return;
+  }
+  
+  currentCaso.equipo = { modelo, serie, garantia };
+  currentCaso.diagnostico = casoDiagnostico;
+  currentCaso.stockSeleccionado = casoStockSeleccionado;
+  
+  if(casoDiagnostico === 'reemplazo' && !casoStockSeleccionado) {
+    alert('Selecciona un equipo de reemplazo del stock disponible');
+    return;
+  }
+  
+  alert(`✅ Caso ${currentCaso.id} actualizado\nDiagnóstico: ${casoDiagnostico === 'reemplazo' ? 'Requiere Reemplazo' : 'Reparación'}`);
+  closeCasoModal();
+  renderCasos();
+}
+
+function closeCasoModal() {
+  document.getElementById('modal-caso').classList.remove('open');
+  currentCaso = null;
+}
+
+// ==================== INICIALIZAR ====================
+renderCasos();
+renderTareas();
 </script>
 </body>
 </html>
