@@ -21,7 +21,14 @@ html{background:#cceeff}
 body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;min-height:100vh;overflow-x:hidden;display:flex;justify-content:center;align-items:flex-start}
 #app{width:100%;max-width:430px;min-height:100vh;background:var(--bg);display:flex;flex-direction:column}
 
-/* STEP BAR */
+/* TABS - NUEVO */
+.tabs-container{background:var(--s1);border-bottom:2px solid var(--border);padding:0 12px;display:flex;gap:4px;position:sticky;top:0;z-index:45}
+.tab-btn{flex:1;padding:12px 8px;background:none;border:none;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;color:var(--text3);cursor:pointer;transition:all .2s;border-bottom:3px solid transparent}
+.tab-btn.active{color:var(--acc);border-bottom-color:var(--acc)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* STEP BAR - ORIGINAL */
 .step-bar{background:var(--s1);border-bottom:2px solid var(--border);padding:10px 12px;display:flex;align-items:center;position:sticky;top:0;z-index:50;width:100%;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .step-dot{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;position:relative}
 .step-dot::after{content:'';position:absolute;top:12px;left:50%;width:100%;height:2px;background:var(--border);z-index:0}
@@ -34,22 +41,38 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
 .step-dot.done .step-label{color:#158a38}
 .step-dot.done::after{background:rgba(28,174,72,.4)}
 
-/* HEADER */
+/* HEADER - ORIGINAL */
 .header{background:#ffffff;border-bottom:3px solid var(--acc);padding:16px 16px 14px;display:flex;align-items:center;gap:12px;color:var(--text)}
 .header-logo{font-size:20px;font-weight:800;letter-spacing:-.5px;color:#0a1a1f}
 .header-logo span{color:var(--acc);font-weight:300}
 .header-sub{font-size:11px;color:var(--text2);margin-top:1px;font-weight:400}
 .header-badge{margin-left:auto;background:rgba(69,195,244,.12);border:1px solid rgba(69,195,244,.4);color:var(--acc);font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;font-family:'JetBrains Mono',monospace;white-space:nowrap}
 
-/* SCREENS */
+/* SCREENS - ORIGINAL */
 .screen{display:none;flex-direction:column;gap:14px;padding:14px 14px 32px;animation:fadeUp .22s ease}
 .screen.active{display:flex}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* LABELS */
+/* LABELS - ORIGINAL */
 .lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);padding:0 2px}
 
-/* CASE CARDS */
+/* TASK CARDS - NUEVO */
+.task-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:12px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.task-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--acc);border-radius:4px 0 0 4px}
+.task-card:active{transform:scale(.985)}
+.task-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.task-title{font-size:14px;font-weight:700;color:var(--text)}
+.task-priority{font-size:10px;padding:3px 8px;border-radius:12px;font-weight:600}
+.priority-high{background:rgba(224,48,48,.1);color:var(--danger)}
+.priority-medium{background:rgba(212,130,10,.1);color:var(--warn)}
+.priority-low{background:rgba(28,174,72,.1);color:var(--acc3)}
+.task-desc{font-size:12px;color:var(--text2);margin-bottom:8px;line-height:1.4}
+.task-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--text3)}
+.task-meta span{display:flex;align-items:center;gap:4px}
+.task-progress{height:4px;background:var(--border);border-radius:2px;margin-top:10px;overflow:hidden}
+.task-progress-bar{height:100%;background:var(--acc);border-radius:2px;transition:width .3s}
+
+/* CASE CARDS - ORIGINAL */
 .case-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .case-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--border);border-radius:4px 0 0 4px;transition:background .18s}
 .case-card:active{transform:scale(.985)}
@@ -68,7 +91,7 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
 .case-meta-i{font-size:11px;color:var(--text3)}
 .case-meta-i strong{color:var(--text2)}
 
-/* INFO CARDS */
+/* INFO CARDS - ORIGINAL */
 .info-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .info-section{padding:12px 14px;border-bottom:1px solid var(--border)}
 .info-section:last-child{border-bottom:none}
@@ -81,12 +104,12 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
 .info-val.green{color:var(--acc3)}
 .info-val.red{color:var(--danger)}
 
-/* CONTRACT/PROJECT BADGE */
+/* CONTRACT/PROJECT BADGE - ORIGINAL */
 .origin-badge{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--r-sm);font-size:12px;font-weight:600;margin-bottom:4px}
 .origin-contract{background:rgba(69,195,244,.1);border:1px solid rgba(69,195,244,.3);color:#0a8ab8}
 .origin-project{background:rgba(28,174,72,.08);border:1px solid rgba(28,174,72,.2);color:#158a38}
 
-/* FORM ELEMENTS */
+/* FORM ELEMENTS - ORIGINAL */
 .form-group{display:flex;flex-direction:column;gap:6px}
 .form-label{font-size:12px;font-weight:600;color:var(--text2)}
 .form-label span{color:var(--danger);margin-left:2px}
@@ -97,7 +120,7 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
 .ftextarea:focus{border-color:var(--acc)}
 .ftextarea::placeholder{color:var(--text3)}
 
-/* MOTIVO CHECKBOXES */
+/* MOTIVO CHECKBOXES - ORIGINAL */
 .motivos-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .motivo-item{display:flex;align-items:center;gap:8px;background:var(--s1);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:9px 12px;cursor:pointer;transition:all .18s;user-select:none}
 .motivo-item.selected{border-color:var(--acc);background:rgba(69,195,244,.08)}
@@ -109,31 +132,14 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
 .motivo-text{font-size:12px;font-weight:500;color:var(--text2);line-height:1.3}
 .motivo-item.selected .motivo-text{color:#0a8ab8}
 
-/* QR SCREEN */
+/* QR SCREEN - ORIGINAL */
 .qr-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;align-items:center;gap:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .qr-title{font-size:16px;font-weight:700;color:var(--text);text-align:center}
 .qr-sub{font-size:12px;color:var(--text2);text-align:center;line-height:1.5}
 #qr-container{background:#fff;padding:16px;border-radius:10px;border:2px solid var(--border)}
 .qr-instructions{background:rgba(26,107,200,.07);border:1px solid rgba(26,107,200,.2);border-radius:var(--r-sm);padding:12px 14px;font-size:12px;color:var(--acc2);line-height:1.6;width:100%;text-align:center}
 
-/* CLIENT FORM (shown on client's phone after QR scan) */
-.client-screen{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.client-header{background:var(--acc);padding:14px 16px;color:#fff}
-.client-header h3{font-size:15px;font-weight:700}
-.client-header p{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px}
-.client-body{padding:14px;display:flex;flex-direction:column;gap:12px}
-
-/* RESULTADO */
-.resultado-card{border-radius:var(--r);padding:20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
-.resultado-card.completo{background:rgba(26,140,90,.08);border:2px solid rgba(26,140,90,.3)}
-.resultado-card.parcial{background:rgba(212,130,10,.08);border:2px solid rgba(212,130,10,.3)}
-.resultado-icon{font-size:44px}
-.resultado-title{font-size:20px;font-weight:800}
-.resultado-card.completo .resultado-title{color:var(--acc3)}
-.resultado-card.parcial .resultado-title{color:var(--warn)}
-.resultado-sub{font-size:13px;color:var(--text2);line-height:1.5}
-
-/* BUTTONS */
+/* BUTTONS - ORIGINAL */
 .btn{width:100%;padding:13px;border:none;border-radius:var(--r-sm);font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .18s;letter-spacing:.01em}
 .btn:active{transform:scale(.97)}
 .btn-primary{background:var(--acc);color:#fff;box-shadow:0 3px 12px rgba(69,195,244,.35)}
@@ -144,7 +150,7 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
 .btn-warn{background:rgba(212,130,10,.1);border:1.5px solid rgba(212,130,10,.4);color:var(--warn)}
 .btn-sm{padding:9px 14px;font-size:13px}
 
-/* RADIO BUTTONS */
+/* RADIO BUTTONS - ORIGINAL */
 .radio-group{display:flex;gap:8px}
 .radio-item{flex:1;padding:11px 8px;border-radius:var(--r-sm);border:2px solid var(--border);background:var(--s1);cursor:pointer;text-align:center;transition:all .18s;user-select:none}
 .radio-item.sel-completo{border-color:var(--acc3);background:rgba(26,140,90,.08)}
@@ -154,215 +160,216 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
 .radio-item.sel-parcial .radio-label{color:var(--warn)}
 .radio-sub{font-size:10px;color:var(--text3);margin-top:2px}
 
-/* MODAL */
+/* MODAL - ORIGINAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-bg.open{opacity:1;pointer-events:all}
 .modal{background:var(--s1);border-radius:20px 20px 0 0;padding:24px 20px 36px;width:100%;max-width:430px;transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);border-top:3px solid var(--acc)}
 .modal-bg.open .modal{transform:translateY(0)}
 .mhandle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 20px}
 
-/* SPIN */
-.spin{width:18px;height:18px;border:2px solid rgba(0,0,0,.15);border-top-color:var(--acc);border-radius:50%;animation:rot .65s linear infinite;flex-shrink:0}
-@keyframes rot{to{transform:rotate(360deg)}}
-
-/* MISC */
-.info-box{background:rgba(69,195,244,.07);border:1px solid rgba(69,195,244,.25);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:#0a8ab8;line-height:1.55}
-.info-box strong{color:#0a8ab8}
-.warn-box{background:rgba(212,130,10,.07);border:1px solid rgba(212,130,10,.2);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--warn);line-height:1.55}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+/* MODAL TAREA - NUEVO */
+.task-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .25s}
+.task-modal.open{opacity:1;pointer-events:all}
+.task-modal-content{background:var(--s1);border-radius:20px 20px 0 0;padding:24px 20px 36px;width:100%;max-width:430px;transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);border-top:3px solid var(--acc);max-height:85vh;overflow-y:auto}
+.task-modal.open .task-modal-content{transform:translateY(0)}
+.status-buttons{display:flex;gap:8px;margin:16px 0}
+.status-btn{flex:1;padding:10px;border:1px solid var(--border);border-radius:var(--r-sm);background:white;font-weight:600;font-size:13px;cursor:pointer}
+.status-btn.active{background:var(--acc);color:white;border:none}
+.expense-box{background:var(--s2);border-radius:var(--r);padding:16px;margin:16px 0}
+.expense-row{display:flex;gap:8px;margin-bottom:12px}
+.expense-select,.expense-input{flex:1;padding:10px;border:1px solid var(--border);border-radius:var(--r-sm);background:white}
+.expense-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.delete-icon{color:var(--danger);cursor:pointer;padding:4px 8px}
+.timer-box{background:linear-gradient(135deg, var(--acc), #2a9bcb);border-radius:var(--r);padding:16px;margin:16px 0;color:white}
+.timer-display{font-size:32px;font-weight:800;font-family:monospace;text-align:center}
+.timer-buttons{display:flex;gap:8px;margin-top:12px}
+.timer-btn{flex:1;padding:10px;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer}
+.timer-start{background:white;color:var(--acc)}
+.timer-stop{background:rgba(255,255,255,.2);color:white}
+.log-time-btn{width:100%;margin-top:12px;padding:10px;background:var(--acc2);color:white;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer}
+.comment-input{display:flex;gap:8px;margin:12px 0}
+.comment-input textarea{flex:1;padding:10px;border:1px solid var(--border);border-radius:var(--r-sm);font-family:inherit;resize:none}
+.comment-item{background:var(--s2);border-radius:var(--r-sm);padding:10px;margin-bottom:8px}
+.comment-header{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:4px}
+.evidence-btn{width:100%;padding:12px;background:var(--s2);border:1.5px dashed var(--border);border-radius:var(--r-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.evidence-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.evidence-img{width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--border)}
+.evidence-wrapper{position:relative;display:inline-block}
+.evidence-delete{position:absolute;top:-6px;right:-6px;background:var(--danger);color:white;border-radius:50%;width:20px;height:20px;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.activity-log{background:var(--s2);border-radius:var(--r);padding:12px;margin-top:16px;max-height:200px;overflow-y:auto}
+.activity-item{font-size:11px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:8px}
+.activity-time{color:var(--text3);min-width:65px;font-family:monospace}
+/* EQUIPMENT SECTION - ORIGINAL */
+.equipment-card{background:var(--s2);border-radius:var(--r-sm);padding:12px;margin-top:8px}
+.stock-card{background:rgba(69,195,244,.05);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;margin-top:8px}
+.stock-available{display:flex;align-items:center;gap:8px;padding:8px;border-radius:var(--r-sm);margin-top:6px;cursor:pointer}
+.stock-available.selected{background:rgba(28,174,72,.1);border:1px solid var(--acc3)}
+.stock-radio{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center}
+.stock-radio.selected::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--acc3)}
+.replacement-option{background:var(--s2);border-radius:var(--r-sm);padding:12px;margin-top:12px}
+.radio-option{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);cursor:pointer}
+.radio-option.selected{background:rgba(69,195,244,.1);border-left:3px solid var(--acc)}
+.radio-custom{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center}
+.radio-custom.selected::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--acc)}
+.info-box{background:rgba(69,195,244,.07);border:1px solid rgba(69,195,244,.25);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:#0a8ab8}
+.warn-box{background:rgba(212,130,10,.07);border:1px solid rgba(212,130,10,.2);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--warn)}
+.resultado-card{border-radius:var(--r);padding:20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.resultado-card.completo{background:rgba(26,140,90,.08);border:2px solid rgba(26,140,90,.3)}
+.resultado-card.parcial{background:rgba(212,130,10,.08);border:2px solid rgba(212,130,10,.3)}
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- STEP BAR -->
-<div class="step-bar">
-  <div class="step-dot active" id="sd1"><div class="step-circle">1</div><div class="step-label">Caso</div></div>
-  <div class="step-dot" id="sd2"><div class="step-circle">2</div><div class="step-label">Cliente</div></div>
-  <div class="step-dot" id="sd3"><div class="step-circle">3</div><div class="step-label">Servicio</div></div>
-  <div class="step-dot" id="sd4"><div class="step-circle">4</div><div class="step-label">Notas</div></div>
-  <div class="step-dot" id="sd5"><div class="step-circle">5</div><div class="step-label">QR</div></div>
-  <div class="step-dot" id="sd6"><div class="step-circle">6</div><div class="step-label">Cierre</div></div>
+<!-- TABS: CASOS / TAREAS -->
+<div class="tabs-container">
+  <button class="tab-btn active" onclick="switchTab('casos')">📋 Casos</button>
+  <button class="tab-btn" onclick="switchTab('tareas')">✅ Tareas</button>
 </div>
 
-<!-- ═══════════════════════════════════ -->
-<!--  S1 — LISTA DE CASOS              -->
-<!-- ═══════════════════════════════════ -->
-<div class="screen active" id="s1">
+<!-- ========== CONTENIDO CASOS (ORIGINAL - SIN MODIFICAR) ========== -->
+<div id="tab-casos" class="tab-content active">
+  <!-- STEP BAR -->
+  <div class="step-bar">
+    <div class="step-dot active" id="sd1"><div class="step-circle">1</div><div class="step-label">Caso</div></div>
+    <div class="step-dot" id="sd2"><div class="step-circle">2</div><div class="step-label">Cliente</div></div>
+    <div class="step-dot" id="sd3"><div class="step-circle">3</div><div class="step-label">Servicio</div></div>
+    <div class="step-dot" id="sd4"><div class="step-circle">4</div><div class="step-label">Notas</div></div>
+    <div class="step-dot" id="sd5"><div class="step-circle">5</div><div class="step-label">QR</div></div>
+    <div class="step-dot" id="sd6"><div class="step-circle">6</div><div class="step-label">Cierre</div></div>
+  </div>
+
+  <!-- S1 — LISTA DE CASOS -->
+  <div class="screen active" id="s1">
+    <div class="header">
+      <div>
+        <div class="header-logo">MULTI<span>TEK</span></div>
+        <div class="header-sub">Órdenes de Servicio Técnico</div>
+      </div>
+      <div class="header-badge">Ing. Técnico</div>
+    </div>
+    <div class="lbl">Casos asignados</div>
+    <div id="cases-list"></div>
+  </div>
+
+  <!-- S2 — DATOS CLIENTE + ORIGEN -->
+  <div class="screen" id="s2">
+    <div style="display:flex;align-items:center;gap:10px;padding:14px 0 0">
+      <button class="btn btn-ghost btn-sm" style="width:auto" onclick="goStep(1)">← Casos</button>
+      <div style="font-size:14px;font-weight:700" id="s2-case-id">OS-0000</div>
+    </div>
+    <div class="lbl">Datos del cliente</div>
+    <div class="info-card" id="client-card"></div>
+    <div class="lbl">Origen del caso</div>
+    <div class="info-card" id="origin-card"></div>
+    <button class="btn btn-primary" onclick="goStep(3)">Continuar al servicio →</button>
+  </div>
+
+  <!-- S3 — MOTIVO + DETALLE SERVICIO + EQUIPO -->
+  <div class="screen" id="s3">
+    <div style="display:flex;align-items:center;gap:10px;padding:14px 0 0">
+      <button class="btn btn-ghost btn-sm" style="width:auto" onclick="goStep(2)">← Cliente</button>
+      <div style="font-size:13px;color:var(--text2)" id="s3-case-label">—</div>
+    </div>
+    <div class="lbl">Motivo del servicio <span style="color:var(--danger)">*</span></div>
+    <div class="motivos-grid" id="motivos-grid"></div>
+    <div id="equipment-section" style="display:none">
+      <div class="lbl">Equipo a evaluar</div>
+      <div class="equipment-card">
+        <div class="form-group"><div class="form-label">Modelo / Descripción</div><input class="finput" id="equipo-modelo" type="text" placeholder="Ej: Servidor Dell PowerEdge T160 Smart"></div>
+        <div class="form-group"><div class="form-label">Número de Serie</div><input class="finput" id="equipo-serie" type="text" placeholder="Ej: 11223344"></div>
+        <div class="form-group"><div class="form-label">Vigencia de Garantía</div><input class="finput" id="equipo-garantia" type="text" placeholder="Ej: 15/03/2026"></div>
+      </div>
+      <div class="replacement-option">
+        <div class="form-label" style="margin-bottom:8px">Diagnóstico</div>
+        <div class="radio-option" id="opt-repair" onclick="selectDiagnosis('repair')"><div class="radio-custom" id="radio-repair"></div><div><strong>🔧 Reparación</strong><br><small>El equipo puede ser reparado</small></div></div>
+        <div class="radio-option" id="opt-replace" onclick="selectDiagnosis('replace')"><div class="radio-custom" id="radio-replace"></div><div><strong>🔄 Reemplazo</strong><br><small>Requiere reemplazo del equipo</small></div></div>
+      </div>
+      <div id="stock-section" style="display:none"><div class="lbl">Stock / Spare disponible</div><div class="stock-card" id="stock-list"></div></div>
+    </div>
+    <div class="lbl">Detalle del servicio prestado <span style="color:var(--danger)">*</span></div>
+    <div class="form-group"><textarea class="ftextarea" id="detalle-servicio" rows="4" placeholder="Describe en detalle las tareas realizadas..."></textarea></div>
+    <div class="lbl">Equipos / Series instalados</div>
+    <div class="form-group"><textarea class="ftextarea" id="equipos-series" rows="2" placeholder="Modelo y número de serie (opcional)"></textarea></div>
+    <div class="lbl">Foto de evidencia del servicio</div>
+    <div id="foto-s3-wrap" style="display:none;flex-direction:column;gap:6px"><div style="display:flex;gap:10px;align-items:center;background:var(--s1);border:1px solid rgba(26,140,90,.3);border-radius:var(--r-sm);padding:10px 12px"><img id="foto-s3-thumb" src="" style="width:52px;height:52px;object-fit:cover;border-radius:6px"><div><div style="font-size:12px;font-weight:600;color:var(--acc3)">✓ Foto cargada</div><div style="font-size:11px;color:var(--text3)" id="foto-s3-nombre">—</div></div><button onclick="clearFotoS3()" style="margin-left:auto;background:none;border:none;color:var(--danger);font-size:18px;cursor:pointer">×</button></div></div>
+    <button class="btn btn-ghost btn-sm" id="btn-foto-s3" onclick="document.getElementById('foto-input-s3').click()">📷 Adjuntar foto del servicio (opcional)</button>
+    <input type="file" id="foto-input-s3" accept="image/*" style="display:none" onchange="adjuntarFotoS3(this)">
+    <button class="btn btn-primary" onclick="validateS3()">Continuar →</button>
+  </div>
+
+  <!-- S4 — OBSERVACIONES -->
+  <div class="screen" id="s4">
+    <div style="display:flex;align-items:center;gap:10px;padding:14px 0 0"><button class="btn btn-ghost btn-sm" style="width:auto" onclick="goStep(3)">← Servicio</button></div>
+    <div class="lbl">Observaciones y recomendaciones</div>
+    <div class="form-group"><textarea class="ftextarea" id="observaciones" rows="4" placeholder="Observaciones adicionales..."></textarea></div>
+    <div class="lbl">Número de Ticket (si aplica)</div>
+    <div class="form-group"><input class="finput" id="num-ticket" type="text" placeholder="Ej: TKT-2024-0512"></div>
+    <div class="info-box">Al continuar se generará el <strong>código QR</strong> para que el cliente lo escanee desde su celular y firme la orden.</div>
+    <button class="btn btn-primary" onclick="generateQR()">Generar QR para cliente →</button>
+  </div>
+
+  <!-- S5 — QR -->
+  <div class="screen" id="s5">
+    <div style="padding:14px 0 0"><div style="font-size:15px;font-weight:700">Presentar al cliente</div><div style="font-size:12px;color:var(--text2)">El cliente escanea el QR con su celular</div></div>
+    <div class="qr-wrap"><div class="qr-title">Confirmación de Servicio</div><div class="qr-sub" id="qr-case-info">—</div><div id="qr-container"></div><div class="qr-instructions">📱 El cliente escanea este QR para confirmar y firmar la orden</div></div>
+    <div class="warn-box">⏳ Esperando que el cliente complete la firma...</div>
+    <button class="btn btn-ghost" onclick="goStep(4)">← Editar notas</button>
+    <button class="btn btn-ghost btn-sm" onclick="simulateClientSign()" style="font-size:11px">🔧 Simular firma del cliente (demo)</button>
+  </div>
+
+  <!-- S6 — RESULTADO -->
+  <div class="screen" id="s6">
+    <div style="padding:14px 0 0"><div style="font-size:15px;font-weight:700">Orden Completada</div></div>
+    <div class="resultado-card" id="resultado-card"><div class="resultado-icon" id="resultado-icon">✅</div><div class="resultado-title" id="resultado-title">Caso Atendido Completo</div><div class="resultado-sub" id="resultado-sub">—</div></div>
+    <div class="info-card" id="firma-card"></div>
+    <div id="replacement-info" style="display:none" class="warn-box">⚠️ <strong>Pendiente de Reemplazo</strong><br>Se requiere una segunda visita para completar el servicio.</div>
+    <div id="foto-adjunta-result" style="display:none"><div class="lbl">Foto adjunta como respaldo</div><div style="display:flex;gap:10px;background:var(--s1);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px"><img id="foto-thumb" src="" style="width:56px;height:56px;object-fit:cover;border-radius:6px"><div><div style="font-size:12px;font-weight:600;color:var(--acc3)">✓ Foto adjuntada</div><div style="font-size:11px;color:var(--text3)" id="foto-nombre">—</div></div><button onclick="clearFoto()" style="margin-left:auto;background:none;border:none;color:var(--danger);font-size:18px">×</button></div></div>
+    <button class="btn btn-ghost" onclick="document.getElementById('foto-input-s6').click()" id="btn-adjuntar-foto">📷 Adjuntar foto de respaldo</button>
+    <input type="file" id="foto-input-s6" accept="image/*" style="display:none" onchange="adjuntarFoto(this)">
+    <button class="btn btn-success" onclick="culminarCaso()">✅ Culminar y cerrar caso</button>
+  </div>
+</div>
+
+<!-- ========== CONTENIDO TAREAS (NUEVO) ========== -->
+<div id="tab-tareas" class="tab-content">
   <div class="header">
-    <div>
-      <div class="header-logo">MULTI<span>TEK</span></div>
-      <div class="header-sub">Órdenes de Servicio Técnico</div>
-    </div>
-    <div class="header-badge">Ing. Técnico</div>
+    <div><div class="header-logo">MULTI<span>TEK</span></div><div class="header-sub">Gestión de Tareas de Proyectos</div></div>
+    <div class="header-badge">Seguimiento</div>
   </div>
-  <div class="lbl">Casos asignados</div>
-  <div id="cases-list"></div>
+  <div style="padding:14px" id="tasks-list"></div>
 </div>
 
-<!-- ═══════════════════════════════════ -->
-<!--  S2 — DATOS CLIENTE + ORIGEN      -->
-<!-- ═══════════════════════════════════ -->
-<div class="screen" id="s2">
-  <div style="display:flex;align-items:center;gap:10px;padding:14px 0 0">
-    <button class="btn btn-ghost btn-sm" style="width:auto" onclick="goStep(1)">← Casos</button>
-    <div style="font-size:14px;font-weight:700" id="s2-case-id">OS-0000</div>
-  </div>
-  <div class="lbl">Datos del cliente</div>
-  <div class="info-card" id="client-card"></div>
-  <div class="lbl">Origen del caso</div>
-  <div class="info-card" id="origin-card"></div>
-  <button class="btn btn-primary" onclick="goStep(3)">Continuar al servicio →</button>
-</div>
-
-<!-- ═══════════════════════════════════ -->
-<!--  S3 — MOTIVO + DETALLE SERVICIO   -->
-<!-- ═══════════════════════════════════ -->
-<div class="screen" id="s3">
-  <div style="display:flex;align-items:center;gap:10px;padding:14px 0 0">
-    <button class="btn btn-ghost btn-sm" style="width:auto" onclick="goStep(2)">← Cliente</button>
-    <div style="font-size:13px;color:var(--text2)" id="s3-case-label">—</div>
-  </div>
-  <div class="lbl">Motivo del servicio <span style="color:var(--danger)">*</span></div>
-  <div class="motivos-grid" id="motivos-grid"></div>
-  <div class="lbl">Detalle del servicio prestado <span style="color:var(--danger)">*</span></div>
-  <div class="form-group">
-    <textarea class="ftextarea" id="detalle-servicio" rows="4" placeholder="Describe en detalle las tareas realizadas, equipos intervenidos, configuraciones aplicadas..."></textarea>
-  </div>
-  <div class="lbl">Equipos / Series instalados</div>
-  <div class="form-group">
-    <textarea class="ftextarea" id="equipos-series" rows="2" placeholder="Modelo y número de serie de equipos instalados (opcional)"></textarea>
-  </div>
-  <div class="lbl">Foto de evidencia del servicio</div>
-  <div id="foto-s3-wrap" style="display:none;flex-direction:column;gap:6px">
-    <div style="display:flex;gap:10px;align-items:center;background:var(--s1);border:1px solid rgba(26,140,90,.3);border-radius:var(--r-sm);padding:10px 12px">
-      <img id="foto-s3-thumb" src="" style="width:52px;height:52px;object-fit:cover;border-radius:6px;border:1px solid var(--border)">
-      <div>
-        <div style="font-size:12px;font-weight:600;color:var(--acc3)">✓ Foto cargada</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:1px" id="foto-s3-nombre">—</div>
-      </div>
-      <button onclick="clearFotoS3()" style="margin-left:auto;background:none;border:none;color:var(--danger);font-size:18px;cursor:pointer">×</button>
-    </div>
-  </div>
-  <button class="btn btn-ghost btn-sm" id="btn-foto-s3" onclick="document.getElementById('foto-input-s3').click()">
-    📷 Adjuntar foto del servicio (opcional)
-  </button>
-  <input type="file" id="foto-input-s3" accept="image/*" style="display:none" onchange="adjuntarFotoS3(this)">
-  <button class="btn btn-primary" id="btn-s3-next" onclick="validateS3()">Continuar →</button>
-</div>
-
-<!-- ═══════════════════════════════════ -->
-<!--  S4 — OBSERVACIONES               -->
-<!-- ═══════════════════════════════════ -->
-<div class="screen" id="s4">
-  <div style="display:flex;align-items:center;gap:10px;padding:14px 0 0">
-    <button class="btn btn-ghost btn-sm" style="width:auto" onclick="goStep(3)">← Servicio</button>
-  </div>
-  <div class="lbl">Observaciones y recomendaciones</div>
-  <div class="form-group">
-    <textarea class="ftextarea" id="observaciones" rows="4" placeholder="Observaciones adicionales, recomendaciones al cliente, puntos de atención pendientes..."></textarea>
-  </div>
-  <div class="lbl">Número de Ticket (si aplica)</div>
-  <div class="form-group">
-    <input class="finput" id="num-ticket" type="text" placeholder="Ej: TKT-2024-0512" autocorrect="off" spellcheck="false">
-  </div>
-  <div class="info-box">Al continuar se generará el <strong>código QR</strong> para que el cliente lo escanee desde su celular y firme la orden.</div>
-  <button class="btn btn-primary" onclick="generateQR()">Generar QR para cliente →</button>
-</div>
-
-<!-- ═══════════════════════════════════ -->
-<!--  S5 — QR                          -->
-<!-- ═══════════════════════════════════ -->
-<div class="screen" id="s5">
-  <div style="padding:14px 0 0">
-    <div style="font-size:15px;font-weight:700">Presentar al cliente</div>
-    <div style="font-size:12px;color:var(--text2);margin-top:2px">El cliente escanea el QR con su celular</div>
-  </div>
-  <div class="qr-wrap">
-    <div class="qr-title">Confirmación de Servicio</div>
-    <div class="qr-sub" id="qr-case-info">—</div>
-    <div id="qr-container"></div>
-    <div class="qr-instructions">📱 El cliente escanea este QR con su celular<br>para confirmar y firmar la orden de servicio</div>
-  </div>
-  <div class="warn-box">⏳ Esperando que el cliente complete la firma en su celular...</div>
-  <button class="btn btn-ghost" onclick="goStep(4)">← Editar notas</button>
-  <!-- Botón solo para demo/prueba -->
-  <button class="btn btn-ghost btn-sm" onclick="simulateClientSign()" style="font-size:11px;color:var(--text3)">🔧 Simular firma del cliente (demo)</button>
-</div>
-
-<!-- ═══════════════════════════════════ -->
-<!--  S6 — RESULTADO + PDF             -->
-<!-- ═══════════════════════════════════ -->
-<div class="screen" id="s6">
-  <div style="padding:14px 0 0">
-    <div style="font-size:15px;font-weight:700">Orden Completada</div>
-  </div>
-  <div class="resultado-card" id="resultado-card">
-    <div class="resultado-icon" id="resultado-icon">✅</div>
-    <div class="resultado-title" id="resultado-title">Caso Atendido Completo</div>
-    <div class="resultado-sub" id="resultado-sub">—</div>
-  </div>
-  <div class="info-card" id="firma-card"></div>
-  <div id="foto-adjunta-result" style="display:none;flex-direction:column;gap:8px">
-    <div class="lbl">Foto adjunta como respaldo</div>
-    <div style="display:flex;gap:10px;align-items:center;background:var(--s1);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 12px">
-      <img id="foto-thumb" src="" style="width:56px;height:56px;object-fit:cover;border-radius:6px;border:1px solid var(--border)">
-      <div>
-        <div style="font-size:12px;font-weight:600;color:var(--acc3)">✓ Foto adjuntada</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px" id="foto-nombre">—</div>
-        <div style="font-size:10px;color:var(--text3)">(simulado · no se guarda)</div>
-      </div>
-      <button onclick="clearFoto()" style="margin-left:auto;background:none;border:none;color:var(--danger);font-size:18px;cursor:pointer">×</button>
-    </div>
-  </div>
-  <button class="btn btn-ghost" onclick="document.getElementById('foto-input-s6').click()" id="btn-adjuntar-foto">
-    📷 Adjuntar foto de respaldo
-  </button>
-  <input type="file" id="foto-input-s6" accept="image/*" style="display:none" onchange="adjuntarFoto(this)">
-  <button class="btn btn-success" onclick="culminarCaso()">✅ Culminar y cerrar caso</button>
-</div>
-
-<!-- MODAL CLIENTE (simulado cuando escanea QR) -->
+<!-- MODAL CLIENTE (ORIGINAL) -->
 <div class="modal-bg" id="client-modal">
-  <div class="modal">
-    <div class="mhandle"></div>
-    <div style="background:#0a2a35;margin:-24px -20px 16px;padding:16px 20px;border-radius:12px 12px 0 0">
-      <div style="font-size:15px;font-weight:700;color:#fff">Confirmar Orden de Servicio</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px" id="modal-case-info">—</div>
-    </div>
-    <div id="modal-service-summary" style="background:var(--s2);border-radius:var(--r-sm);padding:12px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:16px"></div>
+  <div class="modal"><div class="mhandle"></div>
+    <div style="background:#0a2a35;margin:-24px -20px 16px;padding:16px 20px;border-radius:12px 12px 0 0"><div style="font-size:15px;font-weight:700;color:#fff">Confirmar Orden de Servicio</div><div style="font-size:11px;color:rgba(255,255,255,.75)" id="modal-case-info">—</div></div>
+    <div id="modal-service-summary" style="background:var(--s2);border-radius:var(--r-sm);padding:12px 14px;font-size:12px;margin-bottom:16px"></div>
     <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="form-group">
-        <div class="form-label">Nombre completo <span>*</span></div>
-        <input class="finput" id="client-nombre" type="text" placeholder="Nombre y apellido" autocorrect="off">
-      </div>
-      <div class="form-group">
-        <div class="form-label">Cargo <span>*</span></div>
-        <input class="finput" id="client-cargo" type="text" placeholder="Ej: Gerente de TI, Coordinador" autocorrect="off">
-      </div>
+      <div class="form-group"><div class="form-label">Nombre completo <span>*</span></div><input class="finput" id="client-nombre" type="text" placeholder="Nombre y apellido"></div>
+      <div class="form-group"><div class="form-label">Cargo <span>*</span></div><input class="finput" id="client-cargo" type="text" placeholder="Ej: Gerente de TI"></div>
       <div class="lbl">El servicio fue atendido: <span style="color:var(--danger)">*</span></div>
-      <div class="radio-group">
-        <div class="radio-item" id="radio-completo" onclick="selectResult('completo')">
-          <div class="radio-label">✅ Completo</div>
-          <div class="radio-sub">Tarea finalizada</div>
-        </div>
-        <div class="radio-item" id="radio-parcial" onclick="selectResult('parcial')">
-          <div class="radio-label">⚠️ Parcial</div>
-          <div class="radio-sub">Pendiente continuar</div>
-        </div>
-      </div>
-      <button class="btn btn-primary" id="btn-client-confirm" onclick="confirmClientSign()">Confirmar y firmar →</button>
+      <div class="radio-group"><div class="radio-item" id="radio-completo" onclick="selectResult('completo')"><div class="radio-label">✅ Completo</div><div class="radio-sub">Tarea finalizada</div></div><div class="radio-item" id="radio-parcial" onclick="selectResult('parcial')"><div class="radio-label">⚠️ Parcial</div><div class="radio-sub">Pendiente continuar</div></div></div>
+      <button class="btn btn-primary" onclick="confirmClientSign()">Confirmar y firmar →</button>
     </div>
+  </div>
+</div>
+
+<!-- MODAL TAREA (NUEVO) -->
+<div id="task-modal" class="task-modal">
+  <div class="task-modal-content">
+    <div class="mhandle"></div>
+    <div class="modal-header"><h3 id="task-modal-title">Tarea</h3><span class="modal-close" onclick="closeTaskModal()">×</span></div>
+    <div class="modal-body" id="task-modal-body"></div>
   </div>
 </div>
 
 <script>
-// ── TELEGRAM ──
+// ==================== TELEGRAM ====================
 const tg = window.Telegram?.WebApp;
 if(tg){ tg.ready(); tg.expand(); tg.setHeaderColor('#45c3f4'); tg.setBackgroundColor('#f4fcff'); }
 
-// ── DATA ──
+// ==================== DATOS ORIGINALES (CASOS) ====================
 const CLIENTES = {
   'MC0035': { id:'MC0035', nombre:'TELECOMUNICACIONES DIGITALES', email:'atencion.proveedor.pa@tigo.com.pa', tel:'390-7600', contacto:'MELISSA ARAUZ', direccion:'AVENIDA 12 DE OCTUBRE', ciudad:'Panamá' },
   'MC0041': { id:'MC0041', nombre:'BANCO GENERAL S.A.', email:'soporte.ti@bancogeneral.com', tel:'303-0303', contacto:'CARLOS MIRANDA', direccion:'VÍA ESPAÑA, EDIFICIO BANCO GENERAL', ciudad:'Panamá' },
@@ -370,52 +377,410 @@ const CLIENTES = {
 };
 
 const CASOS = [
+  { id:'OS-2024-0318', clienteId:'MC0035', fecha:'2025-03-25', hora:'09:00', tipo:'contrato', refId:'CTR-2024-0089', refNombre:'Soporte Técnico Anual TIGo', refVigencia:'Ene 2025 – Dic 2025', estado:'abierto', atendido:false, resultado:null, requiereReemplazo:false },
+  { id:'OS-2024-0315', clienteId:'MC0041', fecha:'2025-03-24', hora:'14:30', tipo:'proyecto', refId:'PRY-2024-0042', refNombre:'Migración Infraestructura Core', refVigencia:'Oct 2024 – Jun 2025', estado:'abierto', atendido:false, resultado:null, requiereReemplazo:false },
+  { id:'OS-2024-0309', clienteId:'MC0058', fecha:'2025-03-22', hora:'08:00', tipo:'contrato', refId:'CTR-2024-0071', refNombre:'Mantenimiento Preventivo Anual', refVigencia:'Mar 2025 – Feb 2026', estado:'atendido', atendido:true, resultado:'completo', requiereReemplazo:false }
+];
+
+const MOTIVOS = ['Levantamiento de Información (Survey)','Instalación (Software)','Impresoras Fiscales','Inspección de Cableado','Configuración (Hardware)','Mantenimiento Preventivo','Soporte / Reemplazo','Solicitud / Otros'];
+
+const STOCK_EQUIPOS = [
+  { id:'STK-001', nombre:'Servidor Dell PowerEdge T160', serie:'SN-DELL-001', estado:'Disponible', ubicacion:'Bodega Principal' },
+  { id:'STK-002', nombre:'Switch Cisco Catalyst 2960', serie:'SN-CISCO-002', estado:'Disponible', ubicacion:'Bodega Principal' },
+  { id:'STK-003', nombre:'Router MikroTik RB4011', serie:'SN-MIK-003', estado:'En préstamo', ubicacion:'Cliente ABC' },
+  { id:'STK-004', nombre:'Firewall Fortinet 60F', serie:'SN-FORT-004', estado:'Disponible', ubicacion:'Bodega Secundaria' }
+];
+
+// ==================== DATOS TAREAS (NUEVO) ====================
+let TAREAS = [
   {
-    id:'OS-2024-0318', clienteId:'MC0035', fecha:'2025-03-25', hora:'09:00',
-    tipo:'contrato', refId:'CTR-2024-0089', refNombre:'Soporte Técnico Anual TIGo', refVigencia:'Ene 2025 – Dic 2025',
-    estado:'abierto', atendido:false, resultado:null
+    id: 'T001',
+    titulo: 'Instalación Central Telefónica',
+    descripcion: 'Instalación y configuración de central telefónica IP para 50 extensiones. Incluye cableado estructurado, configuración de troncales SIP y pruebas de funcionamiento.',
+    proyecto: 'PRY-2024-0102',
+    responsable: 'Carlos Mendoza',
+    fechaLimite: '2025-04-10',
+    status: 'progress',
+    progreso: 65,
+    comentarios: [],
+    gastos: [],
+    evidencias: [],
+    tiempoRegistrado: 0,
+    actividades: [{ accion: 'Tarea creada', fecha: new Date().toLocaleString() }]
   },
   {
-    id:'OS-2024-0315', clienteId:'MC0041', fecha:'2025-03-24', hora:'14:30',
-    tipo:'proyecto', refId:'PRY-2024-0042', refNombre:'Migración Infraestructura Core', refVigencia:'Oct 2024 – Jun 2025',
-    estado:'abierto', atendido:false, resultado:null
+    id: 'T002',
+    titulo: 'Migración Servidores Core',
+    descripcion: 'Migración de servidores virtuales a nueva infraestructura. Involucra 8 servidores físicos, migración de VMs y validación de servicios críticos.',
+    proyecto: 'PRY-2024-0042',
+    responsable: 'Ana Rodríguez',
+    fechaLimite: '2025-04-25',
+    status: 'pending',
+    progreso: 30,
+    comentarios: [],
+    gastos: [],
+    evidencias: [],
+    tiempoRegistrado: 0,
+    actividades: [{ accion: 'Tarea creada', fecha: new Date().toLocaleString() }]
   },
   {
-    id:'OS-2024-0309', clienteId:'MC0058', fecha:'2025-03-22', hora:'08:00',
-    tipo:'contrato', refId:'CTR-2024-0071', refNombre:'Mantenimiento Preventivo Anual', refVigencia:'Mar 2025 – Feb 2026',
-    estado:'atendido', atendido:true, resultado:'completo'
+    id: 'T003',
+    titulo: 'Cableado Estructurado - Sede Central',
+    descripcion: 'Instalación de cableado categoría 6A para 120 puntos de red. Incluye canaletas, patch panels y certificación de cableado.',
+    proyecto: 'PRY-2024-0098',
+    responsable: 'Ricardo Pérez',
+    fechaLimite: '2025-04-18',
+    status: 'pending',
+    progreso: 45,
+    comentarios: [],
+    gastos: [],
+    evidencias: [],
+    tiempoRegistrado: 0,
+    actividades: [{ accion: 'Tarea creada', fecha: new Date().toLocaleString() }]
   }
 ];
 
-const MOTIVOS = [
-  'Levantamiento de Información (Survey)',
-  'Instalación (Software)',
-  'Impresoras Fiscales',
-  'Inspección de Cableado',
-  'Configuración (Hardware)',
-  'Mantenimiento Preventivo',
-  'Soporte',
-  'Solicitud / Otros'
-];
-
-// ── STATE ──
+// ==================== VARIABLES GLOBALES ====================
 let curCase = null, curStep = 1, resultadoCliente = null;
 let motivosSeleccionados = new Set();
+let diagnosticoSeleccionado = null;
+let stockSeleccionado = null;
+let fotoAdjunta = null;
+let fotoS3 = null;
 
-// ── STEP NAV ──
+// Variables para tareas
+let currentTask = null;
+let timerSeconds = 0;
+let timerInterval = null;
+let timerRunning = false;
+
+// ==================== FUNCIONES TABS ====================
+function switchTab(tab) {
+  const tabCasos = document.getElementById('tab-casos');
+  const tabTareas = document.getElementById('tab-tareas');
+  const btns = document.querySelectorAll('.tab-btn');
+  
+  if(tab === 'casos') {
+    btns[0].classList.add('active');
+    btns[1].classList.remove('active');
+    tabCasos.classList.add('active');
+    tabTareas.classList.remove('active');
+  } else {
+    btns[0].classList.remove('active');
+    btns[1].classList.add('active');
+    tabCasos.classList.remove('active');
+    tabTareas.classList.add('active');
+    renderTareasList();
+  }
+}
+
+// ==================== FUNCIONES TAREAS ====================
+function renderTareasList() {
+  const container = document.getElementById('tasks-list');
+  if(!container) return;
+  container.innerHTML = '';
+  
+  TAREAS.forEach(task => {
+    const statusText = task.status === 'pending' ? 'Pendiente' : (task.status === 'progress' ? 'En Progreso' : 'Completada');
+    const statusClass = task.status === 'pending' ? 'pill-partial' : (task.status === 'progress' ? 'pill-open' : 'pill-done');
+    const totalGastos = task.gastos.reduce((s, g) => s + g.monto, 0);
+    
+    const div = document.createElement('div');
+    div.className = 'task-card';
+    div.onclick = () => openTaskModal(task);
+    div.innerHTML = `
+      <div class="task-header">
+        <div class="task-title">${task.titulo}</div>
+        <div class="pill ${statusClass}">${statusText}</div>
+      </div>
+      <div class="task-desc">${task.descripcion.substring(0, 70)}${task.descripcion.length > 70 ? '...' : ''}</div>
+      <div class="task-meta">
+        <span>📋 ${task.proyecto}</span>
+        <span>👤 ${task.responsable}</span>
+        <span>📅 ${task.fechaLimite}</span>
+        ${totalGastos > 0 ? `<span class="pill" style="background:rgba(212,130,10,.1);color:var(--warn)">💰 B/.${totalGastos}</span>` : ''}
+      </div>
+      <div class="task-progress"><div class="task-progress-bar" style="width: ${task.progreso}%"></div></div>
+      <div style="font-size:10px;color:var(--text3);margin-top:6px">Progreso: ${task.progreso}%</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function openTaskModal(task) {
+  currentTask = task;
+  document.getElementById('task-modal-title').textContent = task.titulo;
+  renderTaskModal();
+  document.getElementById('task-modal').classList.add('open');
+}
+
+function renderTaskModal() {
+  const body = document.getElementById('task-modal-body');
+  const totalGastos = currentTask.gastos.reduce((s, g) => s + g.monto, 0);
+  const statusText = currentTask.status === 'pending' ? 'Pendiente' : (currentTask.status === 'progress' ? 'En Progreso' : 'Completada');
+  
+  body.innerHTML = `
+    <div style="margin-bottom:16px">
+      <div class="task-desc">${currentTask.descripcion}</div>
+      <div class="task-meta" style="margin-top:8px">
+        <span>📋 ${currentTask.proyecto}</span>
+        <span>👤 ${currentTask.responsable}</span>
+        <span>📅 ${currentTask.fechaLimite}</span>
+      </div>
+      <div style="margin-top:8px">Estado: <strong>${statusText}</strong> | Progreso: ${currentTask.progreso}%</div>
+      <div class="task-progress" style="margin-top:8px"><div class="task-progress-bar" style="width: ${currentTask.progreso}%"></div></div>
+    </div>
+    
+    <div class="status-buttons">
+      <button class="status-btn ${currentTask.status === 'pending' ? 'active' : ''}" onclick="updateTaskStatus('pending')">⏳ Pendiente</button>
+      <button class="status-btn ${currentTask.status === 'progress' ? 'active' : ''}" onclick="updateTaskStatus('progress')">🔄 En Progreso</button>
+      <button class="status-btn ${currentTask.status === 'done' ? 'active' : ''}" onclick="updateTaskStatus('done')">✅ Completada</button>
+    </div>
+    
+    <div class="timer-box">
+      <div class="section-title" style="color:white">⏱️ Registro de Tiempo</div>
+      <div class="timer-display" id="timer-display-task">00:00:00</div>
+      <div class="timer-buttons">
+        <button class="timer-btn timer-start" onclick="startTaskTimer()">▶ Iniciar</button>
+        <button class="timer-btn timer-stop" onclick="stopTaskTimer()">⏸ Pausar</button>
+      </div>
+      <button class="log-time-btn" onclick="logTaskTime()">📝 Registrar tiempo trabajado</button>
+      <div class="time-recorded">Tiempo registrado: ${formatTaskTime(currentTask.tiempoRegistrado * 3600)}</div>
+    </div>
+    
+    <div class="expense-box">
+      <div class="section-title">💰 Gastos y Viáticos</div>
+      <div class="expense-row">
+        <select id="expense-type" class="expense-select">
+          <option value="Combustible">⛽ Combustible</option>
+          <option value="Viáticos">🍽️ Viáticos</option>
+          <option value="Peajes">🛣️ Peajes</option>
+          <option value="Estacionamiento">🅿️ Estacionamiento</option>
+          <option value="Materiales">🔧 Materiales</option>
+        </select>
+        <input type="number" id="expense-amount" class="expense-input" placeholder="B/." step="0.01">
+        <button class="btn btn-primary btn-sm" style="width:auto;padding:8px 16px" onclick="addTaskExpense()">+</button>
+      </div>
+      <div id="task-expense-list"></div>
+      <div class="expense-total">Total: B/.${totalGastos.toFixed(2)}</div>
+    </div>
+    
+    <div>
+      <div class="section-title">💬 Comentarios</div>
+      <div class="comment-input">
+        <textarea id="task-new-comment" rows="2" placeholder="Agregar comentario..."></textarea>
+        <button class="btn btn-primary btn-sm" style="width:auto;padding:8px 16px" onclick="addTaskComment()">Enviar</button>
+      </div>
+      <div id="task-comments-list"></div>
+    </div>
+    
+    <div style="margin-top:16px">
+      <div class="section-title">📸 Evidencias</div>
+      <button class="evidence-btn" onclick="document.getElementById('task-evidence-input').click()">📷 Adjuntar foto</button>
+      <input type="file" id="task-evidence-input" accept="image/*" style="display:none" onchange="addTaskEvidence(this)">
+      <div id="task-evidence-list" class="evidence-list"></div>
+    </div>
+    
+    <div class="activity-log">
+      <div class="section-title">📋 Historial</div>
+      <div id="task-activities-list"></div>
+    </div>
+  `;
+  
+  renderTaskExpenses();
+  renderTaskComments();
+  renderTaskEvidences();
+  renderTaskActivities();
+  updateTaskTimerDisplay();
+}
+
+function updateTaskStatus(newStatus) {
+  currentTask.status = newStatus;
+  if(newStatus === 'progress' && currentTask.progreso < 30) currentTask.progreso = 30;
+  if(newStatus === 'done') currentTask.progreso = 100;
+  
+  currentTask.actividades.unshift({
+    accion: `Estado cambiado a ${newStatus === 'pending' ? 'Pendiente' : (newStatus === 'progress' ? 'En Progreso' : 'Completada')}`,
+    fecha: new Date().toLocaleString()
+  });
+  
+  renderTaskModal();
+  renderTareasList();
+}
+
+function startTaskTimer() {
+  if(timerRunning) return;
+  timerRunning = true;
+  timerInterval = setInterval(() => { timerSeconds++; updateTaskTimerDisplay(); }, 1000);
+}
+
+function stopTaskTimer() {
+  if(!timerRunning) return;
+  timerRunning = false;
+  clearInterval(timerInterval);
+}
+
+function updateTaskTimerDisplay() {
+  const display = document.getElementById('timer-display-task');
+  if(display) display.textContent = formatTaskTime(timerSeconds);
+}
+
+function formatTaskTime(segundos) {
+  const h = Math.floor(segundos / 3600);
+  const m = Math.floor((segundos % 3600) / 60);
+  const s = segundos % 60;
+  return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+}
+
+function logTaskTime() {
+  const horas = timerSeconds / 3600;
+  currentTask.tiempoRegistrado += horas;
+  currentTask.actividades.unshift({
+    accion: `Tiempo registrado: ${formatTaskTime(timerSeconds)} (${horas.toFixed(2)} horas)`,
+    fecha: new Date().toLocaleString()
+  });
+  timerSeconds = 0;
+  timerRunning = false;
+  clearInterval(timerInterval);
+  updateTaskTimerDisplay();
+  renderTaskModal();
+  renderTareasList();
+}
+
+function addTaskExpense() {
+  const tipo = document.getElementById('expense-type').value;
+  const monto = parseFloat(document.getElementById('expense-amount').value);
+  
+  if(isNaN(monto) || monto <= 0) {
+    alert('Ingresa un monto válido');
+    return;
+  }
+  
+  currentTask.gastos.push({ tipo, monto, fecha: new Date().toLocaleDateString() });
+  currentTask.actividades.unshift({ accion: `Gasto: ${tipo} - B/.${monto.toFixed(2)}`, fecha: new Date().toLocaleString() });
+  document.getElementById('expense-amount').value = '';
+  renderTaskExpenses();
+  renderTaskActivities();
+  renderTareasList();
+}
+
+function renderTaskExpenses() {
+  const container = document.getElementById('task-expense-list');
+  if(!container) return;
+  if(currentTask.gastos.length === 0) {
+    container.innerHTML = '<div style="font-size:12px;color:var(--text3);text-align:center">No hay gastos registrados</div>';
+    return;
+  }
+  container.innerHTML = currentTask.gastos.map((g, i) => `
+    <div class="expense-item">
+      <div><strong>${g.tipo}</strong><br><span style="font-size:10px;color:var(--text3)">${g.fecha}</span></div>
+      <div><strong>B/.${g.monto.toFixed(2)}</strong></div>
+      <div class="delete-icon" onclick="deleteTaskExpense(${i})">🗑️</div>
+    </div>
+  `).join('');
+}
+
+function deleteTaskExpense(idx) {
+  currentTask.gastos.splice(idx, 1);
+  currentTask.actividades.unshift({ accion: `Gasto eliminado`, fecha: new Date().toLocaleString() });
+  renderTaskExpenses();
+  renderTaskActivities();
+  renderTareasList();
+}
+
+function addTaskComment() {
+  const texto = document.getElementById('task-new-comment').value.trim();
+  if(!texto) { alert('Escribe un comentario'); return; }
+  currentTask.comentarios.push({ usuario: currentTask.responsable, texto, fecha: new Date().toLocaleString() });
+  currentTask.actividades.unshift({ accion: `Comentario: "${texto.substring(0, 50)}${texto.length > 50 ? '...' : ''}"`, fecha: new Date().toLocaleString() });
+  document.getElementById('task-new-comment').value = '';
+  renderTaskComments();
+  renderTaskActivities();
+}
+
+function renderTaskComments() {
+  const container = document.getElementById('task-comments-list');
+  if(!container) return;
+  if(currentTask.comentarios.length === 0) {
+    container.innerHTML = '<div style="font-size:12px;color:var(--text3);text-align:center">No hay comentarios</div>';
+    return;
+  }
+  container.innerHTML = currentTask.comentarios.map(c => `
+    <div class="comment-item">
+      <div class="comment-header"><strong>${c.usuario}</strong><span>${c.fecha}</span></div>
+      <div class="comment-text">${c.texto}</div>
+    </div>
+  `).join('');
+}
+
+function addTaskEvidence(input) {
+  if(!input.files[0]) return;
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = e => {
+    currentTask.evidencias.push({ url: e.target.result, nombre: file.name, fecha: new Date().toLocaleString() });
+    currentTask.actividades.unshift({ accion: `Evidencia: ${file.name}`, fecha: new Date().toLocaleString() });
+    renderTaskEvidences();
+    renderTaskActivities();
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function renderTaskEvidences() {
+  const container = document.getElementById('task-evidence-list');
+  if(!container) return;
+  if(currentTask.evidencias.length === 0) { container.innerHTML = ''; return; }
+  container.innerHTML = currentTask.evidencias.map((e, i) => `
+    <div class="evidence-wrapper">
+      <img src="${e.url}" class="evidence-img">
+      <div class="evidence-delete" onclick="deleteTaskEvidence(${i})">×</div>
+    </div>
+  `).join('');
+}
+
+function deleteTaskEvidence(idx) {
+  currentTask.evidencias.splice(idx, 1);
+  currentTask.actividades.unshift({ accion: `Evidencia eliminada`, fecha: new Date().toLocaleString() });
+  renderTaskEvidences();
+  renderTaskActivities();
+}
+
+function renderTaskActivities() {
+  const container = document.getElementById('task-activities-list');
+  if(!container) return;
+  if(currentTask.actividades.length === 0) {
+    container.innerHTML = '<div style="font-size:12px;color:var(--text3);text-align:center">No hay actividades</div>';
+    return;
+  }
+  container.innerHTML = currentTask.actividades.slice(0, 15).map(a => `
+    <div class="activity-item">
+      <div class="activity-time">${a.fecha.substring(5,16)}</div>
+      <div>${a.accion}</div>
+    </div>
+  `).join('');
+}
+
+function closeTaskModal() {
+  if(timerRunning) { stopTaskTimer(); timerSeconds = 0; }
+  document.getElementById('task-modal').classList.remove('open');
+  currentTask = null;
+}
+
+// ==================== FUNCIONES ORIGINALES (CASOS) ====================
 function goStep(n){
   curStep = n;
   [1,2,3,4,5,6].forEach(i=>{
     document.getElementById('s'+i).classList.toggle('active', i===n);
     const sd = document.getElementById('sd'+i);
-    sd.className = 'step-dot' + (i<n?' done': i===n?' active':'');
+    if(sd) sd.className = 'step-dot' + (i<n?' done': i===n?' active':'');
   });
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-// ── S1: CASES LIST ──
 function renderCases(){
   const c = document.getElementById('cases-list');
+  if(!c) return;
   c.innerHTML = '';
   CASOS.forEach(caso => {
     const cliente = CLIENTES[caso.clienteId];
@@ -424,7 +789,9 @@ function renderCases(){
     let estadoPill = caso.atendido
       ? (caso.resultado==='completo'
           ? '<div class="pill pill-done">✓ Completo</div>'
-          : '<div class="pill pill-partial">⚠️ Parcial</div>')
+          : caso.requiereReemplazo 
+            ? '<div class="pill pill-partial" style="background:rgba(212,130,10,.15);color:#b45f06">🔄 Pendiente Reemplazo</div>'
+            : '<div class="pill pill-partial">⚠️ Parcial</div>')
       : '<div class="pill pill-open">● Abierto</div>';
     div.innerHTML = `
       <div class="case-header">
@@ -445,10 +812,15 @@ function renderCases(){
 function openCase(id){
   curCase = CASOS.find(c => c.id===id);
   motivosSeleccionados = new Set();
+  diagnosticoSeleccionado = null;
+  stockSeleccionado = null;
   document.getElementById('detalle-servicio').value = '';
   document.getElementById('equipos-series').value = '';
   document.getElementById('observaciones').value = '';
   document.getElementById('num-ticket').value = '';
+  document.getElementById('equipo-modelo').value = '';
+  document.getElementById('equipo-serie').value = '';
+  document.getElementById('equipo-garantia').value = '';
   renderMotivos();
   renderClientCard();
   renderOriginCard();
@@ -458,18 +830,15 @@ function openCase(id){
   if(tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 }
 
-// ── S2: CLIENT CARD ──
 function renderClientCard(){
   const cl = CLIENTES[curCase.clienteId];
   document.getElementById('client-card').innerHTML = `
-    <div class="info-section">
-      <div class="info-section-title">Identificación</div>
+    <div class="info-section"><div class="info-section-title">Identificación</div>
       <div class="info-row"><div class="info-key">ID</div><div class="info-val mono">${cl.id}</div></div>
       <div class="info-row"><div class="info-key">Empresa</div><div class="info-val" style="font-weight:700">${cl.nombre}</div></div>
       <div class="info-row"><div class="info-key">Contacto</div><div class="info-val">${cl.contacto}</div></div>
     </div>
-    <div class="info-section">
-      <div class="info-section-title">Contacto</div>
+    <div class="info-section"><div class="info-section-title">Contacto</div>
       <div class="info-row"><div class="info-key">Teléfono</div><div class="info-val">${cl.tel}</div></div>
       <div class="info-row"><div class="info-key">Email</div><div class="info-val" style="font-size:11px">${cl.email}</div></div>
       <div class="info-row"><div class="info-key">Dirección</div><div class="info-val">${cl.direccion}, ${cl.ciudad}</div></div>
@@ -480,18 +849,16 @@ function renderOriginCard(){
   const isContract = curCase.tipo === 'contrato';
   document.getElementById('origin-card').innerHTML = `
     <div class="info-section">
-      <div class="${isContract?'origin-badge origin-contract':'origin-badge origin-project'}">
-        ${isContract ? '📋 Contrato' : '🗂️ Proyecto'}
-      </div>
+      <div class="${isContract?'origin-badge origin-contract':'origin-badge origin-project'}">${isContract ? '📋 Contrato' : '🗂️ Proyecto'}</div>
       <div class="info-row"><div class="info-key">ID</div><div class="info-val mono">${curCase.refId}</div></div>
       <div class="info-row"><div class="info-key">Nombre</div><div class="info-val" style="font-weight:600">${curCase.refNombre}</div></div>
       <div class="info-row"><div class="info-key">Vigencia</div><div class="info-val green">${curCase.refVigencia}</div></div>
     </div>`;
 }
 
-// ── S3: MOTIVOS ──
 function renderMotivos(){
   const grid = document.getElementById('motivos-grid');
+  if(!grid) return;
   grid.innerHTML = '';
   MOTIVOS.forEach(m => {
     const div = document.createElement('div');
@@ -506,50 +873,68 @@ function toggleMotivo(m){
   if(motivosSeleccionados.has(m)) motivosSeleccionados.delete(m);
   else motivosSeleccionados.add(m);
   renderMotivos();
+  const showEquipment = motivosSeleccionados.has('Soporte / Reemplazo');
+  const equipmentSection = document.getElementById('equipment-section');
+  if(equipmentSection) equipmentSection.style.display = showEquipment ? 'block' : 'none';
   if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
 
+function selectDiagnosis(tipo){
+  diagnosticoSeleccionado = tipo;
+  document.getElementById('opt-repair').classList.toggle('selected', tipo === 'repair');
+  document.getElementById('opt-replace').classList.toggle('selected', tipo === 'replace');
+  document.getElementById('radio-repair').classList.toggle('selected', tipo === 'repair');
+  document.getElementById('radio-replace').classList.toggle('selected', tipo === 'replace');
+  const stockSection = document.getElementById('stock-section');
+  if(stockSection) stockSection.style.display = tipo === 'replace' ? 'block' : 'none';
+  if(tipo === 'replace') renderStockList();
+}
+
+function renderStockList(){
+  const container = document.getElementById('stock-list');
+  if(!container) return;
+  container.innerHTML = '<div class="lbl" style="margin-bottom:8px">Seleccione el equipo de reemplazo:</div>';
+  STOCK_EQUIPOS.forEach(stock => {
+    const div = document.createElement('div');
+    div.className = `stock-available ${stockSeleccionado === stock.id ? 'selected' : ''}`;
+    div.onclick = () => { stockSeleccionado = stock.id; renderStockList(); };
+    div.innerHTML = `<div class="stock-radio ${stockSeleccionado === stock.id ? 'selected' : ''}"></div><div class="stock-info"><div class="stock-name">${stock.nombre}</div><div class="stock-serie">Serie: ${stock.serie}</div><div class="stock-status">📍 ${stock.ubicacion}</div></div>`;
+    container.appendChild(div);
+  });
+}
+
 function validateS3(){
-  if(motivosSeleccionados.size === 0){
-    alert('Selecciona al menos un motivo del servicio.');
-    return;
-  }
-  if(!document.getElementById('detalle-servicio').value.trim()){
-    alert('El detalle del servicio es obligatorio.');
-    return;
+  if(motivosSeleccionados.size === 0){ alert('Selecciona al menos un motivo.'); return; }
+  if(!document.getElementById('detalle-servicio').value.trim()){ alert('El detalle del servicio es obligatorio.'); return; }
+  if(motivosSeleccionados.has('Soporte / Reemplazo')) {
+    if(!document.getElementById('equipo-modelo').value.trim()){ alert('Ingresa el modelo del equipo.'); return; }
+    if(!document.getElementById('equipo-serie').value.trim()){ alert('Ingresa el número de serie.'); return; }
+    if(diagnosticoSeleccionado === 'replace' && !stockSeleccionado){ alert('Selecciona un equipo de reemplazo.'); return; }
   }
   goStep(4);
 }
 
-// ── S5: QR ──
 function generateQR(){
   goStep(5);
-  // Build URL for client form
   const cl = CLIENTES[curCase.clienteId];
   const data = {
-    caseId: curCase.id,
-    clienteNombre: cl.nombre,
-    clienteId: cl.id,
+    caseId: curCase.id, clienteNombre: cl.nombre, clienteId: cl.id,
     motivos: Array.from(motivosSeleccionados).join(', '),
     detalle: document.getElementById('detalle-servicio').value.trim(),
     observaciones: document.getElementById('observaciones').value.trim(),
-    ticket: document.getElementById('num-ticket').value.trim()
+    ticket: document.getElementById('num-ticket').value.trim(),
+    equipoModelo: document.getElementById('equipo-modelo').value.trim(),
+    equipoSerie: document.getElementById('equipo-serie').value.trim(),
+    diagnostico: diagnosticoSeleccionado,
+    requiereReemplazo: diagnosticoSeleccionado === 'replace'
   };
-  // Encode as URL params (client would open this on their phone)
   const params = new URLSearchParams({ v: btoa(JSON.stringify(data)) });
   const clientURL = window.location.href.split('?')[0] + '?' + params.toString() + '#client';
-
   document.getElementById('qr-case-info').textContent = curCase.id + ' · ' + cl.nombre;
   document.getElementById('qr-container').innerHTML = '';
-  new QRCode(document.getElementById('qr-container'), {
-    text: clientURL,
-    width: 200, height: 200,
-    colorDark: '#1a1714', colorLight: '#ffffff',
-    correctLevel: QRCode.CorrectLevel.M
-  });
+  new QRCode(document.getElementById('qr-container'), { text: clientURL, width: 200, height: 200, colorDark: '#1a1714', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
 }
 
-// ── CLIENT MODAL (simulate what client sees) ──
 function simulateClientSign(){
   resultadoCliente = null;
   document.getElementById('client-nombre').value = '';
@@ -558,10 +943,13 @@ function simulateClientSign(){
   document.getElementById('radio-parcial').className = 'radio-item';
   const cl = CLIENTES[curCase.clienteId];
   document.getElementById('modal-case-info').textContent = curCase.id + ' · ' + cl.nombre;
-  document.getElementById('modal-service-summary').innerHTML =
-    '<strong>Motivo:</strong> ' + Array.from(motivosSeleccionados).join(', ') +
-    '<br><strong>Detalle:</strong> ' + document.getElementById('detalle-servicio').value.trim().slice(0,120) +
-    (document.getElementById('detalle-servicio').value.length>120?'…':'');
+  let summary = '<strong>Motivo:</strong> ' + Array.from(motivosSeleccionados).join(', ');
+  if(motivosSeleccionados.has('Soporte / Reemplazo')) {
+    summary += `<br><strong>Equipo:</strong> ${document.getElementById('equipo-modelo').value} (Serie: ${document.getElementById('equipo-serie').value})`;
+    if(diagnosticoSeleccionado === 'replace') summary += `<br><strong>Diagnóstico:</strong> Requiere Reemplazo`;
+  }
+  summary += '<br><strong>Detalle:</strong> ' + document.getElementById('detalle-servicio').value.trim().slice(0,120);
+  document.getElementById('modal-service-summary').innerHTML = summary;
   document.getElementById('client-modal').classList.add('open');
   if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 }
@@ -575,45 +963,33 @@ function selectResult(tipo){
 function confirmClientSign(){
   const nombre = document.getElementById('client-nombre').value.trim();
   const cargo  = document.getElementById('client-cargo').value.trim();
-  if(!nombre){ alert('El nombre del cliente es obligatorio.'); return; }
-  if(!cargo)  { alert('El cargo del cliente es obligatorio.'); return; }
-  if(!resultadoCliente){ alert('Indica si el servicio fue atendido completo o parcial.'); return; }
-
+  if(!nombre){ alert('El nombre es obligatorio.'); return; }
+  if(!cargo)  { alert('El cargo es obligatorio.'); return; }
+  if(!resultadoCliente){ alert('Indica si fue completo o parcial.'); return; }
   document.getElementById('client-modal').classList.remove('open');
-
-  // Update case
+  const requiereReemplazo = diagnosticoSeleccionado === 'replace';
   curCase.atendido = true;
   curCase.resultado = resultadoCliente;
-
-  // Build firma card
+  curCase.requiereReemplazo = requiereReemplazo;
   const cl = CLIENTES[curCase.clienteId];
-  document.getElementById('firma-card').innerHTML = `
-    <div class="info-section">
-      <div class="info-section-title">Firma del cliente</div>
-      <div class="info-row"><div class="info-key">Empresa</div><div class="info-val" style="font-weight:700">${cl.nombre}</div></div>
-      <div class="info-row"><div class="info-key">Nombre</div><div class="info-val">${nombre}</div></div>
-      <div class="info-row"><div class="info-key">Cargo</div><div class="info-val">${cargo}</div></div>
-      <div class="info-row"><div class="info-key">Resultado</div><div class="info-val ${resultadoCliente==='completo'?'green':'red'}">${resultadoCliente==='completo'?'✅ Atendido Completo':'⚠️ Atendido Parcial'}</div></div>
-      <div class="info-row"><div class="info-key">Fecha/Hora</div><div class="info-val">${new Date().toLocaleString('es-PA')}</div></div>
-    </div>`;
-
-  // Resultado
-  const isCompleto = resultadoCliente === 'completo';
-  document.getElementById('resultado-card').className = 'resultado-card ' + (isCompleto?'completo':'parcial');
-  document.getElementById('resultado-icon').textContent = isCompleto ? '✅' : '⚠️';
-  document.getElementById('resultado-title').textContent = isCompleto ? 'Caso Atendido Completo' : 'Caso Atendido Parcial';
-  document.getElementById('resultado-sub').textContent = isCompleto
-    ? 'El cliente ' + nombre + ' confirmó que el servicio fue completado satisfactoriamente.'
-    : 'El cliente ' + nombre + ' indicó que el servicio fue atendido de forma parcial. Se requiere seguimiento.';
-
+  document.getElementById('firma-card').innerHTML = `<div class="info-section"><div class="info-section-title">Firma del cliente</div>
+    <div class="info-row"><div class="info-key">Empresa</div><div class="info-val" style="font-weight:700">${cl.nombre}</div></div>
+    <div class="info-row"><div class="info-key">Nombre</div><div class="info-val">${nombre}</div></div>
+    <div class="info-row"><div class="info-key">Cargo</div><div class="info-val">${cargo}</div></div>
+    <div class="info-row"><div class="info-key">Resultado</div><div class="info-val ${requiereReemplazo ? 'warning' : (resultadoCliente==='completo'?'green':'red')}">${requiereReemplazo ? '🔄 Reemplazo Pendiente' : (resultadoCliente==='completo'?'✅ Completo':'⚠️ Parcial')}</div></div>
+    ${requiereReemplazo ? `<div class="info-row"><div class="info-key">Próxima acción</div><div class="info-val">Coordinar visita para reemplazo</div></div>` : ''}
+    <div class="info-row"><div class="info-key">Fecha/Hora</div><div class="info-val">${new Date().toLocaleString('es-PA')}</div></div></div>`;
+  const isCompleto = resultadoCliente === 'completo' && !requiereReemplazo;
+  document.getElementById('resultado-card').className = 'resultado-card ' + (requiereReemplazo ? 'parcial' : (isCompleto?'completo':'parcial'));
+  document.getElementById('resultado-icon').textContent = requiereReemplazo ? '🔄' : (isCompleto ? '✅' : '⚠️');
+  document.getElementById('resultado-title').textContent = requiereReemplazo ? 'Reemplazo Pendiente' : (isCompleto ? 'Completo' : 'Parcial');
+  document.getElementById('resultado-sub').textContent = requiereReemplazo ? 'Se requiere segunda visita para reemplazo.' : (isCompleto ? 'Servicio completado.' : 'Requiere seguimiento.');
+  const replacementInfo = document.getElementById('replacement-info');
+  if(replacementInfo) replacementInfo.style.display = requiereReemplazo ? 'block' : 'none';
   renderCases();
   goStep(6);
-  if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred(isCompleto?'success':'warning');
+  if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred(requiereReemplazo ? 'warning' : (isCompleto?'success':'warning'));
 }
-
-// ── FOTO ADJUNTA ──
-let fotoAdjunta = null;
-let fotoS3 = null;
 
 function adjuntarFotoS3(input){
   if(!input.files[0]) return;
@@ -624,7 +1000,6 @@ function adjuntarFotoS3(input){
     document.getElementById('foto-s3-thumb').src = fotoS3;
     document.getElementById('foto-s3-nombre').textContent = file.name;
     document.getElementById('foto-s3-wrap').style.display = 'flex';
-    document.getElementById('foto-s3-wrap').style.flexDirection = 'column';
     document.getElementById('btn-foto-s3').textContent = '📷 Cambiar foto';
   };
   reader.readAsDataURL(file);
@@ -647,7 +1022,6 @@ function adjuntarFoto(input){
     document.getElementById('foto-nombre').textContent = file.name;
     const wrap = document.getElementById('foto-adjunta-result');
     wrap.style.display = 'flex';
-    wrap.style.flexDirection = 'column';
     document.getElementById('btn-adjuntar-foto').textContent = '📷 Cambiar foto de respaldo';
   };
   reader.readAsDataURL(file);
@@ -660,25 +1034,17 @@ function clearFoto(){
   document.getElementById('btn-adjuntar-foto').textContent = '📷 Adjuntar foto de respaldo';
 }
 
-// ── CULMINAR CASO ──
 function culminarCaso(){
-  // mark as done
-  curCase.atendido = true;
-  curCase.resultado = resultadoCliente;
-  // update in list
   const idx = CASOS.findIndex(c => c.id === curCase.id);
   if(idx >= 0) CASOS[idx] = curCase;
-  // reset foto state
   fotoAdjunta = null; fotoS3 = null;
-  // go back to list
   renderCases();
   goStep(1);
-  // show toast
-  showToast(resultadoCliente === 'completo' ? '✅ Caso cerrado como Completo' : '⚠️ Caso cerrado como Parcial', resultadoCliente);
+  const msg = curCase.requiereReemplazo ? '🔄 Pendiente de Reemplazo' : (curCase.resultado === 'completo' ? '✅ Caso cerrado' : '⚠️ Caso cerrado como Parcial');
+  showToast(msg, curCase.requiereReemplazo ? 'parcial' : curCase.resultado);
   if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 }
 
-// ── TOAST ──
 function showToast(msg, tipo){
   const ex = document.getElementById('app-toast');
   if(ex) ex.remove();
@@ -692,57 +1058,29 @@ function showToast(msg, tipo){
   setTimeout(() => { el.style.opacity='0'; setTimeout(() => el.remove(), 300); }, 3500);
 }
 
+document.getElementById('client-modal')?.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
 
-// Close modal on backdrop
-document.getElementById('client-modal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
-
-// ── INIT ──
+// ==================== INICIALIZAR ====================
 renderCases();
+renderTareasList();
 
-// Check if opened via QR (client side)
 if(window.location.hash === '#client'){
   try {
     const params = new URLSearchParams(window.location.search);
     const data = JSON.parse(atob(params.get('v')));
-    // Show client confirmation page directly
     document.getElementById('s1').classList.remove('active');
     setTimeout(() => {
       document.querySelector('.step-bar').style.display = 'none';
       document.querySelector('#app').innerHTML = `
-        <div style="background:#0a2a35;padding:16px;color:#fff">
-          <div style="font-size:16px;font-weight:800">MULTITEK</div>
-          <div style="font-size:12px;color:rgba(255,255,255,.75)">Confirmación de Orden de Servicio</div>
-        </div>
-        <div style="padding:16px;display:flex;flex-direction:column;gap:14px">
-          <div style="background:var(--s2);border-radius:var(--r);padding:14px;font-size:13px;line-height:1.7">
-            <strong>${data.caseId}</strong><br>
-            Cliente: <strong>${data.clienteNombre}</strong><br>
-            Motivo: ${data.motivos}<br>
-            ${data.detalle ? 'Detalle: ' + data.detalle.slice(0,100) + (data.detalle.length>100?'…':'') : ''}
-          </div>
-          <div class="form-group"><label class="form-label">Nombre completo <span style="color:var(--danger)">*</span></label>
-            <input class="finput" id="qr-nombre" type="text" placeholder="Nombre y apellido"></div>
-          <div class="form-group"><label class="form-label">Cargo <span style="color:var(--danger)">*</span></label>
-            <input class="finput" id="qr-cargo" type="text" placeholder="Su cargo en la empresa"></div>
-          <div class="lbl">El servicio fue atendido: *</div>
-          <div class="radio-group">
-            <div class="radio-item" id="qr-completo" onclick="this.className='radio-item sel-completo';document.getElementById('qr-parcial').className='radio-item';window._qrResult='completo'">
-              <div class="radio-label">✅ Completo</div><div class="radio-sub">Tarea finalizada</div>
-            </div>
-            <div class="radio-item" id="qr-parcial" onclick="this.className='radio-item sel-parcial';document.getElementById('qr-completo').className='radio-item';window._qrResult='parcial'">
-              <div class="radio-label">⚠️ Parcial</div><div class="radio-sub">Pendiente continuar</div>
-            </div>
-          </div>
-          <button class="btn btn-primary" onclick="
-            const n=document.getElementById('qr-nombre').value.trim();
-            const c=document.getElementById('qr-cargo').value.trim();
-            if(!n||!c){alert('Nombre y cargo son obligatorios');return;}
-            if(!window._qrResult){alert('Indica si fue completo o parcial');return;}
-            document.querySelector('#app').innerHTML='<div style=padding:40px;text-align:center><div style=font-size:48px>✅</div><div style=font-size:20px;font-weight:800;color:var(--acc3);margin-top:12px>¡Confirmado!</div><div style=font-size:13px;color:var(--text2);margin-top:8px;line-height:1.5>Tu firma ha sido registrada.<br>Puedes cerrar esta ventana.</div></div>';
-          ">Confirmar y firmar →</button>
-        </div>`;
+        <div style="background:#0a2a35;padding:16px;color:#fff"><div style="font-size:16px;font-weight:800">MULTITEK</div><div style="font-size:12px;color:rgba(255,255,255,.75)">Confirmación de Orden</div></div>
+        <div style="padding:16px"><div style="background:var(--s2);border-radius:var(--r);padding:14px;font-size:13px"><strong>${data.caseId}</strong><br>Cliente: <strong>${data.clienteNombre}</strong><br>Motivo: ${data.motivos}<br>${data.equipoModelo ? `Equipo: ${data.equipoModelo}<br>` : ''}${data.diagnostico === 'replace' ? '<span style="color:var(--warn)">⚠️ Requiere Reemplazo</span><br>' : ''}</div>
+        <div class="form-group"><label class="form-label">Nombre completo *</label><input class="finput" id="qr-nombre" type="text"></div>
+        <div class="form-group"><label class="form-label">Cargo *</label><input class="finput" id="qr-cargo" type="text"></div>
+        <div class="lbl">El servicio fue atendido: *</div>
+        <div class="radio-group"><div class="radio-item" id="qr-completo" onclick="this.className='radio-item sel-completo';document.getElementById('qr-parcial').className='radio-item';window._qrResult='completo'"><div class="radio-label">✅ Completo</div></div><div class="radio-item" id="qr-parcial" onclick="this.className='radio-item sel-parcial';document.getElementById('qr-completo').className='radio-item';window._qrResult='parcial'"><div class="radio-label">⚠️ Parcial</div></div></div>
+        <button class="btn btn-primary" onclick="const n=document.getElementById('qr-nombre').value.trim();const c=document.getElementById('qr-cargo').value.trim();if(!n||!c){alert('Complete los campos');return;}if(!window._qrResult){alert('Indique resultado');return;}document.querySelector('#app').innerHTML='<div style=padding:40px;text-align:center><div style=font-size:48px>✅</div><div style=font-size:20px;font-weight:800;color:var(--acc3);margin-top:12px>¡Confirmado!</div></div>';">Confirmar</button></div>`;
     }, 100);
-  } catch(e){ /* not a valid QR link, show normal app */ }
+  } catch(e){}
 }
 </script>
 </div>
