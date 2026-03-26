@@ -29,414 +29,157 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
 .tab-content.active{display:block}
 
 /* STEP BAR */
-.step-bar{background:var(--s1);border-bottom:2px solid var(--border);padding:10px 12px;display:flex;align-items:center;position:sticky;top:0;z-index:50;width:100%;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.step-bar{background:var(--s1);border-bottom:2px solid var(--border);padding:10px 12px;display:flex;align-items:center;position:sticky;top:0;z-index:50;width:100%}
 .step-dot{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;position:relative}
 .step-dot::after{content:'';position:absolute;top:12px;left:50%;width:100%;height:2px;background:var(--border);z-index:0}
 .step-dot:last-child::after{display:none}
-.step-circle{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text3);position:relative;z-index:1;transition:all .3s;font-family:'JetBrains Mono',monospace}
-.step-label{font-size:8px;color:var(--text3);text-align:center;letter-spacing:.03em;transition:color .3s;font-weight:600;text-transform:uppercase}
+.step-circle{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text3);position:relative;z-index:1}
 .step-dot.active .step-circle{border-color:var(--acc);background:rgba(69,195,244,.15);color:#0a8ab8}
-.step-dot.active .step-label{color:#0a8ab8}
 .step-dot.done .step-circle{border-color:var(--acc2);background:rgba(28,174,72,.12);color:#158a38}
-.step-dot.done .step-label{color:#158a38}
-.step-dot.done::after{background:rgba(28,174,72,.4)}
+.step-label{font-size:8px;color:var(--text3);font-weight:600;text-transform:uppercase}
 
 /* HEADER */
-.header{background:#ffffff;border-bottom:3px solid var(--acc);padding:16px 16px 14px;display:flex;align-items:center;gap:12px;color:var(--text)}
-.header-logo{font-size:20px;font-weight:800;letter-spacing:-.5px;color:#0a1a1f}
-.header-logo span{color:var(--acc);font-weight:300}
-.header-sub{font-size:11px;color:var(--text2);margin-top:1px;font-weight:400}
-.header-badge{margin-left:auto;background:rgba(69,195,244,.12);border:1px solid rgba(69,195,244,.4);color:var(--acc);font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;font-family:'JetBrains Mono',monospace;white-space:nowrap}
-
-/* SCREENS */
-.screen{display:none;flex-direction:column;gap:14px;padding:14px 14px 32px;animation:fadeUp .22s ease}
-.screen.active{display:flex}
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
-/* LABELS */
-.lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);padding:0 2px}
+.header{background:#ffffff;border-bottom:3px solid var(--acc);padding:16px;display:flex;align-items:center;gap:12px}
+.header-logo{font-size:20px;font-weight:800;color:#0a1a1f}
+.header-logo span{color:var(--acc)}
+.header-sub{font-size:11px;color:var(--text2)}
+.header-badge{margin-left:auto;background:rgba(69,195,244,.12);border:1px solid rgba(69,195,244,.4);color:var(--acc);font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px}
 
 /* TASK CARDS */
-.task-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:12px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.task-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--acc);border-radius:4px 0 0 4px}
+.task-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px;cursor:pointer;transition:all .2s}
 .task-card:active{transform:scale(.985)}
-.task-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.task-title{font-size:14px;font-weight:700;color:var(--text)}
-.task-priority{font-size:10px;padding:3px 8px;border-radius:12px;font-weight:600}
-.priority-high{background:rgba(224,48,48,.1);color:var(--danger)}
-.priority-medium{background:rgba(212,130,10,.1);color:var(--warn)}
-.priority-low{background:rgba(28,174,72,.1);color:var(--acc3)}
-.task-desc{font-size:12px;color:var(--text2);margin-bottom:8px;line-height:1.4}
-.task-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--text3)}
-.task-meta span{display:flex;align-items:center;gap:4px}
+.task-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.task-title{font-size:15px;font-weight:700;color:var(--text)}
+.task-status{font-size:10px;padding:4px 10px;border-radius:20px;font-weight:600}
+.status-pending{background:rgba(212,130,10,.1);color:var(--warn)}
+.status-progress{background:rgba(69,195,244,.1);color:#0a8ab8}
+.status-done{background:rgba(28,174,72,.1);color:var(--acc3)}
+.task-desc{font-size:12px;color:var(--text2);margin-bottom:8px}
+.task-meta{display:flex;gap:12px;font-size:10px;color:var(--text3);margin-top:8px;flex-wrap:wrap}
 .task-progress{height:4px;background:var(--border);border-radius:2px;margin-top:10px;overflow:hidden}
-.task-progress-bar{height:100%;background:var(--acc);border-radius:2px;transition:width .3s}
+.task-progress-bar{height:100%;background:var(--acc);transition:width .3s}
 
-/* CASE CARDS */
-.case-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.case-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--border);border-radius:4px 0 0 4px;transition:background .18s}
-.case-card:active{transform:scale(.985)}
-.case-card.done::before{background:var(--acc3)}
-.case-card.done{opacity:.55;cursor:default}
-.case-card:not(.done):active::before{background:var(--acc)}
-.case-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.case-id{font-family:'JetBrains Mono',monospace;font-size:12px;color:#0a8ab8;font-weight:600;background:rgba(69,195,244,.12);padding:3px 8px;border-radius:5px}
-.case-id.done-id{color:var(--acc3);background:rgba(26,140,90,.08)}
-.pill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px}
-.pill-open{background:rgba(69,195,244,.12);color:#0a8ab8;border:1px solid rgba(69,195,244,.35)}
-.pill-done{background:rgba(26,140,90,.1);color:var(--acc3);border:1px solid rgba(26,140,90,.25)}
-.pill-partial{background:rgba(212,130,10,.1);color:var(--warn);border:1px solid rgba(212,130,10,.25)}
-.pill-pending-replacement{background:rgba(212,130,10,.15);color:#b45f06;border:1px solid rgba(212,130,10,.4)}
-.case-client{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
-.case-meta{display:flex;gap:10px;flex-wrap:wrap}
-.case-meta-i{font-size:11px;color:var(--text3)}
-.case-meta-i strong{color:var(--text2)}
+/* TASK DETAIL MODAL */
+.task-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.task-modal.open{opacity:1;pointer-events:all}
+.task-modal-content{background:var(--s1);border-radius:24px 24px 0 0;width:100%;max-width:430px;max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.task-modal.open .task-modal-content{transform:translateY(0)}
+.modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto}
+.modal-header{padding:8px 20px 0;display:flex;justify-content:space-between;align-items:center}
+.modal-header h3{font-size:18px;font-weight:700}
+.modal-close{font-size:24px;cursor:pointer;color:var(--text3)}
+.modal-body{padding:16px 20px 24px}
 
-/* INFO CARDS */
-.info-card{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.info-section{padding:12px 14px;border-bottom:1px solid var(--border)}
-.info-section:last-child{border-bottom:none}
-.info-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px}
-.info-row{display:flex;gap:8px;margin-bottom:5px;align-items:flex-start}
-.info-row:last-child{margin-bottom:0}
-.info-key{font-size:11px;color:var(--text3);min-width:80px;flex-shrink:0;padding-top:1px}
-.info-val{font-size:12px;color:var(--text);font-weight:500;flex:1;line-height:1.4}
-.info-val.mono{font-family:'JetBrains Mono',monospace;color:#0a8ab8;font-size:11px}
-.info-val.green{color:var(--acc3)}
-.info-val.red{color:var(--danger)}
-.info-val.warning{color:var(--warn)}
+/* STATUS BUTTONS */
+.status-buttons{display:flex;gap:8px;margin:16px 0}
+.status-btn{flex:1;padding:10px;border-radius:var(--r-sm);border:none;font-weight:600;font-size:13px;cursor:pointer;transition:all .2s}
+.status-btn.pending{background:rgba(212,130,10,.1);color:var(--warn);border:1px solid rgba(212,130,10,.3)}
+.status-btn.progress{background:rgba(69,195,244,.1);color:#0a8ab8;border:1px solid rgba(69,195,244,.3)}
+.status-btn.done{background:rgba(28,174,72,.1);color:var(--acc3);border:1px solid rgba(28,174,72,.3)}
+.status-btn.active{background:var(--acc);color:white;border:none}
 
-/* CONTRACT/PROJECT BADGE */
-.origin-badge{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--r-sm);font-size:12px;font-weight:600;margin-bottom:4px}
-.origin-contract{background:rgba(69,195,244,.1);border:1px solid rgba(69,195,244,.3);color:#0a8ab8}
-.origin-project{background:rgba(28,174,72,.08);border:1px solid rgba(28,174,72,.2);color:#158a38}
+/* EXPENSE SECTION */
+.expense-section{background:var(--s2);border-radius:var(--r);padding:16px;margin:16px 0}
+.expense-title{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.expense-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.expense-input{flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:13px}
+.expense-type{flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);background:white}
+.expense-list{margin-top:12px}
+.expense-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.expense-item-info{flex:1}
+.expense-item-type{font-size:11px;color:var(--text3)}
+.expense-item-amount{font-weight:700;color:var(--text)}
+.expense-delete{color:var(--danger);cursor:pointer;padding:4px 8px}
 
-/* EQUIPMENT SECTION */
-.equipment-card{background:var(--s2);border-radius:var(--r-sm);padding:12px;margin-top:8px}
-.equipment-card .info-row{margin-bottom:8px}
+/* COMMENT SECTION */
+.comment-input{display:flex;gap:8px;margin:12px 0}
+.comment-input textarea{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:13px;resize:none;font-family:inherit}
+.comment-list{margin-top:16px;max-height:300px;overflow-y:auto}
+.comment-item{background:var(--s2);border-radius:var(--r-sm);padding:10px;margin-bottom:8px}
+.comment-header{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:4px}
+.comment-text{font-size:12px;color:var(--text);line-height:1.4}
 
-/* STOCK SECTION */
-.stock-card{background:rgba(69,195,244,.05);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;margin-top:8px}
-.stock-available{display:flex;align-items:center;gap:8px;padding:8px;border-radius:var(--r-sm);margin-top:6px;cursor:pointer;transition:all .18s}
-.stock-available:hover{background:rgba(69,195,244,.1)}
-.stock-available.selected{background:rgba(28,174,72,.1);border:1px solid var(--acc3)}
-.stock-radio{width:16px;height:16px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center}
-.stock-radio.selected::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--acc3)}
-.stock-info{flex:1}
-.stock-name{font-size:13px;font-weight:600;color:var(--text)}
-.stock-serie{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace}
-.stock-status{font-size:10px;color:var(--acc3)}
+/* TIMER SECTION */
+.timer-section{background:linear-gradient(135deg, var(--acc) 0%, #2a9bcb 100%);border-radius:var(--r);padding:16px;margin:16px 0;color:white}
+.timer-display{font-size:32px;font-weight:800;font-family:'JetBrains Mono',monospace;text-align:center}
+.timer-buttons{display:flex;gap:8px;margin-top:12px}
+.timer-btn{flex:1;padding:8px;border:none;border-radius:var(--r-sm);font-weight:600;cursor:pointer}
+.timer-start{background:#fff;color:var(--acc)}
+.timer-stop{background:rgba(255,255,255,.2);color:white}
+.log-time-btn{background:var(--acc2);color:white;margin-top:8px;padding:8px;border:none;border-radius:var(--r-sm);font-weight:600}
 
-/* FORM ELEMENTS */
-.form-group{display:flex;flex-direction:column;gap:6px}
-.form-label{font-size:12px;font-weight:600;color:var(--text2)}
-.form-label span{color:var(--danger);margin-left:2px}
-.finput{width:100%;background:var(--s1);border:1.5px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;padding:10px 12px;outline:none;transition:border .18s}
-.finput:focus{border-color:var(--acc)}
-.finput::placeholder{color:var(--text3)}
-.ftextarea{width:100%;background:var(--s1);border:1.5px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;padding:10px 12px;outline:none;transition:border .18s;resize:none;line-height:1.55}
-.ftextarea:focus{border-color:var(--acc)}
-.ftextarea::placeholder{color:var(--text3)}
+/* EVIDENCE SECTION */
+.evidence-section{margin:16px 0}
+.evidence-btn{width:100%;padding:12px;background:var(--s2);border:1.5px dashed var(--border);border-radius:var(--r-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.evidence-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.evidence-item{position:relative;width:70px;height:70px;border-radius:8px;overflow:hidden}
+.evidence-item img{width:100%;height:100%;object-fit:cover}
+.evidence-delete{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.5);color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer}
 
-/* MOTIVO CHECKBOXES */
-.motivos-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.motivo-item{display:flex;align-items:center;gap:8px;background:var(--s1);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:9px 12px;cursor:pointer;transition:all .18s;user-select:none}
-.motivo-item.selected{border-color:var(--acc);background:rgba(69,195,244,.08)}
-.motivo-item:active{transform:scale(.97)}
-.motivo-cb{width:16px;height:16px;border-radius:4px;border:2px solid var(--border);flex-shrink:0;transition:all .18s;display:flex;align-items:center;justify-content:center}
-.motivo-item.selected .motivo-cb{background:var(--acc);border-color:var(--acc)}
-.motivo-check{color:#fff;font-size:10px;font-weight:800;display:none}
-.motivo-item.selected .motivo-check{display:block}
-.motivo-text{font-size:12px;font-weight:500;color:var(--text2);line-height:1.3}
-.motivo-item.selected .motivo-text{color:#0a8ab8}
+/* ACTIVITY LOG */
+.activity-log{background:var(--s2);border-radius:var(--r);padding:12px;margin-top:16px}
+.activity-item{font-size:11px;color:var(--text2);padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:8px}
+.activity-time{font-family:'JetBrains Mono',monospace;color:var(--text3);min-width:60px}
 
-/* REPLACEMENT OPTION */
-.replacement-option{background:var(--s2);border-radius:var(--r-sm);padding:12px;margin-top:12px}
-.radio-option{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r-sm);cursor:pointer;transition:all .18s}
-.radio-option:hover{background:rgba(69,195,244,.05)}
-.radio-option.selected{background:rgba(69,195,244,.1);border-left:3px solid var(--acc)}
-.radio-custom{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center}
-.radio-custom.selected::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--acc)}
-
-/* QR SCREEN */
-.qr-wrap{background:var(--s1);border:1px solid var(--border);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;align-items:center;gap:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.qr-title{font-size:16px;font-weight:700;color:var(--text);text-align:center}
-.qr-sub{font-size:12px;color:var(--text2);text-align:center;line-height:1.5}
-#qr-container{background:#fff;padding:16px;border-radius:10px;border:2px solid var(--border)}
-.qr-instructions{background:rgba(26,107,200,.07);border:1px solid rgba(26,107,200,.2);border-radius:var(--r-sm);padding:12px 14px;font-size:12px;color:var(--acc2);line-height:1.6;width:100%;text-align:center}
+/* BADGES */
+.badge{display:inline-block;padding:2px 6px;border-radius:12px;font-size:9px;font-weight:600}
+.badge-expense{background:rgba(212,130,10,.1);color:var(--warn)}
 
 /* BUTTONS */
-.btn{width:100%;padding:13px;border:none;border-radius:var(--r-sm);font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .18s;letter-spacing:.01em}
-.btn:active{transform:scale(.97)}
-.btn-primary{background:var(--acc);color:#fff;box-shadow:0 3px 12px rgba(69,195,244,.35)}
-.btn-primary:disabled{background:var(--border2);color:var(--text3);box-shadow:none;cursor:not-allowed;transform:none}
-.btn-blue{background:var(--acc2);color:#fff;box-shadow:0 3px 12px rgba(28,174,72,.3)}
-.btn-success{background:var(--acc2);color:#fff;box-shadow:0 3px 12px rgba(28,174,72,.3)}
-.btn-ghost{background:var(--s2);border:1.5px solid var(--border);color:var(--text2)}
-.btn-warn{background:rgba(212,130,10,.1);border:1.5px solid rgba(212,130,10,.4);color:var(--warn)}
-.btn-sm{padding:9px 14px;font-size:13px}
-
-/* RADIO BUTTONS */
-.radio-group{display:flex;gap:8px}
-.radio-item{flex:1;padding:11px 8px;border-radius:var(--r-sm);border:2px solid var(--border);background:var(--s1);cursor:pointer;text-align:center;transition:all .18s;user-select:none}
-.radio-item.sel-completo{border-color:var(--acc3);background:rgba(26,140,90,.08)}
-.radio-item.sel-parcial{border-color:var(--warn);background:rgba(212,130,10,.08)}
-.radio-label{font-size:13px;font-weight:700;color:var(--text2)}
-.radio-item.sel-completo .radio-label{color:var(--acc3)}
-.radio-item.sel-parcial .radio-label{color:var(--warn)}
-.radio-sub{font-size:10px;color:var(--text3);margin-top:2px}
-
-/* MODAL */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity .25s}
-.modal-bg.open{opacity:1;pointer-events:all}
-.modal{background:var(--s1);border-radius:20px 20px 0 0;padding:24px 20px 36px;width:100%;max-width:430px;transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.56,.64,1);border-top:3px solid var(--acc)}
-.modal-bg.open .modal{transform:translateY(0)}
-.mhandle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 20px}
-
-/* SPIN */
-.spin{width:18px;height:18px;border:2px solid rgba(0,0,0,.15);border-top-color:var(--acc);border-radius:50%;animation:rot .65s linear infinite;flex-shrink:0}
-@keyframes rot{to{transform:rotate(360deg)}}
-
-/* MISC */
-.info-box{background:rgba(69,195,244,.07);border:1px solid rgba(69,195,244,.25);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:#0a8ab8;line-height:1.55}
-.info-box strong{color:#0a8ab8}
-.warn-box{background:rgba(212,130,10,.07);border:1px solid rgba(212,130,10,.2);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--warn);line-height:1.55}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.btn{width:100%;padding:12px;border:none;border-radius:var(--r-sm);font-weight:700;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--acc);color:#fff}
+.btn-success{background:var(--acc2);color:#fff}
+.btn-ghost{background:var(--s2);border:1px solid var(--border);color:var(--text2)}
+.btn-sm{padding:8px 12px;font-size:12px}
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- TABS: CASOS / TAREAS -->
+<!-- TABS -->
 <div class="tabs-container">
   <button class="tab-btn active" onclick="switchTab('casos')">📋 Casos</button>
   <button class="tab-btn" onclick="switchTab('tareas')">✅ Tareas</button>
 </div>
 
-<!-- CONTENIDO CASOS -->
+<!-- CONTENIDO CASOS (resumido para enfoque en tareas) -->
 <div id="tab-casos" class="tab-content active">
-  <!-- STEP BAR -->
   <div class="step-bar">
-    <div class="step-dot active" id="sd1"><div class="step-circle">1</div><div class="step-label">Caso</div></div>
-    <div class="step-dot" id="sd2"><div class="step-circle">2</div><div class="step-label">Cliente</div></div>
-    <div class="step-dot" id="sd3"><div class="step-circle">3</div><div class="step-label">Servicio</div></div>
-    <div class="step-dot" id="sd4"><div class="step-circle">4</div><div class="step-label">Notas</div></div>
-    <div class="step-dot" id="sd5"><div class="step-circle">5</div><div class="step-label">QR</div></div>
-    <div class="step-dot" id="sd6"><div class="step-circle">6</div><div class="step-label">Cierre</div></div>
+    <div class="step-dot active"><div class="step-circle">1</div><div class="step-label">Caso</div></div>
+    <div class="step-dot"><div class="step-circle">2</div><div class="step-label">Cliente</div></div>
+    <div class="step-dot"><div class="step-circle">3</div><div class="step-label">Servicio</div></div>
+    <div class="step-dot"><div class="step-circle">4</div><div class="step-label">Notas</div></div>
+    <div class="step-dot"><div class="step-circle">5</div><div class="step-label">QR</div></div>
+    <div class="step-dot"><div class="step-circle">6</div><div class="step-label">Cierre</div></div>
   </div>
-
-  <!-- S1 — LISTA DE CASOS -->
-  <div class="screen active" id="s1">
-    <div class="header">
-      <div>
-        <div class="header-logo">MULTI<span>TEK</span></div>
-        <div class="header-sub">Órdenes de Servicio Técnico</div>
-      </div>
-      <div class="header-badge">Ing. Técnico</div>
-    </div>
+  <div class="header">
+    <div><div class="header-logo">MULTI<span>TEK</span></div><div class="header-sub">Órdenes de Servicio</div></div>
+    <div class="header-badge">Ing. Técnico</div>
+  </div>
+  <div style="padding:14px">
     <div class="lbl">Casos asignados</div>
     <div id="cases-list"></div>
   </div>
-
-  <!-- S2 — DATOS CLIENTE + ORIGEN -->
-  <div class="screen" id="s2">
-    <div style="display:flex;align-items:center;gap:10px;padding:14px 0 0">
-      <button class="btn btn-ghost btn-sm" style="width:auto" onclick="goStep(1)">← Casos</button>
-      <div style="font-size:14px;font-weight:700" id="s2-case-id">OS-0000</div>
-    </div>
-    <div class="lbl">Datos del cliente</div>
-    <div class="info-card" id="client-card"></div>
-    <div class="lbl">Origen del caso</div>
-    <div class="info-card" id="origin-card"></div>
-    <button class="btn btn-primary" onclick="goStep(3)">Continuar al servicio →</button>
-  </div>
-
-  <!-- S3 — MOTIVO + DETALLE SERVICIO + EQUIPO -->
-  <div class="screen" id="s3">
-    <div style="display:flex;align-items:center;gap:10px;padding:14px 0 0">
-      <button class="btn btn-ghost btn-sm" style="width:auto" onclick="goStep(2)">← Cliente</button>
-      <div style="font-size:13px;color:var(--text2)" id="s3-case-label">—</div>
-    </div>
-    
-    <div class="lbl">Motivo del servicio <span style="color:var(--danger)">*</span></div>
-    <div class="motivos-grid" id="motivos-grid"></div>
-    
-    <!-- Sección de Equipo (se muestra solo si se selecciona Soporte/Reemplazo) -->
-    <div id="equipment-section" style="display:none">
-      <div class="lbl">Equipo a evaluar</div>
-      <div class="equipment-card">
-        <div class="form-group">
-          <div class="form-label">Modelo / Descripción</div>
-          <input class="finput" id="equipo-modelo" type="text" placeholder="Ej: Servidor Dell PowerEdge T160 Smart">
-        </div>
-        <div class="form-group">
-          <div class="form-label">Número de Serie</div>
-          <input class="finput" id="equipo-serie" type="text" placeholder="Ej: 11223344">
-        </div>
-        <div class="form-group">
-          <div class="form-label">Vigencia de Garantía</div>
-          <input class="finput" id="equipo-garantia" type="text" placeholder="Ej: 15/03/2026">
-        </div>
-      </div>
-      
-      <!-- Opción de Reemplazo -->
-      <div class="replacement-option">
-        <div class="form-label" style="margin-bottom:8px">Diagnóstico</div>
-        <div class="radio-option" id="opt-repair" onclick="selectDiagnosis('repair')">
-          <div class="radio-custom" id="radio-repair"></div>
-          <div><strong>🔧 Reparación</strong><br><small>El equipo puede ser reparado</small></div>
-        </div>
-        <div class="radio-option" id="opt-replace" onclick="selectDiagnosis('replace')">
-          <div class="radio-custom" id="radio-replace"></div>
-          <div><strong>🔄 Reemplazo</strong><br><small>Requiere reemplazo del equipo</small></div>
-        </div>
-      </div>
-      
-      <!-- Stock disponible para reemplazo -->
-      <div id="stock-section" style="display:none">
-        <div class="lbl">Stock / Spare disponible</div>
-        <div class="stock-card" id="stock-list"></div>
-      </div>
-    </div>
-    
-    <div class="lbl">Detalle del servicio prestado <span style="color:var(--danger)">*</span></div>
-    <div class="form-group">
-      <textarea class="ftextarea" id="detalle-servicio" rows="4" placeholder="Describe en detalle las tareas realizadas, equipos intervenidos, configuraciones aplicadas..."></textarea>
-    </div>
-    <div class="lbl">Equipos / Series instalados</div>
-    <div class="form-group">
-      <textarea class="ftextarea" id="equipos-series" rows="2" placeholder="Modelo y número de serie de equipos instalados (opcional)"></textarea>
-    </div>
-    <div class="lbl">Foto de evidencia del servicio</div>
-    <div id="foto-s3-wrap" style="display:none;flex-direction:column;gap:6px">
-      <div style="display:flex;gap:10px;align-items:center;background:var(--s1);border:1px solid rgba(26,140,90,.3);border-radius:var(--r-sm);padding:10px 12px">
-        <img id="foto-s3-thumb" src="" style="width:52px;height:52px;object-fit:cover;border-radius:6px;border:1px solid var(--border)">
-        <div>
-          <div style="font-size:12px;font-weight:600;color:var(--acc3)">✓ Foto cargada</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:1px" id="foto-s3-nombre">—</div>
-        </div>
-        <button onclick="clearFotoS3()" style="margin-left:auto;background:none;border:none;color:var(--danger);font-size:18px;cursor:pointer">×</button>
-      </div>
-    </div>
-    <button class="btn btn-ghost btn-sm" id="btn-foto-s3" onclick="document.getElementById('foto-input-s3').click()">
-      📷 Adjuntar foto del servicio (opcional)
-    </button>
-    <input type="file" id="foto-input-s3" accept="image/*" style="display:none" onchange="adjuntarFotoS3(this)">
-    <button class="btn btn-primary" id="btn-s3-next" onclick="validateS3()">Continuar →</button>
-  </div>
-
-  <!-- S4 — OBSERVACIONES -->
-  <div class="screen" id="s4">
-    <div style="display:flex;align-items:center;gap:10px;padding:14px 0 0">
-      <button class="btn btn-ghost btn-sm" style="width:auto" onclick="goStep(3)">← Servicio</button>
-    </div>
-    <div class="lbl">Observaciones y recomendaciones</div>
-    <div class="form-group">
-      <textarea class="ftextarea" id="observaciones" rows="4" placeholder="Observaciones adicionales, recomendaciones al cliente, puntos de atención pendientes..."></textarea>
-    </div>
-    <div class="lbl">Número de Ticket (si aplica)</div>
-    <div class="form-group">
-      <input class="finput" id="num-ticket" type="text" placeholder="Ej: TKT-2024-0512" autocorrect="off" spellcheck="false">
-    </div>
-    <div class="info-box">Al continuar se generará el <strong>código QR</strong> para que el cliente lo escanee desde su celular y firme la orden.</div>
-    <button class="btn btn-primary" onclick="generateQR()">Generar QR para cliente →</button>
-  </div>
-
-  <!-- S5 — QR -->
-  <div class="screen" id="s5">
-    <div style="padding:14px 0 0">
-      <div style="font-size:15px;font-weight:700">Presentar al cliente</div>
-      <div style="font-size:12px;color:var(--text2);margin-top:2px">El cliente escanea el QR con su celular</div>
-    </div>
-    <div class="qr-wrap">
-      <div class="qr-title">Confirmación de Servicio</div>
-      <div class="qr-sub" id="qr-case-info">—</div>
-      <div id="qr-container"></div>
-      <div class="qr-instructions">📱 El cliente escanea este QR con su celular<br>para confirmar y firmar la orden de servicio</div>
-    </div>
-    <div class="warn-box">⏳ Esperando que el cliente complete la firma en su celular...</div>
-    <button class="btn btn-ghost" onclick="goStep(4)">← Editar notas</button>
-    <button class="btn btn-ghost btn-sm" onclick="simulateClientSign()" style="font-size:11px;color:var(--text3)">🔧 Simular firma del cliente (demo)</button>
-  </div>
-
-  <!-- S6 — RESULTADO -->
-  <div class="screen" id="s6">
-    <div style="padding:14px 0 0">
-      <div style="font-size:15px;font-weight:700">Orden Completada</div>
-    </div>
-    <div class="resultado-card" id="resultado-card">
-      <div class="resultado-icon" id="resultado-icon">✅</div>
-      <div class="resultado-title" id="resultado-title">Caso Atendido Completo</div>
-      <div class="resultado-sub" id="resultado-sub">—</div>
-    </div>
-    <div class="info-card" id="firma-card"></div>
-    <div id="replacement-info" style="display:none" class="warn-box">
-      ⚠️ <strong>Pendiente de Reemplazo</strong><br>
-      Se ha coordinado el reemplazo del equipo. Se requiere una segunda visita para completar el servicio.
-    </div>
-    <div id="foto-adjunta-result" style="display:none;flex-direction:column;gap:8px">
-      <div class="lbl">Foto adjunta como respaldo</div>
-      <div style="display:flex;gap:10px;align-items:center;background:var(--s1);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 12px">
-        <img id="foto-thumb" src="" style="width:56px;height:56px;object-fit:cover;border-radius:6px;border:1px solid var(--border)">
-        <div>
-          <div style="font-size:12px;font-weight:600;color:var(--acc3)">✓ Foto adjuntada</div>
-          <div style="font-size:11px;color:var(--text3);margin-top:2px" id="foto-nombre">—</div>
-        </div>
-        <button onclick="clearFoto()" style="margin-left:auto;background:none;border:none;color:var(--danger);font-size:18px;cursor:pointer">×</button>
-      </div>
-    </div>
-    <button class="btn btn-ghost" onclick="document.getElementById('foto-input-s6').click()" id="btn-adjuntar-foto">
-      📷 Adjuntar foto de respaldo
-    </button>
-    <input type="file" id="foto-input-s6" accept="image/*" style="display:none" onchange="adjuntarFoto(this)">
-    <button class="btn btn-success" onclick="culminarCaso()">✅ Culminar y cerrar caso</button>
-  </div>
 </div>
 
-<!-- CONTENIDO TAREAS - AHORA CON VISUALIZACIÓN CLARA -->
+<!-- CONTENIDO TAREAS - VERSIÓN COMPLETA -->
 <div id="tab-tareas" class="tab-content">
   <div class="header">
-    <div>
-      <div class="header-logo">MULTI<span>TEK</span></div>
-      <div class="header-sub">Tareas de Proyectos</div>
-    </div>
-    <div class="header-badge">En progreso</div>
+    <div><div class="header-logo">MULTI<span>TEK</span></div><div class="header-sub">Gestión de Tareas de Proyectos</div></div>
+    <div class="header-badge">Seguimiento</div>
   </div>
   <div style="padding:14px" id="tasks-container"></div>
 </div>
 
-<!-- MODAL CLIENTE -->
-<div class="modal-bg" id="client-modal">
-  <div class="modal">
-    <div class="mhandle"></div>
-    <div style="background:#0a2a35;margin:-24px -20px 16px;padding:16px 20px;border-radius:12px 12px 0 0">
-      <div style="font-size:15px;font-weight:700;color:#fff">Confirmar Orden de Servicio</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.75);margin-top:2px" id="modal-case-info">—</div>
+<!-- MODAL PARA DETALLE DE TAREA -->
+<div id="task-modal" class="task-modal">
+  <div class="task-modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h3 id="modal-task-title">Tarea</h3>
+      <span class="modal-close" onclick="closeTaskModal()">×</span>
     </div>
-    <div id="modal-service-summary" style="background:var(--s2);border-radius:var(--r-sm);padding:12px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:16px"></div>
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="form-group">
-        <div class="form-label">Nombre completo <span>*</span></div>
-        <input class="finput" id="client-nombre" type="text" placeholder="Nombre y apellido">
-      </div>
-      <div class="form-group">
-        <div class="form-label">Cargo <span>*</span></div>
-        <input class="finput" id="client-cargo" type="text" placeholder="Ej: Gerente de TI, Coordinador">
-      </div>
-      <div class="lbl">El servicio fue atendido: <span style="color:var(--danger)">*</span></div>
-      <div class="radio-group">
-        <div class="radio-item" id="radio-completo" onclick="selectResult('completo')">
-          <div class="radio-label">✅ Completo</div>
-          <div class="radio-sub">Tarea finalizada</div>
-        </div>
-        <div class="radio-item" id="radio-parcial" onclick="selectResult('parcial')">
-          <div class="radio-label">⚠️ Parcial</div>
-          <div class="radio-sub">Pendiente continuar</div>
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="confirmClientSign()">Confirmar y firmar →</button>
-    </div>
+    <div class="modal-body" id="modal-task-body"></div>
   </div>
 </div>
 
@@ -445,94 +188,86 @@ body{background:#cceeff;color:var(--text);font-family:'Outfit',sans-serif;font-s
 const tg = window.Telegram?.WebApp;
 if(tg){ tg.ready(); tg.expand(); tg.setHeaderColor('#45c3f4'); tg.setBackgroundColor('#f4fcff'); }
 
-// ── TAREAS DE PROYECTOS (DATOS DE EJEMPLO) ──
-const TAREAS = [
+// ── TAREAS COMPLETAS CON SEGUIMIENTO ──
+let TAREAS = [
   {
-    id:'TASK-001',
-    titulo:'Instalación Central Telefónica',
-    descripcion:'Instalación y configuración de central telefónica IP para 50 extensiones. Incluye cableado estructurado, configuración de troncales SIP y pruebas de funcionamiento.',
-    prioridad:'high',
-    progreso:65,
-    proyecto:'PRY-2024-0102',
-    responsable:'Carlos Mendoza',
-    fechaLimite:'2025-04-10',
-    subtareas:['Instalar rack y equipamiento', 'Cableado de 50 puntos', 'Configurar central telefónica', 'Pruebas de llamadas']
+    id: 'TASK-001',
+    titulo: 'Instalación Central Telefónica',
+    descripcion: 'Instalación y configuración de central telefónica IP para 50 extensiones. Incluye cableado estructurado, configuración de troncales SIP y pruebas de funcionamiento.',
+    prioridad: 'high',
+    status: 'progress',
+    progreso: 65,
+    proyecto: 'PRY-2024-0102',
+    responsable: 'Carlos Mendoza',
+    fechaLimite: '2025-04-10',
+    comentarios: [
+      { usuario: 'Carlos M.', texto: 'Iniciada instalación del rack', fecha: '2025-03-25 09:30', tipo: 'comment' },
+      { usuario: 'Carlos M.', texto: 'Cableado de 20 puntos completado', fecha: '2025-03-25 14:15', tipo: 'comment' }
+    ],
+    gastos: [
+      { tipo: 'Combustible', monto: 15.00, fecha: '2025-03-25' },
+      { tipo: 'Viáticos', monto: 25.00, fecha: '2025-03-25' }
+    ],
+    evidencias: [],
+    tiempoRegistrado: 4.5,
+    actividades: [
+      { accion: 'Tarea iniciada', fecha: '2025-03-25 08:00' },
+      { accion: 'Gasto registrado: Combustible $15.00', fecha: '2025-03-25 12:30' }
+    ]
   },
   {
-    id:'TASK-002',
-    titulo:'Migración Servidores Core',
-    descripcion:'Migración de servidores virtuales a nueva infraestructura. Involucra 8 servidores físicos, migración de VMs y validación de servicios críticos.',
-    prioridad:'medium',
-    progreso:30,
-    proyecto:'PRY-2024-0042',
-    responsable:'Ana Rodríguez',
-    fechaLimite:'2025-04-25',
-    subtareas:['Backup de servidores existentes', 'Configurar nuevo cluster', 'Migrar VMs por fase', 'Validar servicios post-migración']
+    id: 'TASK-002',
+    titulo: 'Migración Servidores Core',
+    descripcion: 'Migración de servidores virtuales a nueva infraestructura. Involucra 8 servidores físicos, migración de VMs y validación de servicios críticos.',
+    prioridad: 'medium',
+    status: 'pending',
+    progreso: 30,
+    proyecto: 'PRY-2024-0042',
+    responsable: 'Ana Rodríguez',
+    fechaLimite: '2025-04-25',
+    comentarios: [],
+    gastos: [],
+    evidencias: [],
+    tiempoRegistrado: 0,
+    actividades: []
   },
   {
-    id:'TASK-003',
-    titulo:'Cableado Estructurado - Sede Central',
-    descripcion:'Instalación de cableado categoría 6A para 120 puntos de red. Incluye canaletas, patch panels y certificación de cableado.',
-    prioridad:'medium',
-    progreso:45,
-    proyecto:'PRY-2024-0098',
-    responsable:'Ricardo Pérez',
-    fechaLimite:'2025-04-18',
-    subtareas:['Levantamiento de planos', 'Instalación de canaletas', 'Tendido de cableado', 'Certificación de puntos']
+    id: 'TASK-003',
+    titulo: 'Cableado Estructurado - Sede Central',
+    descripcion: 'Instalación de cableado categoría 6A para 120 puntos de red. Incluye canaletas, patch panels y certificación de cableado.',
+    prioridad: 'medium',
+    status: 'pending',
+    progreso: 45,
+    proyecto: 'PRY-2024-0098',
+    responsable: 'Ricardo Pérez',
+    fechaLimite: '2025-04-18',
+    comentarios: [],
+    gastos: [],
+    evidencias: [],
+    tiempoRegistrado: 0,
+    actividades: []
   }
 ];
 
-// ── STOCK DISPONIBLE PARA REEMPLAZO ──
-const STOCK_EQUIPOS = [
-  { id:'STK-001', nombre:'Servidor Dell PowerEdge T160', serie:'SN-DELL-001', estado:'Disponible', ubicacion:'Bodega Principal' },
-  { id:'STK-002', nombre:'Switch Cisco Catalyst 2960', serie:'SN-CISCO-002', estado:'Disponible', ubicacion:'Bodega Principal' },
-  { id:'STK-003', nombre:'Router MikroTik RB4011', serie:'SN-MIK-003', estado:'En préstamo', ubicacion:'Cliente ABC' },
-  { id:'STK-004', nombre:'Firewall Fortinet 60F', serie:'SN-FORT-004', estado:'Disponible', ubicacion:'Bodega Secundaria' }
-];
+let currentTask = null;
+let timerInterval = null;
+let timerSeconds = 0;
+let timerRunning = false;
 
-// ── DATOS CLIENTES Y CASOS ──
+// ── DATOS PARA CASOS ──
 const CLIENTES = {
-  'MC0035': { id:'MC0035', nombre:'TELECOMUNICACIONES DIGITALES', email:'atencion.proveedor.pa@tigo.com.pa', tel:'390-7600', contacto:'MELISSA ARAUZ', direccion:'AVENIDA 12 DE OCTUBRE', ciudad:'Panamá' },
-  'MC0041': { id:'MC0041', nombre:'BANCO GENERAL S.A.', email:'soporte.ti@bancogeneral.com', tel:'303-0303', contacto:'CARLOS MIRANDA', direccion:'VÍA ESPAÑA, EDIFICIO BANCO GENERAL', ciudad:'Panamá' },
-  'MC0058': { id:'MC0058', nombre:'COPA AIRLINES', email:'it.support@copaair.com', tel:'217-2672', contacto:'ANA RONDÓN', direccion:'AVE. PRINCIPAL TOCUMEN, AEROPUERTO INT\'L', ciudad:'Panamá' }
+  'MC0035': { nombre: 'TELECOMUNICACIONES DIGITALES', id: 'MC0035' },
+  'MC0041': { nombre: 'BANCO GENERAL S.A.', id: 'MC0041' },
+  'MC0058': { nombre: 'COPA AIRLINES', id: 'MC0058' }
 };
 
 const CASOS = [
-  {
-    id:'OS-2024-0318', clienteId:'MC0035', fecha:'2025-03-25', hora:'09:00',
-    tipo:'contrato', refId:'CTR-2024-0089', refNombre:'Soporte Técnico Anual TIGo', refVigencia:'Ene 2025 – Dic 2025',
-    estado:'abierto', atendido:false, resultado:null, requiereReemplazo:false
-  },
-  {
-    id:'OS-2024-0315', clienteId:'MC0041', fecha:'2025-03-24', hora:'14:30',
-    tipo:'proyecto', refId:'PRY-2024-0042', refNombre:'Migración Infraestructura Core', refVigencia:'Oct 2024 – Jun 2025',
-    estado:'abierto', atendido:false, resultado:null, requiereReemplazo:false
-  },
-  {
-    id:'OS-2024-0309', clienteId:'MC0058', fecha:'2025-03-22', hora:'08:00',
-    tipo:'contrato', refId:'CTR-2024-0071', refNombre:'Mantenimiento Preventivo Anual', refVigencia:'Mar 2025 – Feb 2026',
-    estado:'atendido', atendido:true, resultado:'completo', requiereReemplazo:false
-  }
+  { id:'OS-2024-0318', clienteId:'MC0035', fecha:'2025-03-25', atendido:false },
+  { id:'OS-2024-0315', clienteId:'MC0041', fecha:'2025-03-24', atendido:false },
+  { id:'OS-2024-0309', clienteId:'MC0058', fecha:'2025-03-22', atendido:true, resultado:'completo' }
 ];
 
-const MOTIVOS = [
-  'Levantamiento de Información (Survey)',
-  'Instalación (Software)',
-  'Impresoras Fiscales',
-  'Inspección de Cableado',
-  'Configuración (Hardware)',
-  'Mantenimiento Preventivo',
-  'Soporte / Reemplazo',
-  'Solicitud / Otros'
-];
-
-// ── STATE ──
-let curCase = null, curStep = 1, resultadoCliente = null;
-let motivosSeleccionados = new Set();
-let diagnosticoSeleccionado = null;
-let stockSeleccionado = null;
-
-// ── FUNCIÓN PARA CAMBIAR ENTRE PESTAÑAS ──
+// ── FUNCIONES PRINCIPALES ──
 function switchTab(tab) {
   const tabCasos = document.getElementById('tab-casos');
   const tabTareas = document.getElementById('tab-tareas');
@@ -543,38 +278,39 @@ function switchTab(tab) {
     btns[1].classList.remove('active');
     tabCasos.classList.add('active');
     tabTareas.classList.remove('active');
+    renderCases();
   } else {
     btns[0].classList.remove('active');
     btns[1].classList.add('active');
     tabCasos.classList.remove('active');
     tabTareas.classList.add('active');
-    renderTasks(); // Renderizar tareas al cambiar a la pestaña
+    renderTasksList();
   }
 }
 
-// ── RENDERIZAR TAREAS ──
-function renderTasks() {
+function renderTasksList() {
   const container = document.getElementById('tasks-container');
   if(!container) return;
   container.innerHTML = '';
   
   TAREAS.forEach(task => {
-    const priorityClass = task.prioridad === 'high' ? 'priority-high' : (task.prioridad === 'medium' ? 'priority-medium' : 'priority-low');
-    const priorityText = task.prioridad === 'high' ? 'Alta' : (task.prioridad === 'medium' ? 'Media' : 'Baja');
+    const statusText = task.status === 'pending' ? 'Pendiente' : (task.status === 'progress' ? 'En Progreso' : 'Completada');
+    const statusClass = task.status === 'pending' ? 'status-pending' : (task.status === 'progress' ? 'status-progress' : 'status-done');
     
     const div = document.createElement('div');
     div.className = 'task-card';
-    div.onclick = () => showTaskDetail(task);
+    div.onclick = () => openTaskDetail(task);
     div.innerHTML = `
       <div class="task-header">
         <div class="task-title">${task.titulo}</div>
-        <div class="task-priority ${priorityClass}">${priorityText}</div>
+        <div class="task-status ${statusClass}">${statusText}</div>
       </div>
       <div class="task-desc">${task.descripcion.substring(0, 80)}${task.descripcion.length > 80 ? '...' : ''}</div>
       <div class="task-meta">
         <span>📋 ${task.proyecto}</span>
         <span>👤 ${task.responsable}</span>
         <span>📅 ${task.fechaLimite}</span>
+        ${task.gastos.length > 0 ? `<span class="badge badge-expense">💰 $${task.gastos.reduce((sum, g) => sum + g.monto, 0)}</span>` : ''}
       </div>
       <div class="task-progress">
         <div class="task-progress-bar" style="width: ${task.progreso}%"></div>
@@ -585,419 +321,370 @@ function renderTasks() {
   });
 }
 
-function showTaskDetail(task) {
-  const subtasksHtml = task.subtareas.map(st => `✓ ${st}`).join('\n');
-  alert(`📋 ${task.titulo}\n\n${task.descripcion}\n\nProyecto: ${task.proyecto}\nResponsable: ${task.responsable}\nFecha límite: ${task.fechaLimite}\nProgreso: ${task.progreso}%\n\nSubtareas:\n${subtasksHtml}`);
+function openTaskDetail(task) {
+  currentTask = task;
+  document.getElementById('modal-task-title').textContent = task.titulo;
+  renderTaskModal();
+  document.getElementById('task-modal').classList.add('open');
 }
 
-// ── STEP NAV ──
-function goStep(n){
-  curStep = n;
-  [1,2,3,4,5,6].forEach(i=>{
-    document.getElementById('s'+i).classList.toggle('active', i===n);
-    const sd = document.getElementById('sd'+i);
-    if(sd) sd.className = 'step-dot' + (i<n?' done': i===n?' active':'');
-  });
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-// ── S1: CASES LIST ──
-function renderCases(){
-  const c = document.getElementById('cases-list');
-  if(!c) return;
-  c.innerHTML = '';
-  CASOS.forEach(caso => {
-    const cliente = CLIENTES[caso.clienteId];
-    const div = document.createElement('div');
-    div.className = 'case-card' + (caso.atendido?' done':'');
-    let estadoPill = caso.atendido
-      ? (caso.resultado==='completo'
-          ? '<div class="pill pill-done">✓ Completo</div>'
-          : caso.requiereReemplazo 
-            ? '<div class="pill pill-pending-replacement">🔄 Pendiente Reemplazo</div>'
-            : '<div class="pill pill-partial">⚠️ Parcial</div>')
-      : '<div class="pill pill-open">● Abierto</div>';
-    div.innerHTML = `
-      <div class="case-header">
-        <div class="case-id${caso.atendido?' done-id':''}">${caso.id}</div>
-        ${estadoPill}
+function renderTaskModal() {
+  if(!currentTask) return;
+  
+  const modalBody = document.getElementById('modal-task-body');
+  const statusText = currentTask.status === 'pending' ? 'Pendiente' : (currentTask.status === 'progress' ? 'En Progreso' : 'Completada');
+  const progresoWidth = currentTask.progreso;
+  
+  modalBody.innerHTML = `
+    <div style="margin-bottom:16px">
+      <div class="task-desc" style="font-size:14px">${currentTask.descripcion}</div>
+      <div class="task-meta" style="margin-top:8px">
+        <span>📋 ${currentTask.proyecto}</span>
+        <span>👤 ${currentTask.responsable}</span>
+        <span>📅 ${currentTask.fechaLimite}</span>
       </div>
-      <div class="case-client">${cliente.nombre}</div>
-      <div class="case-meta">
-        <div class="case-meta-i">📅 <strong>${caso.fecha}</strong></div>
-        <div class="case-meta-i">🕐 <strong>${caso.hora}</strong></div>
-        <div class="case-meta-i">${caso.tipo==='contrato'?'📋':'🗂️'} <strong>${caso.refId}</strong></div>
-      </div>`;
-    if(!caso.atendido) div.onclick = () => openCase(caso.id);
-    c.appendChild(div);
-  });
-}
-
-function openCase(id){
-  curCase = CASOS.find(c => c.id===id);
-  motivosSeleccionados = new Set();
-  diagnosticoSeleccionado = null;
-  stockSeleccionado = null;
-  document.getElementById('detalle-servicio').value = '';
-  document.getElementById('equipos-series').value = '';
-  document.getElementById('observaciones').value = '';
-  document.getElementById('num-ticket').value = '';
-  document.getElementById('equipo-modelo').value = '';
-  document.getElementById('equipo-serie').value = '';
-  document.getElementById('equipo-garantia').value = '';
-  renderMotivos();
-  renderClientCard();
-  renderOriginCard();
-  document.getElementById('s2-case-id').textContent = curCase.id;
-  document.getElementById('s3-case-label').textContent = CLIENTES[curCase.clienteId].nombre;
-  goStep(2);
-  if(tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-}
-
-function renderClientCard(){
-  const cl = CLIENTES[curCase.clienteId];
-  document.getElementById('client-card').innerHTML = `
-    <div class="info-section">
-      <div class="info-section-title">Identificación</div>
-      <div class="info-row"><div class="info-key">ID</div><div class="info-val mono">${cl.id}</div></div>
-      <div class="info-row"><div class="info-key">Empresa</div><div class="info-val" style="font-weight:700">${cl.nombre}</div></div>
-      <div class="info-row"><div class="info-key">Contacto</div><div class="info-val">${cl.contacto}</div></div>
+      <div style="margin-top:8px">
+        <div style="font-size:12px;font-weight:600">Progreso: ${progresoWidth}%</div>
+        <div class="task-progress"><div class="task-progress-bar" style="width: ${progresoWidth}%"></div></div>
+      </div>
     </div>
-    <div class="info-section">
-      <div class="info-section-title">Contacto</div>
-      <div class="info-row"><div class="info-key">Teléfono</div><div class="info-val">${cl.tel}</div></div>
-      <div class="info-row"><div class="info-key">Email</div><div class="info-val" style="font-size:11px">${cl.email}</div></div>
-      <div class="info-row"><div class="info-key">Dirección</div><div class="info-val">${cl.direccion}, ${cl.ciudad}</div></div>
-    </div>`;
-}
-
-function renderOriginCard(){
-  const isContract = curCase.tipo === 'contrato';
-  document.getElementById('origin-card').innerHTML = `
-    <div class="info-section">
-      <div class="${isContract?'origin-badge origin-contract':'origin-badge origin-project'}">
-        ${isContract ? '📋 Contrato' : '🗂️ Proyecto'}
+    
+    <!-- BOTONES DE CAMBIO DE ESTADO -->
+    <div class="status-buttons">
+      <button class="status-btn pending ${currentTask.status === 'pending' ? 'active' : ''}" onclick="updateTaskStatus('pending')">⏳ Pendiente</button>
+      <button class="status-btn progress ${currentTask.status === 'progress' ? 'active' : ''}" onclick="updateTaskStatus('progress')">🔄 En Progreso</button>
+      <button class="status-btn done ${currentTask.status === 'done' ? 'active' : ''}" onclick="updateTaskStatus('done')">✅ Completada</button>
+    </div>
+    
+    <!-- REGISTRO DE TIEMPO -->
+    <div class="timer-section">
+      <div style="font-size:12px;margin-bottom:8px">⏱️ Registro de Tiempo</div>
+      <div class="timer-display" id="timer-display">00:00:00</div>
+      <div class="timer-buttons">
+        <button class="timer-btn timer-start" onclick="startTimer()">▶ Iniciar</button>
+        <button class="timer-btn timer-stop" onclick="stopTimer()">⏸ Pausar</button>
       </div>
-      <div class="info-row"><div class="info-key">ID</div><div class="info-val mono">${curCase.refId}</div></div>
-      <div class="info-row"><div class="info-key">Nombre</div><div class="info-val" style="font-weight:600">${curCase.refNombre}</div></div>
-      <div class="info-row"><div class="info-key">Vigencia</div><div class="info-val green">${curCase.refVigencia}</div></div>
-    </div>`;
-}
-
-function renderMotivos(){
-  const grid = document.getElementById('motivos-grid');
-  if(!grid) return;
-  grid.innerHTML = '';
-  MOTIVOS.forEach(m => {
-    const div = document.createElement('div');
-    div.className = 'motivo-item' + (motivosSeleccionados.has(m)?' selected':'');
-    div.innerHTML = `<div class="motivo-cb"><span class="motivo-check">✓</span></div><div class="motivo-text">${m}</div>`;
-    div.onclick = () => toggleMotivo(m);
-    grid.appendChild(div);
-  });
-}
-
-function toggleMotivo(m){
-  if(motivosSeleccionados.has(m)) motivosSeleccionados.delete(m);
-  else motivosSeleccionados.add(m);
-  renderMotivos();
-  
-  const showEquipment = motivosSeleccionados.has('Soporte / Reemplazo');
-  const equipmentSection = document.getElementById('equipment-section');
-  if(equipmentSection) equipmentSection.style.display = showEquipment ? 'block' : 'none';
-  
-  if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-}
-
-function selectDiagnosis(tipo){
-  diagnosticoSeleccionado = tipo;
-  document.getElementById('opt-repair').classList.toggle('selected', tipo === 'repair');
-  document.getElementById('opt-replace').classList.toggle('selected', tipo === 'replace');
-  document.getElementById('radio-repair').classList.toggle('selected', tipo === 'repair');
-  document.getElementById('radio-replace').classList.toggle('selected', tipo === 'replace');
-  
-  const stockSection = document.getElementById('stock-section');
-  if(stockSection) stockSection.style.display = tipo === 'replace' ? 'block' : 'none';
-  
-  if(tipo === 'replace') renderStockList();
-}
-
-function renderStockList(){
-  const container = document.getElementById('stock-list');
-  if(!container) return;
-  container.innerHTML = '<div class="lbl" style="margin-bottom:8px">Seleccione el equipo de reemplazo:</div>';
-  
-  STOCK_EQUIPOS.forEach(stock => {
-    const div = document.createElement('div');
-    div.className = `stock-available ${stockSeleccionado === stock.id ? 'selected' : ''}`;
-    div.onclick = () => {
-      stockSeleccionado = stock.id;
-      renderStockList();
-    };
-    div.innerHTML = `
-      <div class="stock-radio ${stockSeleccionado === stock.id ? 'selected' : ''}"></div>
-      <div class="stock-info">
-        <div class="stock-name">${stock.nombre}</div>
-        <div class="stock-serie">Serie: ${stock.serie}</div>
-        <div class="stock-status">📍 ${stock.ubicacion}</div>
+      <button class="log-time-btn" onclick="logTime()">📝 Registrar tiempo trabajado</button>
+      <div style="font-size:11px;margin-top:8px;text-align:center">Tiempo registrado: ${formatTime(currentTask.tiempoRegistrado * 3600)}</div>
+    </div>
+    
+    <!-- SOLICITUD DE GASTOS -->
+    <div class="expense-section">
+      <div class="expense-title">💰 Gastos y Viáticos</div>
+      <div class="expense-row">
+        <select id="expense-type" class="expense-type">
+          <option value="Combustible">⛽ Combustible</option>
+          <option value="Viáticos">🍽️ Viáticos</option>
+          <option value="Peajes">🛣️ Peajes</option>
+          <option value="Estacionamiento">🅿️ Estacionamiento</option>
+          <option value="Materiales">🔧 Materiales</option>
+          <option value="Otros">📦 Otros</option>
+        </select>
+        <input type="number" id="expense-amount" class="expense-input" placeholder="Monto B/." step="0.01">
+        <button class="btn btn-primary btn-sm" style="width:auto;padding:8px 16px" onclick="addExpense()">+</button>
       </div>
-    `;
-    container.appendChild(div);
+      <div id="expense-list" class="expense-list"></div>
+    </div>
+    
+    <!-- COMENTARIOS Y SEGUIMIENTO -->
+    <div>
+      <div class="expense-title">💬 Comentarios y Eventos</div>
+      <div class="comment-input">
+        <textarea id="new-comment" rows="2" placeholder="Agregar comentario o evento..."></textarea>
+        <button class="btn btn-primary btn-sm" style="width:auto;padding:8px 16px" onclick="addComment()">Enviar</button>
+      </div>
+      <div id="comment-list" class="comment-list"></div>
+    </div>
+    
+    <!-- EVIDENCIAS -->
+    <div class="evidence-section">
+      <div class="expense-title">📸 Evidencias</div>
+      <button class="evidence-btn" onclick="document.getElementById('evidence-input').click()">
+        📷 Adjuntar foto o documento
+      </button>
+      <input type="file" id="evidence-input" accept="image/*" style="display:none" onchange="addEvidence(this)">
+      <div id="evidence-list" class="evidence-list"></div>
+    </div>
+    
+    <!-- HISTORIAL DE ACTIVIDADES -->
+    <div class="activity-log">
+      <div class="expense-title">📋 Historial de Actividades</div>
+      <div id="activity-list"></div>
+    </div>
+  `;
+  
+  renderExpenses();
+  renderComments();
+  renderEvidences();
+  renderActivities();
+}
+
+function updateTaskStatus(newStatus) {
+  currentTask.status = newStatus;
+  
+  let progresoUpdate = currentTask.progreso;
+  if(newStatus === 'progress' && currentTask.progreso < 30) progresoUpdate = 30;
+  if(newStatus === 'done') progresoUpdate = 100;
+  currentTask.progreso = progresoUpdate;
+  
+  currentTask.actividades.unshift({
+    accion: `Estado cambiado a ${newStatus === 'pending' ? 'Pendiente' : (newStatus === 'progress' ? 'En Progreso' : 'Completada')}`,
+    fecha: new Date().toLocaleString()
   });
-}
-
-function validateS3(){
-  if(motivosSeleccionados.size === 0){
-    alert('Selecciona al menos un motivo del servicio.');
-    return;
-  }
-  if(!document.getElementById('detalle-servicio').value.trim()){
-    alert('El detalle del servicio es obligatorio.');
-    return;
-  }
   
-  if(motivosSeleccionados.has('Soporte / Reemplazo')) {
-    if(!document.getElementById('equipo-modelo').value.trim()){
-      alert('Por favor ingresa el modelo del equipo a evaluar.');
-      return;
-    }
-    if(!document.getElementById('equipo-serie').value.trim()){
-      alert('Por favor ingresa el número de serie del equipo.');
-      return;
-    }
-    if(diagnosticoSeleccionado === 'replace' && !stockSeleccionado){
-      alert('Selecciona un equipo de reemplazo del stock disponible.');
-      return;
-    }
-  }
-  
-  goStep(4);
-}
-
-function generateQR(){
-  goStep(5);
-  const cl = CLIENTES[curCase.clienteId];
-  const data = {
-    caseId: curCase.id,
-    clienteNombre: cl.nombre,
-    clienteId: cl.id,
-    motivos: Array.from(motivosSeleccionados).join(', '),
-    detalle: document.getElementById('detalle-servicio').value.trim(),
-    observaciones: document.getElementById('observaciones').value.trim(),
-    ticket: document.getElementById('num-ticket').value.trim(),
-    equipoModelo: document.getElementById('equipo-modelo').value.trim(),
-    equipoSerie: document.getElementById('equipo-serie').value.trim(),
-    diagnostico: diagnosticoSeleccionado,
-    requiereReemplazo: diagnosticoSeleccionado === 'replace'
-  };
-  
-  const params = new URLSearchParams({ v: btoa(JSON.stringify(data)) });
-  const clientURL = window.location.href.split('?')[0] + '?' + params.toString() + '#client';
-  
-  document.getElementById('qr-case-info').textContent = curCase.id + ' · ' + cl.nombre;
-  document.getElementById('qr-container').innerHTML = '';
-  new QRCode(document.getElementById('qr-container'), {
-    text: clientURL,
-    width: 200, height: 200,
-    colorDark: '#1a1714', colorLight: '#ffffff',
-    correctLevel: QRCode.CorrectLevel.M
-  });
-}
-
-function simulateClientSign(){
-  resultadoCliente = null;
-  document.getElementById('client-nombre').value = '';
-  document.getElementById('client-cargo').value = '';
-  document.getElementById('radio-completo').className = 'radio-item';
-  document.getElementById('radio-parcial').className = 'radio-item';
-  const cl = CLIENTES[curCase.clienteId];
-  document.getElementById('modal-case-info').textContent = curCase.id + ' · ' + cl.nombre;
-  
-  let summary = '<strong>Motivo:</strong> ' + Array.from(motivosSeleccionados).join(', ');
-  if(motivosSeleccionados.has('Soporte / Reemplazo')) {
-    summary += `<br><strong>Equipo:</strong> ${document.getElementById('equipo-modelo').value} (Serie: ${document.getElementById('equipo-serie').value})`;
-    if(diagnosticoSeleccionado === 'replace') summary += `<br><strong>Diagnóstico:</strong> Requiere Reemplazo`;
-  }
-  summary += '<br><strong>Detalle:</strong> ' + document.getElementById('detalle-servicio').value.trim().slice(0,120);
-  
-  document.getElementById('modal-service-summary').innerHTML = summary;
-  document.getElementById('client-modal').classList.add('open');
-  if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-}
-
-function selectResult(tipo){
-  resultadoCliente = tipo;
-  document.getElementById('radio-completo').className = 'radio-item' + (tipo==='completo'?' sel-completo':'');
-  document.getElementById('radio-parcial').className = 'radio-item' + (tipo==='parcial'?' sel-parcial':'');
-}
-
-function confirmClientSign(){
-  const nombre = document.getElementById('client-nombre').value.trim();
-  const cargo  = document.getElementById('client-cargo').value.trim();
-  if(!nombre){ alert('El nombre del cliente es obligatorio.'); return; }
-  if(!cargo)  { alert('El cargo del cliente es obligatorio.'); return; }
-  if(!resultadoCliente){ alert('Indica si el servicio fue atendido completo o parcial.'); return; }
-  
-  document.getElementById('client-modal').classList.remove('open');
-  
-  const requiereReemplazo = diagnosticoSeleccionado === 'replace';
-  
-  curCase.atendido = true;
-  curCase.resultado = resultadoCliente;
-  curCase.requiereReemplazo = requiereReemplazo;
-  
-  const cl = CLIENTES[curCase.clienteId];
-  document.getElementById('firma-card').innerHTML = `
-    <div class="info-section">
-      <div class="info-section-title">Firma del cliente</div>
-      <div class="info-row"><div class="info-key">Empresa</div><div class="info-val" style="font-weight:700">${cl.nombre}</div></div>
-      <div class="info-row"><div class="info-key">Nombre</div><div class="info-val">${nombre}</div></div>
-      <div class="info-row"><div class="info-key">Cargo</div><div class="info-val">${cargo}</div></div>
-      <div class="info-row"><div class="info-key">Resultado</div><div class="info-val ${requiereReemplazo ? 'warning' : (resultadoCliente==='completo'?'green':'red')}">
-        ${requiereReemplazo ? '🔄 Reemplazo Pendiente' : (resultadoCliente==='completo'?'✅ Atendido Completo':'⚠️ Atendido Parcial')}
-      </div></div>
-      ${requiereReemplazo ? `<div class="info-row"><div class="info-key">Próxima acción</div><div class="info-val">Coordinar visita para reemplazo de equipo</div></div>` : ''}
-      <div class="info-row"><div class="info-key">Fecha/Hora</div><div class="info-val">${new Date().toLocaleString('es-PA')}</div></div>
-    </div>`;
-  
-  document.getElementById('resultado-card').className = 'resultado-card ' + (requiereReemplazo ? 'parcial' : (resultadoCliente==='completo'?'completo':'parcial'));
-  document.getElementById('resultado-icon').textContent = requiereReemplazo ? '🔄' : (resultadoCliente==='completo' ? '✅' : '⚠️');
-  document.getElementById('resultado-title').textContent = requiereReemplazo ? 'Reemplazo Pendiente' : (resultadoCliente==='completo' ? 'Caso Atendido Completo' : 'Caso Atendido Parcial');
-  document.getElementById('resultado-sub').textContent = requiereReemplazo
-    ? 'Se requiere coordinar una segunda visita para el reemplazo del equipo.'
-    : (resultadoCliente==='completo'
-      ? 'El cliente confirmó que el servicio fue completado satisfactoriamente.'
-      : 'El servicio fue atendido de forma parcial. Se requiere seguimiento.');
-  
-  const replacementInfo = document.getElementById('replacement-info');
-  if(replacementInfo) replacementInfo.style.display = requiereReemplazo ? 'block' : 'none';
-  
-  renderCases();
-  goStep(6);
-  if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred(requiereReemplazo ? 'warning' : (resultadoCliente==='completo'?'success':'warning'));
-}
-
-let fotoAdjunta = null;
-let fotoS3 = null;
-
-function adjuntarFotoS3(input){
-  if(!input.files[0]) return;
-  const file = input.files[0];
-  const reader = new FileReader();
-  reader.onload = e => {
-    fotoS3 = e.target.result;
-    document.getElementById('foto-s3-thumb').src = fotoS3;
-    document.getElementById('foto-s3-nombre').textContent = file.name;
-    document.getElementById('foto-s3-wrap').style.display = 'flex';
-    document.getElementById('btn-foto-s3').textContent = '📷 Cambiar foto';
-  };
-  reader.readAsDataURL(file);
-  input.value = '';
-}
-
-function clearFotoS3(){
-  fotoS3 = null;
-  document.getElementById('foto-s3-wrap').style.display = 'none';
-  document.getElementById('btn-foto-s3').textContent = '📷 Adjuntar foto del servicio (opcional)';
-}
-
-function adjuntarFoto(input){
-  if(!input.files[0]) return;
-  const file = input.files[0];
-  const reader = new FileReader();
-  reader.onload = e => {
-    fotoAdjunta = e.target.result;
-    document.getElementById('foto-thumb').src = fotoAdjunta;
-    document.getElementById('foto-nombre').textContent = file.name;
-    const wrap = document.getElementById('foto-adjunta-result');
-    wrap.style.display = 'flex';
-    document.getElementById('btn-adjuntar-foto').textContent = '📷 Cambiar foto de respaldo';
-  };
-  reader.readAsDataURL(file);
-  input.value = '';
-}
-
-function clearFoto(){
-  fotoAdjunta = null;
-  document.getElementById('foto-adjunta-result').style.display = 'none';
-  document.getElementById('btn-adjuntar-foto').textContent = '📷 Adjuntar foto de respaldo';
-}
-
-function culminarCaso(){
-  const idx = CASOS.findIndex(c => c.id === curCase.id);
-  if(idx >= 0) CASOS[idx] = curCase;
-  fotoAdjunta = null; fotoS3 = null;
-  renderCases();
-  goStep(1);
-  const msg = curCase.requiereReemplazo ? '🔄 Caso marcado como Pendiente de Reemplazo' : (curCase.resultado === 'completo' ? '✅ Caso cerrado como Completo' : '⚠️ Caso cerrado como Parcial');
-  showToast(msg, curCase.requiereReemplazo ? 'parcial' : curCase.resultado);
+  renderTaskModal();
+  renderTasksList();
   if(tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 }
 
-function showToast(msg, tipo){
-  const ex = document.getElementById('app-toast');
-  if(ex) ex.remove();
-  const el = document.createElement('div');
-  el.id = 'app-toast';
-  const bg = tipo === 'completo' ? 'rgba(26,140,90,.95)' : 'rgba(212,130,10,.95)';
-  el.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:'+bg+';color:#fff;font-size:13px;font-weight:700;padding:12px 22px;border-radius:30px;z-index:999;text-align:center;max-width:320px;width:90%;box-shadow:0 4px 20px rgba(0,0,0,.25);transition:all .3s;opacity:0';
-  el.textContent = msg;
-  document.body.appendChild(el);
-  setTimeout(() => { el.style.opacity='1'; el.style.transform='translateX(-50%) translateY(0)'; }, 50);
-  setTimeout(() => { el.style.opacity='0'; setTimeout(() => el.remove(), 300); }, 3500);
+function startTimer() {
+  if(timerRunning) return;
+  timerRunning = true;
+  timerInterval = setInterval(() => {
+    timerSeconds++;
+    updateTimerDisplay();
+  }, 1000);
 }
 
-document.getElementById('client-modal')?.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+function stopTimer() {
+  if(!timerRunning) return;
+  timerRunning = false;
+  clearInterval(timerInterval);
+}
 
-// ── INICIALIZAR ──
-renderCases();
-renderTasks();
+function updateTimerDisplay() {
+  const display = document.getElementById('timer-display');
+  if(display) display.textContent = formatTime(timerSeconds);
+}
 
-if(window.location.hash === '#client'){
-  try {
-    const params = new URLSearchParams(window.location.search);
-    const data = JSON.parse(atob(params.get('v')));
-    document.getElementById('s1').classList.remove('active');
-    setTimeout(() => {
-      document.querySelector('.step-bar').style.display = 'none';
-      document.querySelector('#app').innerHTML = `
-        <div style="background:#0a2a35;padding:16px;color:#fff">
-          <div style="font-size:16px;font-weight:800">MULTITEK</div>
-          <div style="font-size:12px;color:rgba(255,255,255,.75)">Confirmación de Orden de Servicio</div>
+function formatTime(seconds) {
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+  return `${hrs.toString().padStart(2,'0')}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
+}
+
+function logTime() {
+  const horas = timerSeconds / 3600;
+  currentTask.tiempoRegistrado += horas;
+  currentTask.actividades.unshift({
+    accion: `Tiempo registrado: ${formatTime(timerSeconds)} (${horas.toFixed(2)} horas)`,
+    fecha: new Date().toLocaleString()
+  });
+  timerSeconds = 0;
+  timerRunning = false;
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  renderTaskModal();
+  renderTasksList();
+  if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+function addExpense() {
+  const tipo = document.getElementById('expense-type').value;
+  const monto = parseFloat(document.getElementById('expense-amount').value);
+  
+  if(isNaN(monto) || monto <= 0) {
+    alert('Ingresa un monto válido');
+    return;
+  }
+  
+  currentTask.gastos.push({
+    tipo: tipo,
+    monto: monto,
+    fecha: new Date().toLocaleDateString()
+  });
+  
+  currentTask.actividades.unshift({
+    accion: `Gasto registrado: ${tipo} - B/.${monto.toFixed(2)}`,
+    fecha: new Date().toLocaleString()
+  });
+  
+  document.getElementById('expense-amount').value = '';
+  renderExpenses();
+  renderActivities();
+  renderTasksList();
+  if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+function renderExpenses() {
+  const container = document.getElementById('expense-list');
+  if(!container) return;
+  
+  if(currentTask.gastos.length === 0) {
+    container.innerHTML = '<div style="font-size:11px;color:var(--text3);text-align:center">No hay gastos registrados</div>';
+    return;
+  }
+  
+  const total = currentTask.gastos.reduce((sum, g) => sum + g.monto, 0);
+  container.innerHTML = `
+    <div style="font-weight:600;margin-bottom:8px">Total: B/.${total.toFixed(2)}</div>
+    ${currentTask.gastos.map((g, idx) => `
+      <div class="expense-item">
+        <div class="expense-item-info">
+          <strong>${g.tipo}</strong>
+          <div class="expense-item-type">${g.fecha}</div>
         </div>
-        <div style="padding:16px;display:flex;flex-direction:column;gap:14px">
-          <div style="background:var(--s2);border-radius:var(--r);padding:14px;font-size:13px;line-height:1.7">
-            <strong>${data.caseId}</strong><br>
-            Cliente: <strong>${data.clienteNombre}</strong><br>
-            Motivo: ${data.motivos}<br>
-            ${data.equipoModelo ? `Equipo: ${data.equipoModelo} (Serie: ${data.equipoSerie})<br>` : ''}
-            ${data.diagnostico === 'replace' ? '<span style="color:var(--warn)">⚠️ Diagnóstico: Requiere Reemplazo</span><br>' : ''}
-            ${data.detalle ? 'Detalle: ' + data.detalle.slice(0,100) : ''}
-          </div>
-          <div class="form-group"><label class="form-label">Nombre completo <span>*</span></label>
-            <input class="finput" id="qr-nombre" type="text" placeholder="Nombre y apellido"></div>
-          <div class="form-group"><label class="form-label">Cargo <span>*</span></label>
-            <input class="finput" id="qr-cargo" type="text" placeholder="Su cargo en la empresa"></div>
-          <div class="lbl">El servicio fue atendido: *</div>
-          <div class="radio-group">
-            <div class="radio-item" id="qr-completo" onclick="this.className='radio-item sel-completo';document.getElementById('qr-parcial').className='radio-item';window._qrResult='completo'">
-              <div class="radio-label">✅ Completo</div><div class="radio-sub">Tarea finalizada</div>
-            </div>
-            <div class="radio-item" id="qr-parcial" onclick="this.className='radio-item sel-parcial';document.getElementById('qr-completo').className='radio-item';window._qrResult='parcial'">
-              <div class="radio-label">⚠️ Parcial</div><div class="radio-sub">Pendiente continuar</div>
-            </div>
-          </div>
-          <button class="btn btn-primary" onclick="
-            const n=document.getElementById('qr-nombre').value.trim();
-            const c=document.getElementById('qr-cargo').value.trim();
-            if(!n||!c){alert('Nombre y cargo son obligatorios');return;}
-            if(!window._qrResult){alert('Indica si fue completo o parcial');return;}
-            document.querySelector('#app').innerHTML='<div style=padding:40px;text-align:center><div style=font-size:48px>✅</div><div style=font-size:20px;font-weight:800;color:var(--acc3);margin-top:12px>¡Confirmado!</div><div style=font-size:13px;color:var(--text2);margin-top:8px;line-height:1.5>Tu firma ha sido registrada.<br>Puedes cerrar esta ventana.</div></div>';
-          ">Confirmar y firmar →</button>
-        </div>`;
-    }, 100);
-  } catch(e){}
+        <div class="expense-item-amount">B/.${g.monto.toFixed(2)}</div>
+        <div class="expense-delete" onclick="deleteExpense(${idx})">🗑️</div>
+      </div>
+    `).join('')}
+  `;
 }
+
+function deleteExpense(idx) {
+  currentTask.gastos.splice(idx, 1);
+  currentTask.actividades.unshift({
+    accion: `Gasto eliminado`,
+    fecha: new Date().toLocaleString()
+  });
+  renderExpenses();
+  renderActivities();
+  renderTasksList();
+}
+
+function addComment() {
+  const textarea = document.getElementById('new-comment');
+  const texto = textarea.value.trim();
+  
+  if(!texto) {
+    alert('Escribe un comentario');
+    return;
+  }
+  
+  currentTask.comentarios.push({
+    usuario: currentTask.responsable,
+    texto: texto,
+    fecha: new Date().toLocaleString(),
+    tipo: 'comment'
+  });
+  
+  currentTask.actividades.unshift({
+    accion: `Comentario agregado: "${texto.substring(0, 50)}${texto.length > 50 ? '...' : ''}"`,
+    fecha: new Date().toLocaleString()
+  });
+  
+  textarea.value = '';
+  renderComments();
+  renderActivities();
+  if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+function renderComments() {
+  const container = document.getElementById('comment-list');
+  if(!container) return;
+  
+  if(currentTask.comentarios.length === 0) {
+    container.innerHTML = '<div style="font-size:11px;color:var(--text3);text-align:center">No hay comentarios</div>';
+    return;
+  }
+  
+  container.innerHTML = currentTask.comentarios.map(c => `
+    <div class="comment-item">
+      <div class="comment-header">
+        <strong>${c.usuario}</strong>
+        <span>${c.fecha}</span>
+      </div>
+      <div class="comment-text">${c.texto}</div>
+    </div>
+  `).join('');
+}
+
+function addEvidence(input) {
+  if(!input.files[0]) return;
+  const file = input.files[0];
+  const reader = new FileReader();
+  
+  reader.onload = e => {
+    currentTask.evidencias.push({
+      url: e.target.result,
+      nombre: file.name,
+      fecha: new Date().toLocaleString()
+    });
+    currentTask.actividades.unshift({
+      accion: `Evidencia adjuntada: ${file.name}`,
+      fecha: new Date().toLocaleString()
+    });
+    renderEvidences();
+    renderActivities();
+    if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function renderEvidences() {
+  const container = document.getElementById('evidence-list');
+  if(!container) return;
+  
+  if(currentTask.evidencias.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  
+  container.innerHTML = currentTask.evidencias.map((e, idx) => `
+    <div class="evidence-item">
+      <img src="${e.url}" alt="evidencia">
+      <div class="evidence-delete" onclick="deleteEvidence(${idx})">×</div>
+    </div>
+  `).join('');
+}
+
+function deleteEvidence(idx) {
+  currentTask.evidencias.splice(idx, 1);
+  currentTask.actividades.unshift({
+    accion: `Evidencia eliminada`,
+    fecha: new Date().toLocaleString()
+  });
+  renderEvidences();
+  renderActivities();
+}
+
+function renderActivities() {
+  const container = document.getElementById('activity-list');
+  if(!container) return;
+  
+  if(currentTask.actividades.length === 0) {
+    container.innerHTML = '<div style="font-size:11px;color:var(--text3);text-align:center">No hay actividades registradas</div>';
+    return;
+  }
+  
+  container.innerHTML = currentTask.actividades.slice(0, 20).map(a => `
+    <div class="activity-item">
+      <div class="activity-time">${a.fecha.substring(5,16)}</div>
+      <div>${a.accion}</div>
+    </div>
+  `).join('');
+}
+
+function closeTaskModal() {
+  document.getElementById('task-modal').classList.remove('open');
+  if(timerRunning) {
+    stopTimer();
+    timerSeconds = 0;
+    updateTimerDisplay();
+  }
+  currentTask = null;
+}
+
+function renderCases() {
+  const c = document.getElementById('cases-list');
+  if(!c) return;
+  c.innerHTML = CASOS.map(caso => `
+    <div class="case-card ${caso.atendido ? 'done' : ''}">
+      <div class="case-header">
+        <div class="case-id">${caso.id}</div>
+        <div class="pill ${caso.atendido ? 'pill-done' : 'pill-open'}">${caso.atendido ? '✓ Atendido' : '● Abierto'}</div>
+      </div>
+      <div class="case-client">${CLIENTES[caso.clienteId]?.nombre || 'Cliente'}</div>
+      <div class="case-meta"><div class="case-meta-i">📅 ${caso.fecha}</div></div>
+    </div>
+  `).join('');
+}
+
+// Inicializar
+renderCases();
+renderTasksList();
 </script>
 </div>
 </body>
