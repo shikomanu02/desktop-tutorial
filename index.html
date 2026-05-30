@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dashboard Ejecutivo · Live Sales + LY Comparison</title>
+    <title>Dashboard Ejecutivo · Live Sales + PYTD</title>
     
     <!-- SDK de Telegram -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -221,7 +221,6 @@
             color: var(--primary-accent);
         }
 
-        /* Nueva grilla para 4 indicadores: Venta, Meta, %, Año Pasado */
         .store-stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -363,19 +362,19 @@
         <div class="kpi-sub" id="kpi-margen-sub">▲ +2.1% vs ayer</div>
     </div>
     <div class="kpi-item">
-        <div class="kpi-label">💵 ANTICIPO HOY</div>
-        <div class="kpi-value" id="kpi-anticipo">$0</div>
-        <div class="kpi-sub">Sin movimientos</div>
-    </div>
-    <div class="kpi-item">
-        <div class="kpi-label">📆 MISMO DÍA 2025</div>
+        <div class="kpi-label">📆 AÑO PASADO (LY)</div>
         <div class="kpi-value" id="kpi-ano-pasado">$68,630</div>
-        <div class="kpi-sub" id="kpi-var-yp">▲ +12.3%</div>
+        <div class="kpi-sub" id="kpi-var-yp">▲ +12.3% vs hoy</div>
     </div>
     <div class="kpi-item">
-        <div class="kpi-label">🏆 YTD ACUMULADO</div>
+        <div class="kpi-label">🏆 YTD ACTUAL</div>
         <div class="kpi-value" id="kpi-ytd">$4.89M</div>
         <div class="kpi-sub" id="kpi-ytd-avance">55.9% meta anual</div>
+    </div>
+    <div class="kpi-item">
+        <div class="kpi-label">📉 PYTD (Año Anterior)</div>
+        <div class="kpi-value" id="kpi-pytd">$4.12M</div>
+        <div class="kpi-sub" id="kpi-pytd-var">▲ +18.7% vs YTD</div>
     </div>
 </div>
 
@@ -419,7 +418,7 @@
     WebApp.enableClosingConfirmation();
     document.body.style.background = WebApp.themeParams.bg_color || '#f4f6fa';
 
-    // ---------- DATA MODEL con AÑO PASADO (LY) inventado pero coherente ----------
+    // ---------- DATA MODEL con AÑO PASADO (LY) y PYTD ----------
     let storesData = [
         { id: "albrook", name: "ALBROOK 2", venta: 4096, meta: 10634, metaPorc: 38.5, ventaLY: 3620, varLY: 13.2 },
         { id: "chiriqui", name: "CHIRIQUI", venta: 5964, meta: 9802, metaPorc: 60.8, ventaLY: 5210, varLY: 14.5 },
@@ -436,19 +435,51 @@
         { name: "MULTIMAX CORPORATIVO", venta: 1533, meta: 0, metaPorc: 100, ventaLY: 1420, varLY: 7.96 }
     ];
 
-    // KPIs mejorados
+    // KPIs mejorados: eliminamos anticipo, agregamos PYTD (Previous Year to Date)
     let kpis = {
         margen: 34.6,
         margenDelta: "+2.1%",
-        anticipo: 0,
-        añoPasado: 68630,
+        añoPasado: 68630,          // LY mismo día
         varYp: "+12.3%",
-        ytd: 4890000,
+        ytd: 4890000,              // YTD actual (4.89M)
         ytdAvance: 55.9,
+        pytd: 4120000,             // PYTD = Year to Date del año anterior (ej: $4.12M)
         metaDiariaObjetivo: 66250,
         metaMensualObj: 4130000,
         acumMensualActual: 970928
     };
+    
+    // Calcular variación YTD vs PYTD
+    function calcularVarPYTD() {
+        let diff = kpis.ytd - kpis.pytd;
+        let pct = (diff / kpis.pytd) * 100;
+        return { diff, pct: pct.toFixed(1) };
+    }
+
+    function actualizarKPIs() {
+        document.getElementById('kpi-margen').innerText = `${kpis.margen}%`;
+        document.getElementById('kpi-margen-sub').innerHTML = `▲ ${kpis.margenDelta} vs ayer`;
+        document.getElementById('kpi-ano-pasado').innerHTML = `$${kpis.añoPasado.toLocaleString()}`;
+        document.getElementById('kpi-var-yp').innerHTML = `${kpis.varYp} vs hoy`;
+        
+        let ytdFormat = (kpis.ytd / 1000000).toFixed(2) + 'M';
+        document.getElementById('kpi-ytd').innerHTML = `$${ytdFormat}`;
+        document.getElementById('kpi-ytd-avance').innerHTML = `${kpis.ytdAvance}% meta anual`;
+        
+        let pytdFormat = (kpis.pytd / 1000000).toFixed(2) + 'M';
+        document.getElementById('kpi-pytd').innerHTML = `$${pytdFormat}`;
+        
+        let varData = calcularVarPYTD();
+        let trendClass = varData.pct >= 0 ? 'trend-up' : 'trend-down';
+        let arrow = varData.pct >= 0 ? '▲' : '▼';
+        document.getElementById('kpi-pyrd-var').innerHTML = `<span style="color:${varData.pct>=0?'#2c9a4c':'#dc4c3a'}">${arrow} ${Math.abs(varData.pct)}% vs YTD</span>`;
+        // Ajuste de ID: por si el span no existe, lo creamos.
+        let pytdSub = document.getElementById('kpi-pyrd-var');
+        if(pytdSub) pytdSub.innerHTML = `<span style="color:${varData.pct>=0?'#2c9a4c':'#dc4c3a'}">${arrow} ${Math.abs(varData.pct)}% vs YTD</span>`;
+        else {
+            document.getElementById('kpi-pytd-var').innerHTML = `<span style="color:${varData.pct>=0?'#2c9a4c':'#dc4c3a'}">${arrow} ${Math.abs(varData.pct)}% vs YTD</span>`;
+        }
+    }
 
     function calcularTotales() {
         let totalTiendas = storesData.reduce((sum, s) => sum + s.venta, 0);
@@ -475,17 +506,6 @@
         document.getElementById('meta-mensual-fill').style.width = `${avanceMensual}%`;
     }
 
-    function actualizarKPIs() {
-        document.getElementById('kpi-margen').innerText = `${kpis.margen}%`;
-        document.getElementById('kpi-margen-sub').innerHTML = `▲ ${kpis.margenDelta} vs ayer`;
-        document.getElementById('kpi-anticipo').innerHTML = `$${kpis.anticipo.toLocaleString()}`;
-        document.getElementById('kpi-ano-pasado').innerHTML = `$${kpis.añoPasado.toLocaleString()}`;
-        document.getElementById('kpi-var-yp').innerHTML = `${kpis.varYp}`;
-        let ytdFormat = (kpis.ytd / 1000000).toFixed(2) + 'M';
-        document.getElementById('kpi-ytd').innerHTML = `$${ytdFormat}`;
-        document.getElementById('kpi-ytd-avance').innerHTML = `${kpis.ytdAvance}% meta anual`;
-    }
-
     function renderStores() {
         const container = document.getElementById('stores-list-container');
         container.innerHTML = '';
@@ -496,7 +516,6 @@
             else if(store.metaPorc < 65) percentClass = 'yellow';
             else percentClass = 'green';
             
-            // Variación año pasado: clase y símbolo
             let varClass = store.varLY >= 0 ? 'trend-up' : 'trend-down';
             let varSymbol = store.varLY >= 0 ? '▲' : '▼';
             
@@ -556,16 +575,15 @@
         actualizarResumenYMetas();
     }
 
-    // Simular actualización manteniendo inventado el LY y variaciones lógicas
+    // Simular actualización manteniendo inventado el LY y PYTD fluctuante
     function simularBackendUpdate() {
-        // Actualizar ventas actuales (pequeña fluctuación)
+        // Actualizar ventas actuales
         storesData = storesData.map(store => {
             let factor = 1 + (Math.random() * 0.07 - 0.02);
             let newVenta = Math.round(store.venta * factor);
             newVenta = Math.max(newVenta, 50);
             let newMetaPorc = (newVenta / store.meta) * 100;
             newMetaPorc = Math.min(newMetaPorc, 140);
-            // Actualizar variación respecto al año pasado: conservar ventaLY original pero recalcular var%
             let newVarLY = ((newVenta - store.ventaLY) / store.ventaLY) * 100;
             return {
                 ...store,
@@ -575,7 +593,6 @@
             };
         });
         
-        // Actualizar corporativo
         let randomCorpVenta = corporateData[0].venta + Math.floor(Math.random() * 250 - 70);
         randomCorpVenta = Math.max(randomCorpVenta, 1350);
         let newCorpVar = ((randomCorpVenta - corporateData[0].ventaLY) / corporateData[0].ventaLY) * 100;
@@ -585,15 +602,18 @@
             varLY: parseFloat(newCorpVar.toFixed(1))
         };
         
-        // KPIs globales
+        // KPIs con PYTD dinámico
         kpis.margen = (34 + Math.random() * 1.8).toFixed(1);
         kpis.margenDelta = `+${(Math.random() * 1.8 + 0.2).toFixed(1)}%`;
-        kpis.anticipo = Math.floor(Math.random() * 850);
         let variacionYP = (Math.random() * 18 - 4).toFixed(1);
         kpis.varYp = `${variacionYP >= 0 ? '+' : ''}${variacionYP}%`;
         kpis.añoPasado = Math.floor(68630 * (1 + (Math.random() * 0.09 - 0.03)));
         kpis.ytd = 4890000 + Math.floor(Math.random() * 130000);
         kpis.ytdAvance = (55.9 + (Math.random() * 1.5 - 0.6)).toFixed(1);
+        // PYTD (año anterior acumulado) simulado ligeramente menor o mayor
+        let pytdBase = 4120000;
+        kpis.pytd = pytdBase + Math.floor(Math.random() * 180000 - 60000);
+        if(kpis.pytd < 3800000) kpis.pytd = 3980000;
         kpis.acumMensualActual = Math.floor(970928 + (Math.random() * 22000 - 4000));
         if(kpis.acumMensualActual < 860000) kpis.acumMensualActual = 970928;
         
