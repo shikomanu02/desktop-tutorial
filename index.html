@@ -128,15 +128,16 @@
             margin-top: 4px;
         }
 
+        /* ========== CONTROLES DE FECHA - LEGIBILIDAD OPTIMIZADA ========== */
         .date-controls {
             display: flex;
             gap: 12px;
             margin-bottom: 20px;
-            background: var(--tg-theme-secondary-bg-color, var(--card-bg));
+            background: var(--tg-theme-secondary-bg-color, #1e2a3e);
             border-radius: 40px;
             padding: 6px 12px 6px 16px;
             align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .date-btn {
@@ -156,16 +157,41 @@
             opacity: 0.85;
         }
 
+        /* INPUT DE FECHA: texto blanco y fondo oscuro para máxima legibilidad en Mini App */
         .date-input {
             flex: 1;
-            background: var(--tg-theme-bg-color, #f1f5f9);
-            border: 1px solid var(--tg-theme-hint-color, #e2e8f0);
+            background: #2d3a4b;
+            border: 1px solid #4a5b6e;
             border-radius: 32px;
             padding: 10px 12px;
             font-size: 13px;
             font-weight: 500;
             text-align: center;
-            color: var(--text-main);
+            color: #ffffff !important;
+            caret-color: #ffffff;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .date-input:focus {
+            border-color: var(--primary-accent);
+            background: #1e2a3a;
+            box-shadow: 0 0 0 2px rgba(42, 125, 225, 0.2);
+        }
+
+        .date-input::placeholder {
+            color: #a0b3c9;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        /* Asegurar que en cualquier tema de Telegram el texto sea blanco */
+        @media (prefers-color-scheme: dark) {
+            .date-input {
+                background: #1e2a3a;
+                border-color: #3a4a5c;
+                color: #ffffff;
+            }
         }
 
         .stores-section {
@@ -435,7 +461,7 @@
         { name: "MULTIMAX CORPORATIVO", venta: 1533, meta: 0, metaPorc: 100, ventaLY: 1420, varLY: 7.96 }
     ];
 
-    // KPIs mejorados: eliminamos anticipo, agregamos PYTD (Previous Year to Date)
+    // KPIs mejorados: PYTD (Previous Year to Date)
     let kpis = {
         margen: 34.6,
         margenDelta: "+2.1%",
@@ -470,15 +496,9 @@
         document.getElementById('kpi-pytd').innerHTML = `$${pytdFormat}`;
         
         let varData = calcularVarPYTD();
-        let trendClass = varData.pct >= 0 ? 'trend-up' : 'trend-down';
         let arrow = varData.pct >= 0 ? '▲' : '▼';
-        document.getElementById('kpi-pyrd-var').innerHTML = `<span style="color:${varData.pct>=0?'#2c9a4c':'#dc4c3a'}">${arrow} ${Math.abs(varData.pct)}% vs YTD</span>`;
-        // Ajuste de ID: por si el span no existe, lo creamos.
-        let pytdSub = document.getElementById('kpi-pyrd-var');
-        if(pytdSub) pytdSub.innerHTML = `<span style="color:${varData.pct>=0?'#2c9a4c':'#dc4c3a'}">${arrow} ${Math.abs(varData.pct)}% vs YTD</span>`;
-        else {
-            document.getElementById('kpi-pytd-var').innerHTML = `<span style="color:${varData.pct>=0?'#2c9a4c':'#dc4c3a'}">${arrow} ${Math.abs(varData.pct)}% vs YTD</span>`;
-        }
+        let color = varData.pct >= 0 ? '#2c9a4c' : '#dc4c3a';
+        document.getElementById('kpi-pytd-var').innerHTML = `<span style="color:${color}">${arrow} ${Math.abs(varData.pct)}% vs YTD</span>`;
     }
 
     function calcularTotales() {
@@ -577,7 +597,6 @@
 
     // Simular actualización manteniendo inventado el LY y PYTD fluctuante
     function simularBackendUpdate() {
-        // Actualizar ventas actuales
         storesData = storesData.map(store => {
             let factor = 1 + (Math.random() * 0.07 - 0.02);
             let newVenta = Math.round(store.venta * factor);
@@ -602,7 +621,6 @@
             varLY: parseFloat(newCorpVar.toFixed(1))
         };
         
-        // KPIs con PYTD dinámico
         kpis.margen = (34 + Math.random() * 1.8).toFixed(1);
         kpis.margenDelta = `+${(Math.random() * 1.8 + 0.2).toFixed(1)}%`;
         let variacionYP = (Math.random() * 18 - 4).toFixed(1);
@@ -610,7 +628,6 @@
         kpis.añoPasado = Math.floor(68630 * (1 + (Math.random() * 0.09 - 0.03)));
         kpis.ytd = 4890000 + Math.floor(Math.random() * 130000);
         kpis.ytdAvance = (55.9 + (Math.random() * 1.5 - 0.6)).toFixed(1);
-        // PYTD (año anterior acumulado) simulado ligeramente menor o mayor
         let pytdBase = 4120000;
         kpis.pytd = pytdBase + Math.floor(Math.random() * 180000 - 60000);
         if(kpis.pytd < 3800000) kpis.pytd = 3980000;
